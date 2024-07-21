@@ -1,0 +1,47 @@
+public class PlayerStateGrounded : PlayerState
+{
+    public PlayerStateGrounded(Player _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
+    {
+    }
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
+    }
+
+    public override void OnUpdate()
+    {
+        base.OnUpdate(); 
+
+        if (player.input.IsHurting)
+        {
+            FSM.ChangeState(player.hurtState);
+            return;
+        }
+        if (player.input.IsStunning)
+        {
+            FSM.ChangeState(player.stunState);
+            return;
+        }
+        if (player.input.IsDashing)
+        {
+            FSM.ChangeState(player.dashState);
+            return;
+        }
+        if (player.input.IsParrying)
+        {
+            FSM.ChangeState(player.parryState);
+            return;
+        }
+        if (player.input.IsAttacking && FSM.currentState != player.swordState)
+        {
+            FSM.ChangeState(player.swordState);
+            return;
+        }
+    }
+}
