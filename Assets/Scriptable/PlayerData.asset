@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6751edfc99c73a4db8386fa885d6a02, type: 3}
+  m_Script: {fileID: 11500000, guid: a5430969edf844c48b35d08d9363da2c, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   gravityStrength: -33.333332
@@ -25,6 +25,7 @@ MonoBehaviour:
   runDeccelAmount: 40
   accelInAir: 1
   deccelInAir: 1
+  hurtResetTime: 0.5
   jumpHeight: 1.5
   jumpTimeToApex: 0.3
   jumpForce: 10

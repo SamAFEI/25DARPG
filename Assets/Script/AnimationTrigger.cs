@@ -8,4 +8,9 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.AnimationFinishTrigger();
     }
+
+    private void PlayAttackFX(int _index)
+    {
+        entity.PlayAttackTrigger(_index);
+    }
 }

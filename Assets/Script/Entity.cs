@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,9 +13,17 @@ public abstract class Entity : MonoBehaviour
     public List<SpriteResolver> spriteResolvers { get; private set; } = new List<SpriteResolver>();
     public SpriteLibrary spriteLibrary { get; private set; }
     public EntityFSM FSM { get; private set; }
+    public EntityFX entityFX { get; private set; }
+    public GameObject attackMesh { get; private set; }
+    public List<SpriteRenderer> sprites { get; private set; } = new List<SpriteRenderer>();
     #endregion
-    public EntityData Data;
 
+    public EntityData Data;
+    public bool IsHurting { get { return LastHurtTime > 0; } }
+    public bool IsStunning { get { return LastStunTime > 0; } }
+    public bool IsSuperArmeding { get { return LastSuperArmedTime > 0; } }
+
+    public bool IsHeaveyAttack;
     public bool IsFacingRight;
     public int FacingDir => IsFacingRight ? 1 : -1;
     [Header("重力係數")]
@@ -22,14 +31,27 @@ public abstract class Entity : MonoBehaviour
     [Header("重力")]
     public static float GlobalGravity = -9.81f;
 
+    #region Timers
+    public float LastHurtTime;
+    public float LastStunTime;
+    public float LastSuperArmedTime;
+    #endregion
+    public float AttackDamage;
+    public int CurrentHp;
+    public int MaxHp;
+
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         skeleton = transform.Find("Skeleton").gameObject;
+        attackMesh = skeleton.transform.Find("AttackMesh").gameObject;
+        attackMesh.SetActive(false);
         anim = GetComponentInChildren<Animator>();
         spriteResolvers = skeleton.GetComponentsInChildren<SpriteResolver>().ToList();
         spriteLibrary = skeleton.GetComponentInChildren<SpriteLibrary>();
+        sprites = skeleton.GetComponentsInChildren<SpriteRenderer>().ToList();
+        entityFX = GetComponentInChildren<EntityFX>();
         FSM = new EntityFSM();
     }
     protected virtual void Start()
@@ -38,6 +60,12 @@ public abstract class Entity : MonoBehaviour
     }
     protected virtual void Update()
     {
+        #region Timers
+        LastHurtTime -= Time.deltaTime;
+        LastStunTime -= Time.deltaTime;
+        LastSuperArmedTime -= Time.deltaTime;
+        #endregion
+
         FSM.currentState.OnUpdate();
     }
     protected virtual void FixedUpdate()
@@ -50,7 +78,9 @@ public abstract class Entity : MonoBehaviour
         FSM.currentState.OnLateUpdate();
     }
 
+
     public void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
+    public void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
 
     #region Flip
     public virtual void CheckIsFacingRight(bool isMovingRight)
@@ -103,9 +133,39 @@ public abstract class Entity : MonoBehaviour
         spriteLibrary.spriteLibraryAsset = _asset;
     }
 
+    #region HurtFlash
+    public virtual IEnumerator HurtFlasher()
+    {
+        SetFlashColor();
+        float currentFlashAmount = 0f;
+        float elapsedTime = 0f;
+        while(elapsedTime < 0.3f)
+        {
+            elapsedTime += Time.deltaTime;
+            currentFlashAmount = Mathf.Lerp(1f, 0f, elapsedTime / 0.3f);
+            SetFlashAmount(currentFlashAmount);
+            yield return null;
+        }
+    }
+    public virtual void SetFlashColor()
+    {
+        foreach (SpriteRenderer spr in sprites)
+        {
+            spr.material.SetColor("_FlashColor", Color.white);
+        }
+    }
+    public virtual void SetFlashAmount(float _amount)
+    {
+        foreach (SpriteRenderer spr in sprites)
+        {
+            spr.material.SetFloat("_FlashAmount", _amount);
+        }
+    }
+    #endregion
+
     protected virtual void Die(float _delay = 1f)
     {
-        Destroy(gameObject,_delay);
+        Destroy(gameObject, _delay);
     }
 }
 

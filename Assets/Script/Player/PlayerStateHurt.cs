@@ -8,12 +8,12 @@ public class PlayerStateHurt : PlayerState
     {
         base.OnEnter();
         player.SetZeroVelocity();
+        player.LastSuperArmedTime = player.Data.hurtResetTime;
     }
 
     public override void OnExit()
     {
         base.OnExit();
-        player.input.SetHurting(false);
     }
 
     public override void OnUpdate()

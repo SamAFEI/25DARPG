@@ -18,6 +18,7 @@ public class PlayerStateSword : PlayerStateGrounded
     {
         base.OnExit();
         player.input.SetAttacking(false);
+        player.IsHeaveyAttack = false;
     }
     public override void OnUpdate()
     {
@@ -27,6 +28,7 @@ public class PlayerStateSword : PlayerStateGrounded
             if (player.input.IsPressedAttack && attackCount < 3)
             {
                 attackCount++;
+                if (attackCount == 3) { player.IsHeaveyAttack = true; }
                 animName = "Sword" + attackCount;
                 isAnimFinish = false;
                 AnimatorPlay();

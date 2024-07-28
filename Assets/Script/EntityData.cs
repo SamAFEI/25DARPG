@@ -19,10 +19,10 @@ public class EntityData : ScriptableObject
     
     [Space(20)]
     [Header("Run")]
-    public float runMaxSpeed = 5f; //Target speed we want the player to reach.
-    public float runAcceleration = 4f; //The speed at which our player accelerates to max speed, can be set to runMaxSpeed for instant acceleration down to 0 for none at all
+    public float runMaxSpeed = 9f; //Target speed we want the player to reach.
+    public float runAcceleration = 7f; //The speed at which our player accelerates to max speed, can be set to runMaxSpeed for instant acceleration down to 0 for none at all
     [HideInInspector] public float runAccelAmount; //The actual force (multiplied with speedDiff) applied to the player.
-    public float runDecceleration = 4f; //The speed at which our player decelerates from their current speed, can be set to runMaxSpeed for instant deceleration down to 0 for none at all
+    public float runDecceleration = 7f; //The speed at which our player decelerates from their current speed, can be set to runMaxSpeed for instant deceleration down to 0 for none at all
     [HideInInspector] public float runDeccelAmount; //Actual force (multiplied with speedDiff) applied to the player .
     
     [Space(5)]
@@ -30,9 +30,13 @@ public class EntityData : ScriptableObject
     [Range(0f, 1)] public float deccelInAir = 1f;
 
     [Space(20)]
+    [Header("Hurt")]
+    public float hurtResetTime = 0.5f;
+
+    [Space(20)]
     [Header("Jump")]
-    public float jumpHeight = 10f; //Height of the player's jump
-    public float jumpTimeToApex = 0.5f; //Time between applying the jump force and reaching the desired jump height. These values also control the player's gravity and jump force.
+    public float jumpHeight = 1.5f; //Height of the player's jump
+    public float jumpTimeToApex = 0.3f; //Time between applying the jump force and reaching the desired jump height. These values also control the player's gravity and jump force.
     [HideInInspector] public float jumpForce; //The actual force applied (upwards) to the player when they jump.
 
     [Header("Both Jumps")]
@@ -42,23 +46,7 @@ public class EntityData : ScriptableObject
     [Space(0.5f)]
     public float jumpHangAccelerationMult = 0;
     public float jumpHangMaxSpeedMult = 0;
-
-    [Header("Assists")]
-    [Range(0.01f, 0.5f)] public float coyoteTime = 0.2f; //Grace period after falling off a platform, where you can still jump
-    [Range(0.01f, 0.5f)] public float jumpInputBufferTime = 0.2f; //Grace period after pressing jump where a jump will be automatically performed once the requirements (eg. being grounded) are met.
-    [Range(0.01f, 0.5f)] public float attackInputBufferTime = 0.2f;
-    [Range(0.01f, 0.5f)] public float dashInputBufferTime = 0.2f;
-    [Range(0.01f, 0.5f)] public float parryInputBufferTime = 0.2f;
-
-    [Space(20)]
-    [Header("Dash")]
-    public float dashSpeed = 30f;
-    public float dashDurationTime = 0.2f;
-    public float dashResetTime = 0.5f;
-
-    [Space(20)]
-    public float canCounterTime = 0.2f;
-
+    
     //Unity Callback, called when the inspector updates
     private void OnValidate()
     {

@@ -18,12 +18,12 @@ public class PlayerStateGrounded : PlayerState
     {
         base.OnUpdate(); 
 
-        if (player.input.IsHurting)
+        if (player.IsHurting && !player.IsSuperArmeding)
         {
             FSM.ChangeState(player.hurtState);
             return;
         }
-        if (player.input.IsStunning)
+        if (player.IsStunning)
         {
             FSM.ChangeState(player.stunState);
             return;

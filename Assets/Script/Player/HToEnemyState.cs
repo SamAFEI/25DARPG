@@ -9,7 +9,7 @@ public class HToEnemyState : PlayerState
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (!player.input.IsStunning)
+        if (!player.IsStunning)
         {
             FSM.ChangeState(player.idleState);
             return;

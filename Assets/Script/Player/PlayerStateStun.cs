@@ -17,7 +17,7 @@ public class PlayerStateStun : PlayerState
     {
         base.OnUpdate();
         Debug.Log(stateTime);
-        if (!player.input.IsStunning)
+        if (!player.IsStunning)
         {
             FSM.ChangeState(player.idleState);
             return;

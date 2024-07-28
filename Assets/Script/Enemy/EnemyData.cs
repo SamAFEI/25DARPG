@@ -1,0 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "AFEI/EnemyData")]
+public class EnemyData : EntityData
+{
+    [Header("Attack")]
+    public float attackResetTime = 1f;
+
+}

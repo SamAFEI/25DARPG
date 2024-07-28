@@ -1,14 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
 
 public class PlayerInput : MonoBehaviour
 {
     #region Components
     public Player player => GetComponent<Player>();
     public Rigidbody rb => player.rb;
-    public EntityData data => player.Data;
+    public PlayerData data => player.Data;
     #endregion
 
     #region Input Parameters
@@ -17,7 +15,6 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region Timers
-    public float LastOnGroundTime;
     public float LastPressedJumpTime;
     public float LastPressedDashTime;
     public float LastPressedAttackTime;
@@ -27,7 +24,6 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region CONTROL PARAMETERS
-    public bool IsOnGround { get { return LastOnGroundTime > 0; } }
     public bool IsPressedAttack { get { return LastPressedAttackTime > 0; } }
     public bool IsPressedParry { get { return LastPressedParryTime > 0; } }
     public bool IsUpParry { get { return LastUpParryTime > 0; } }
@@ -36,8 +32,6 @@ public class PlayerInput : MonoBehaviour
     public bool IsJumping { get; private set; }
     public bool IsDashing { get; private set; }
     public bool IsParrying { get; private set; }
-    public bool IsHurting { get; private set; }
-    public bool IsStunning { get; private set; }
     public bool IsSuperArmoring { get; private set; }
     public bool IsAttacking { get; private set; }
     #endregion
@@ -45,7 +39,6 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         #region Timers
-        LastOnGroundTime -= Time.deltaTime;
         LastPressedJumpTime -= Time.deltaTime;
         LastPressedDashTime -= Time.deltaTime;
         LastPressedAttackTime -= Time.deltaTime;
@@ -97,25 +90,6 @@ public class PlayerInput : MonoBehaviour
         {
             player.SetSpriteLibraryAsset(player.SLAssetBreak2);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            player.input.SetHurting(true);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            IsStunning = true;
-            StunCount = 10;
-        }
-
-        if (IsStunning)
-        {
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-                StunCount -= (int)Mathf.Abs(MoveInput.x);
-            if (StunCount <= 0)
-            {
-                IsStunning = false;
-            }
-        }
         #endregion
 
         #region ATTACK CHECKS
@@ -153,7 +127,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsAttacking && !IsDashing && !IsStunning && !IsParrying)
+        if (!IsAttacking && !IsDashing && !IsParrying && !player.IsStunning)
         {
             if (MoveInput.x != 0)
             {
@@ -177,14 +151,8 @@ public class PlayerInput : MonoBehaviour
 
         //Gets an acceleration value based on if we are accelerating (includes turning) 
         //or trying to decelerate (stop). As well as applying a multiplier if we're air borne.
-        if (LastOnGroundTime > 0)
-        {
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccelAmount : data.runDeccelAmount;
-        }
-        else
-        {
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccelAmount * data.accelInAir : data.runDeccelAmount * data.deccelInAir;
-        }
+
+        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccelAmount : data.runDeccelAmount;
         #endregion
 
         #region Add Bonus Jump Apex Acceleration
@@ -226,7 +194,6 @@ public class PlayerInput : MonoBehaviour
     {
         //Ensures we can't call Jump multiple times from one press
         LastPressedJumpTime = 0;
-        LastOnGroundTime = 0;
 
         #region Perform Jump
         //We increase the force applied if we are falling
@@ -308,13 +275,6 @@ public class PlayerInput : MonoBehaviour
         {
             CanCounterTime = 0;
         }
-    }
-    #endregion
-
-    #region Hurt METHODS
-    public void SetHurting(bool value)
-    {
-        IsHurting = value;
     }
     #endregion
 
