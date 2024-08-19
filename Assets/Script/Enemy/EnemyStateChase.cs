@@ -21,7 +21,11 @@ public class EnemyStateChase : EnemyState
     public override void OnFixedUpdate()
     {
         base.OnFixedUpdate();
+    }
 
+    public override void OnLateUpdate()
+    {
+        base.OnLateUpdate();
         enemy.DoChase();
     }
 }

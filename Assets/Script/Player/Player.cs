@@ -6,7 +6,7 @@ public class Player : Entity
 {
     public PlayerInput input { get; set; }
     public UI_PlayerStatus uiPlayerStatus { get; private set; }
-
+    public UI_PlayerHint uiPlayerHint { get; private set; }
     #region FSM States
     public PlayerStateIdle idleState { get; set; }
     public PlayerStateRun runState { get; set; }
@@ -15,13 +15,15 @@ public class Player : Entity
     public PlayerStateStun stunState { get; set; }
     public PlayerStateParry parryState { get; set; }
     public PlayerStateHurt hurtState { get; set; }
-    public HToEnemyState hToEnemyState { get; set; }
+    public PlayerStateSex sexState { get; set; }
     #endregion
     public new PlayerData Data => (PlayerData)base.Data;
+    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying && !IsStunning && !IsSexing; } }
     public Vector3 MoveInput { get { return input.MoveInput; } }
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
+    public int hurtCount;
 
     protected override void Awake()
     {
@@ -30,6 +32,7 @@ public class Player : Entity
         AttackDamage = 10;
         base.Awake();
         input = GetComponent<PlayerInput>();
+        uiPlayerHint = GetComponentInChildren<UI_PlayerHint>();
         idleState = new PlayerStateIdle(this, FSM, "Idle");
         runState = new PlayerStateRun(this, FSM, "Run");
         swordState = new PlayerStateSword(this, FSM, "Sword1");
@@ -37,10 +40,10 @@ public class Player : Entity
         stunState = new PlayerStateStun(this, FSM, "Stun");
         parryState = new PlayerStateParry(this, FSM, "Parry");
         hurtState = new PlayerStateHurt(this, FSM, "Hurt");
-
-        hToEnemyState = new HToEnemyState(this, FSM, "HToPuppet");
+        sexState = new PlayerStateSex(this, FSM, "Sex");
         FSM.InitState(idleState);
     }
+
     protected override void Start()
     {
         base.Start();
@@ -56,6 +59,7 @@ public class Player : Entity
     {
         base.FixedUpdate();
     }
+
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag == "EnemyAttack")
@@ -72,7 +76,7 @@ public class Player : Entity
         }
     }
 
-    #region HurtFlash
+    #region Hurt
     public override IEnumerator HurtFlasher()
     {
         SetFlashColor();
@@ -84,15 +88,83 @@ public class Player : Entity
             yield return new WaitForSeconds(.1f);
         }
     }
+
+    public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
+    {
+        //DoDamageHp
+        if (_damage > 0)
+        {
+            if (IsHurting || IsStunning || IsSuperArmeding) { return; }
+            CameraManager.Instance.Shake(3f, 0.1f);
+            LastHurtTime = Data.hurtResetTime;
+            StartCoroutine(HurtFlasher());
+            CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
+            uiPlayerStatus.DoLerpHealth();
+            hurtCount++;
+        }
+        //HealHp
+        else
+        {
+            CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
+            uiPlayerStatus.DoLerpHealth();
+        }
+    }
+
+    public override void SexHurt()
+    {
+        if (!IsSexing) { return; }
+        CameraManager.Instance.Shake(3f, 0.1f);
+        foreach (Enemy _enemy in GameManager.Instance.sexEnemies)
+        {
+            float _damage = 0;
+            _damage = _enemy.AttackDamage;
+            CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
+            uiPlayerStatus.DoLerpHealth();
+        }
+    }
     #endregion
 
-    public virtual void Hurt(float _damage)
+    #region Sex
+    public void SearchSexEnemy()
     {
-        if (IsHurting || IsStunning || IsSuperArmeding) { return; }
-        CameraManager.Instance.Shake(3f, 0.1f);
-        LastHurtTime = Data.hurtResetTime;
-        StartCoroutine(HurtFlasher());
-        CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-        uiPlayerStatus.DoLerpHealth(_damage);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Enemy")
+            {
+                Enemy enemy = collider.GetComponentInParent<Enemy>();
+                sexAnimName = enemy.sexAnimName;
+                IsSexing = true;
+                StartCoroutine(Resist());
+                GameManager.AddSexEnemies(enemy);
+                break;
+            }
+        }
     }
+
+    public IEnumerator Resist()
+    {
+        int _count = 1;
+        float _currentInput;
+        float _nextInput = 0;
+        while (IsSexing)
+        {
+            if (MoveInput.x != 0)
+            {
+                _currentInput = MoveInput.x;
+                if (_currentInput == _nextInput) 
+                {
+                    _count++;
+                    if (_count == 10)
+                    {
+                        IsSexing = false;
+                        yield break;
+                    }
+                }
+                _nextInput = _currentInput * -1;
+            }
+            yield return null;
+        }
+    }
+    #endregion
 }

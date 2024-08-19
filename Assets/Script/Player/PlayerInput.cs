@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -7,6 +9,7 @@ public class PlayerInput : MonoBehaviour
     public Player player => GetComponent<Player>();
     public Rigidbody rb => player.rb;
     public PlayerData data => player.Data;
+    public InputHandle inputHandle;
     #endregion
 
     #region Input Parameters
@@ -36,6 +39,11 @@ public class PlayerInput : MonoBehaviour
     public bool IsAttacking { get; private set; }
     #endregion
 
+    private void Awake()
+    {
+        InitInputHandle();
+    }
+
     private void Update()
     {
         #region Timers
@@ -48,34 +56,6 @@ public class PlayerInput : MonoBehaviour
         #endregion
 
         #region Input Handler
-        MoveInput.x = Input.GetAxisRaw("Horizontal");
-        MoveInput.z = Input.GetAxisRaw("Vertical");
-
-        /*if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //OnJumpInput();
-            Jump();
-        }*/
-        /*if (Input.GetKeyUp(KeyCode.Space))
-        {
-            OnJumpUpInput();
-        }*/
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            OnDashInput();
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
-        {
-            OnAttackInput();
-        }
-        if (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.K))
-        {
-            OnParryInput();
-        }
-        if (Input.GetKeyUp(KeyCode.Mouse1) || Input.GetKeyUp(KeyCode.K))
-        {
-            OnParryCancelInput();
-        }
 
         //TEST Input
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -127,7 +107,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsAttacking && !IsDashing && !IsParrying && !player.IsStunning)
+        if (player.CanMovement)
         {
             if (MoveInput.x != 0)
             {
@@ -136,6 +116,56 @@ public class PlayerInput : MonoBehaviour
             Run(1);
         }
     }
+
+    #region InputHandle 
+    private void InitInputHandle()
+    {
+        inputHandle = new InputHandle();
+        inputHandle.Enable();
+
+        inputHandle.Character.Movement.performed += InputMovement;
+        inputHandle.Character.Movement.canceled += InputMovement;
+        inputHandle.Character.Dash.performed += InputDash;
+        inputHandle.Character.Attack.canceled += InputAttack;
+        inputHandle.Character.Defend.performed += InputDefend;
+        inputHandle.Character.Defend.canceled += InputDefendCancel;
+
+        inputHandle.SexAction.ResistHorizontal.started += InputResistHorizontal;
+    }
+
+    private void InputMovement(InputAction.CallbackContext _context)
+    {
+        Vector2 vector = _context.ReadValue<Vector2>();
+        MoveInput.x = vector.x;
+        MoveInput.z = vector.y;
+    }
+
+    private void InputDash(InputAction.CallbackContext _context)
+    {
+        LastPressedDashTime = data.dashInputBufferTime;
+    }
+
+    private void InputAttack(InputAction.CallbackContext _context)
+    {
+        LastPressedAttackTime = data.attackInputBufferTime;
+    }
+
+    private void InputDefend(InputAction.CallbackContext _context)
+    {
+        LastPressedParryTime = data.parryInputBufferTime;
+    }
+
+    private void InputDefendCancel(InputAction.CallbackContext _context)
+    {
+        LastUpParryTime = data.parryInputBufferTime;
+    }
+
+    private void InputResistHorizontal(InputAction.CallbackContext _context)
+    {
+        float input = _context.ReadValue<float>();
+        MoveInput.x = input;
+    }
+    #endregion
 
     #region RUN METHODS
     private void Run(float lerpAmount)
@@ -294,39 +324,6 @@ public class PlayerInput : MonoBehaviour
     {
         return !IsParrying && !IsDashing;
     }
-
-    #endregion
-
-    #region INPUT CALLBACKS
-    //Methods which whandle input detected in Update()
-    /*public void OnJumpInput()
-    {
-        LastPressedJumpTime = data.jumpInputBufferTime;
-    }
-    public void OnJumpUpInput()
-    {
-        if (CanJumpCut() || CanWallJumpCut())
-            _isJumpCut = true;
-    }*/
-    public void OnDashInput()
-    {
-        LastPressedDashTime = data.dashInputBufferTime;
-    }
-
-    private void OnAttackInput()
-    {
-        LastPressedAttackTime = data.attackInputBufferTime;
-    }
-
-    private void OnParryInput()
-    {
-        LastPressedParryTime = data.parryInputBufferTime;
-    }
-    private void OnParryCancelInput()
-    {
-        LastUpParryTime = data.parryInputBufferTime;
-    }
-
 
     #endregion
 }

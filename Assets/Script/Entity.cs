@@ -22,6 +22,7 @@ public abstract class Entity : MonoBehaviour
     public bool IsHurting { get { return LastHurtTime > 0; } }
     public bool IsStunning { get { return LastStunTime > 0; } }
     public bool IsSuperArmeding { get { return LastSuperArmedTime > 0; } }
+    public bool IsSexing;
 
     public bool IsHeaveyAttack;
     public bool IsFacingRight;
@@ -36,6 +37,7 @@ public abstract class Entity : MonoBehaviour
     public float LastStunTime;
     public float LastSuperArmedTime;
     #endregion
+    public string sexAnimName;
     public float AttackDamage;
     public int CurrentHp;
     public int MaxHp;
@@ -54,10 +56,12 @@ public abstract class Entity : MonoBehaviour
         entityFX = GetComponentInChildren<EntityFX>();
         FSM = new EntityFSM();
     }
+
     protected virtual void Start()
     {
         SetGravityScale(Data.gravityScale);
     }
+
     protected virtual void Update()
     {
         #region Timers
@@ -68,11 +72,13 @@ public abstract class Entity : MonoBehaviour
 
         FSM.currentState.OnUpdate();
     }
+
     protected virtual void FixedUpdate()
     {
         FSM.currentState.OnFixedUpdate();
         SetGravity();
     }
+
     protected virtual void LateUpdate()
     {
         FSM.currentState.OnLateUpdate();
@@ -81,6 +87,7 @@ public abstract class Entity : MonoBehaviour
 
     public void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
     public void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
+    public void DoSexHurt() => SexHurt();
 
     #region Flip
     public virtual void CheckIsFacingRight(bool isMovingRight)
@@ -90,9 +97,9 @@ public abstract class Entity : MonoBehaviour
     }
     public virtual void Flip()
     {
-        Vector3 scale = transform.localScale;
+        Vector3 scale = skeleton.transform.localScale;
         scale.x *= -1;
-        transform.localScale = scale;
+        skeleton.transform.localScale = scale;
 
         IsFacingRight = !IsFacingRight;
     }
@@ -133,7 +140,7 @@ public abstract class Entity : MonoBehaviour
         spriteLibrary.spriteLibraryAsset = _asset;
     }
 
-    #region HurtFlash
+    #region Hurt
     public virtual IEnumerator HurtFlasher()
     {
         SetFlashColor();
@@ -160,6 +167,10 @@ public abstract class Entity : MonoBehaviour
         {
             spr.material.SetFloat("_FlashAmount", _amount);
         }
+    }
+    public virtual void SexHurt()
+    {
+
     }
     #endregion
 

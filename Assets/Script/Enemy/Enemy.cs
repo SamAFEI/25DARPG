@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
-
     public UI_EntityStatus uiEnityStatus { get; private set; }
 
     #region FSM States
@@ -27,6 +26,7 @@ public class Enemy : Entity
     public bool IsAttacking;
     public bool CanChase;
     public bool CanAttack;
+    public bool CanSexPlayer;
 
     public float Attack1Distance;
 
@@ -45,6 +45,7 @@ public class Enemy : Entity
         alertState = new EnemyStateAlert(this, FSM, "Alert");
         chaseState = new EnemyStateChase(this, FSM, "Run");
         FSM.InitState(idleState);
+        sexAnimName = "Sex01";
     }
 
     protected override void Start()
@@ -94,14 +95,22 @@ public class Enemy : Entity
 
     public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
     {
-        if (IsHurting) { return; }
-        TimerManager.Instance.DoFrozenTime(0.1f);
-        CameraManager.Instance.Shake(1f, 0.1f);
-        LastHurtTime = Data.hurtResetTime;
-        if (_isHeaveyAttack ) { LastHurtTime += 0.3f; }
-        StartCoroutine(HurtFlasher());
-        CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-        uiEnityStatus.DoLerpHealth(_damage);
+        if (_damage > 0)
+        {
+            if (IsHurting) { return; }
+            TimerManager.Instance.DoFrozenTime(0.1f);
+            CameraManager.Instance.Shake(1f, 0.1f);
+            LastHurtTime = Data.hurtResetTime;
+            if (_isHeaveyAttack) { LastHurtTime += 0.3f; }
+            StartCoroutine(HurtFlasher());
+            CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
+            uiEnityStatus.DoLerpHealth();
+        }
+        else
+        {
+            CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
+            uiEnityStatus.DoLerpHealth();
+        }
     }
 
     public virtual void DoAlert()
@@ -112,23 +121,24 @@ public class Enemy : Entity
             CanAttack = false;
             return; 
         }
-        Vector3 _vector = GameManager.Instance.GetPlayerDirection(this.transform.position);
+        Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
         if (_vector.x != 0)
         {
             CheckIsFacingRight(_vector.x > 0);
         }
 
-        CanChase = LastAttackTime < 0 && GameManager.Instance.GetPlayerDistance(this.transform.position) > Attack1Distance;
-        CanAttack = LastAttackTime < 0 && GameManager.Instance.GetPlayerDistance(this.transform.position) < Attack1Distance;
-
+        CanChase = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) > Attack1Distance;
+        CanAttack = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance 
+            && GameManager.CanAttackPlayer();
+        CanSexPlayer = GameManager.CanSexPlayer() && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance;
     }
 
     public virtual void DoChase()
     {
         if (IsHurting && IsAttacking) { return ; }
-        if (GameManager.Instance.GetPlayerDistance(this.transform.position) > Attack1Distance)
+        if (GameManager.GetPlayerDistance(this.transform.position) > Attack1Distance)
         {
-            MoveTarget = GameManager.Instance.GetPlayerDirection(this.transform.position);
+            MoveTarget = GameManager.GetPlayerDirection(this.transform.position);
             Run(1);
         }
     }

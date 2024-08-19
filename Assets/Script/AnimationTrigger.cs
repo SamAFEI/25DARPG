@@ -13,4 +13,9 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.PlayAttackTrigger(_index);
     }
+
+    private void DoSexHurt()
+    {
+        entity.DoSexHurt();
+    }
 }

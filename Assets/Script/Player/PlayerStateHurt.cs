@@ -21,6 +21,11 @@ public class PlayerStateHurt : PlayerState
         base.OnUpdate(); 
         if (isAnimFinish)
         {
+            if (player.hurtCount == 2)
+            {
+                FSM.ChangeState(player.stunState);
+                return;
+            }
             FSM.ChangeState(player.idleState);
             return;
         }

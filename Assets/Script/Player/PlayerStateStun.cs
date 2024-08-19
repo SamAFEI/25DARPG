@@ -10,21 +10,29 @@ public class PlayerStateStun : PlayerState
     {
         base.OnEnter();
         player.SetZeroVelocity();
+        player.hurtCount = 0;
         stateTime = 3f;
+        player.LastStunTime = stateTime;
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
+        player.LastStunTime = 0;
     }
 
     public override void OnUpdate()
     {
+        player.SearchSexEnemy();
         base.OnUpdate();
-        Debug.Log(stateTime);
         if (!player.IsStunning)
         {
             FSM.ChangeState(player.idleState);
             return;
         }
-        if (stateTime < 0)
+        if (player.IsSexing)
         {
-            FSM.ChangeState(player.hToEnemyState);
+            FSM.ChangeState(player.sexState);
             return;
         }
     }

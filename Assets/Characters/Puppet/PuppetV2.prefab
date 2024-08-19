@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1637158276648652697}
   m_Layer: 0
   m_Name: PuppetV2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7351853700918964289}
   - {fileID: 4797554071484516734}
   - {fileID: 471724083775133519}
   m_Father: {fileID: 0}
@@ -99,12 +100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: cd3293e4fd7de5748b6d1ff96113e277, type: 2}
+  IsSexing: 0
   IsHeaveyAttack: 0
   IsFacingRight: 0
   gravityScale: 0
   LastHurtTime: 0
   LastStunTime: 0
   LastSuperArmedTime: 0
+  sexAnimName: 
   AttackDamage: 0
   CurrentHp: 0
   MaxHp: 0
@@ -115,6 +118,7 @@ MonoBehaviour:
   IsAttacking: 0
   CanChase: 0
   CanAttack: 0
+  CanSexPlayer: 0
   Attack1Distance: 0
 --- !u!1 &3156869430831960134
 GameObject:
@@ -151,7 +155,6 @@ Transform:
   - {fileID: 8517728037137455976}
   - {fileID: 2326102173729147936}
   - {fileID: 4884065175444841367}
-  - {fileID: 7351853700918964289}
   m_Father: {fileID: 267891849092187911}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7881236750137781428
@@ -1030,7 +1033,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4797554071484516734}
+    m_TransformParent: {fileID: 267891849092187911}
     m_Modifications:
     - target: {fileID: 1961965337742142102, guid: da35750c0a32fd445bdab3690755c786,
         type: 3}
@@ -1100,7 +1103,7 @@ PrefabInstance:
     - target: {fileID: 1961965337742142102, guid: da35750c0a32fd445bdab3690755c786,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.062
+      value: 1.8529968
       objectReference: {fileID: 0}
     - target: {fileID: 1961965337742142102, guid: da35750c0a32fd445bdab3690755c786,
         type: 3}
@@ -1130,7 +1133,7 @@ PrefabInstance:
     - target: {fileID: 1961965337742142102, guid: da35750c0a32fd445bdab3690755c786,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.062
+      value: 1.197
       objectReference: {fileID: 0}
     - target: {fileID: 1961965337742142102, guid: da35750c0a32fd445bdab3690755c786,
         type: 3}

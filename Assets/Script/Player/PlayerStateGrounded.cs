@@ -23,11 +23,11 @@ public class PlayerStateGrounded : PlayerState
             FSM.ChangeState(player.hurtState);
             return;
         }
-        if (player.IsStunning)
+        /*if (player.IsStunning)
         {
             FSM.ChangeState(player.stunState);
             return;
-        }
+        }*/
         if (player.input.IsDashing)
         {
             FSM.ChangeState(player.dashState);

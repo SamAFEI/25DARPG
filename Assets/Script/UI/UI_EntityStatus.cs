@@ -22,13 +22,13 @@ public class UI_EntityStatus : MonoBehaviour
         hpSlider.gameObject.SetActive(false);
     }
 
-    public void DoLerpHealth(float _damage)
+    public void DoLerpHealth()
     {
         hpSmooth = 0;
-        StartCoroutine(LerpHealth(_damage));
+        StartCoroutine(LerpHealth());
     }
 
-    private IEnumerator LerpHealth(float _damage)
+    private IEnumerator LerpHealth()
     {
         float smooth = 10;
         float startHP = hpSlider.value;
