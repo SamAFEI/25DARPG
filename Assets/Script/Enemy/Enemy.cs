@@ -87,7 +87,7 @@ public class Enemy : Entity
             if (_player.transform.position.z > transform.position.z) { DirZ = -10; }
             if (_player.transform.position.z < transform.position.z) { DirZ = 10; }
             CheckIsFacingRight(faceDir*-1 > 0);
-            entityFX.DoPlayHitFX(0, skeleton.transform.position);
+            entityFX.DoPlayHitFX(0, entityColider.ClosestPoint(other.transform.position));
             rb.AddForce(new Vector3(faceDir * power, 0, DirZ), ForceMode.Impulse);
             Hurt(_player.AttackDamage, _player.IsHeaveyAttack);
         }

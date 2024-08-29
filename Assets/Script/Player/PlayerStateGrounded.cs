@@ -1,4 +1,4 @@
-public class PlayerStateGrounded : PlayerState
+﻿public class PlayerStateGrounded : PlayerState
 {
     public PlayerStateGrounded(Player _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
     {
@@ -23,7 +23,8 @@ public class PlayerStateGrounded : PlayerState
             FSM.ChangeState(player.hurtState);
             return;
         }
-        /*if (player.IsStunning)
+        /* 由 Hurt 進入 Stun
+        if (player.IsStunning)
         {
             FSM.ChangeState(player.stunState);
             return;

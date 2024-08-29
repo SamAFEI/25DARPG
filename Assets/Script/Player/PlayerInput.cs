@@ -88,8 +88,8 @@ public class PlayerInput : MonoBehaviour
             {
                 player.CheckIsFacingRight(MoveInput.x > 0);
             }
-            Vector3 vector = new Vector3(player.FacingDir, 0, MoveInput.z);
-            StartCoroutine(StartDash(vector));
+            Vector3 targetDirection = player.GetDirectionByCamera(MoveInput.z, player.FacingDir);
+            StartCoroutine(StartDash(targetDirection));
         }
         #endregion
 
@@ -170,9 +170,12 @@ public class PlayerInput : MonoBehaviour
     #region RUN METHODS
     private void Run(float lerpAmount)
     {
+        Vector3 targetDirection = player.GetDirectionByCamera(MoveInput.z, MoveInput.x);
+
         float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         //Calculate the direction we want to move in and our desired velocity
-        float targetSpeed = MoveInput.normalized.magnitude * data.runMaxSpeed;
+        //float targetSpeed = MoveInput.normalized.magnitude * data.runMaxSpeed;
+        float targetSpeed = targetDirection.normalized.magnitude * data.runMaxSpeed;
         //We can reduce are control using Lerp() this smooths changes to are direction and speed
         targetSpeed = Mathf.Lerp(rbSpeed, targetSpeed, lerpAmount);
 
@@ -210,7 +213,7 @@ public class PlayerInput : MonoBehaviour
         float movement = speedDif * accelRate;
 
         //Convert this to a vector and apply to rigidbody
-        rb.AddForce(movement * MoveInput.normalized, ForceMode.Force);
+        rb.AddForce(movement * targetDirection.normalized, ForceMode.Force);
         /*
 		 * For those interested here is what AddForce() will do
 		 * RB.velocity = new Vector2(RB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);

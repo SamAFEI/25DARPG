@@ -57,7 +57,8 @@ public class Player : Entity
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
+        base.FixedUpdate(); 
+        CheckCamera();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -167,4 +168,12 @@ public class Player : Entity
         }
     }
     #endregion
+
+    public void CheckCamera()
+    {
+        if (transform.position.z >= 30)
+        {
+            CameraManager.Instance.ChangeCamera(1);
+        }
+    }
 }

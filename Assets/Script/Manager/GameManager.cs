@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
         player = playerObj.GetComponent<Player>();
     }
 
+    #region About Player
+
     /// <summary>
     /// Get 朝Player方向向量
     /// </summary>
@@ -51,13 +53,11 @@ public class GameManager : MonoBehaviour
         return GetPlayerDirection(_position).magnitude;
 
     }
-
     public static float GetPlayerDistanceX(Vector3 _position)
     {
         if (Instance.playerObj == null) { return 0; }
         return GetPlayerDirection(_position).magnitude;
     }
-
     public static bool CanAttackPlayer()
     {
         if (Instance.playerObj == null) { return false; }
@@ -68,13 +68,11 @@ public class GameManager : MonoBehaviour
         if (Instance.playerObj == null) { return false; }
         return Instance.player.IsStunning;
     }
-
     public static void AddSexEnemies(Enemy enemy)
     {
         Instance.sexEnemies.Add(enemy);
         enemy.skeleton.SetActive(false);
     }
-
     public static void ResetSexEnemies()
     {
         List<Enemy> enemies = new List<Enemy>();
@@ -86,4 +84,6 @@ public class GameManager : MonoBehaviour
             Instance.sexEnemies.Remove(enemy);
         }
     }
+
+    #endregion
 }

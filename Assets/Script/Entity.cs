@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public abstract class Entity : MonoBehaviour
     public EntityFX entityFX { get; private set; }
     public GameObject attackMesh { get; private set; }
     public List<SpriteRenderer> sprites { get; private set; } = new List<SpriteRenderer>();
+    public Collider entityColider { get; private set; }
     #endregion
 
     public EntityData Data;
@@ -45,6 +47,7 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        entityColider = GetComponent<Collider>();
         rb.useGravity = false;
         skeleton = transform.Find("Skeleton").gameObject;
         attackMesh = skeleton.transform.Find("AttackMesh").gameObject;
@@ -82,6 +85,7 @@ public abstract class Entity : MonoBehaviour
     protected virtual void LateUpdate()
     {
         FSM.currentState.OnLateUpdate();
+        DoBillboard();
     }
 
 
@@ -177,6 +181,25 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Die(float _delay = 1f)
     {
         Destroy(gameObject, _delay);
+    }
+
+    /// <summary>
+    /// ­±¦VCamera
+    /// </summary>
+    protected void DoBillboard()
+    {
+        skeleton.transform.rotation = Camera.main.transform.rotation;
+        skeleton.transform.rotation = Quaternion.Euler(0f, skeleton.transform.rotation.eulerAngles.y, 0f);
+    }
+
+    public Vector3 GetDirectionByCamera(float vertical, float horizontal)
+    {
+        Vector3 forward = Vector3.forward;
+        forward = Camera.main.transform.TransformDirection(forward);
+        forward.y = 0;
+        forward = forward.normalized;
+        Vector3 right = new Vector3(forward.z, 0, -forward.x);
+        return horizontal * right + vertical * forward;
     }
 }
 
