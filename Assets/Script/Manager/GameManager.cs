@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     public static void AddSexEnemies(Enemy enemy)
     {
         Instance.sexEnemies.Add(enemy);
+        enemy.FSM.ChangeState(enemy.alertState);
         enemy.skeleton.SetActive(false);
     }
     public static void ResetSexEnemies()
@@ -80,7 +81,7 @@ public class GameManager : MonoBehaviour
         foreach(Enemy enemy in enemies)
         {
             enemy.skeleton.SetActive(true);
-            enemy.FSM.ChangeState(enemy.idleState);
+            enemy.FSM.ChangeState(enemy.alertState);
             Instance.sexEnemies.Remove(enemy);
         }
     }

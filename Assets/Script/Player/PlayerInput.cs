@@ -88,7 +88,7 @@ public class PlayerInput : MonoBehaviour
             {
                 player.CheckIsFacingRight(MoveInput.x > 0);
             }
-            Vector3 targetDirection = player.GetDirectionByCamera(MoveInput.z, player.FacingDir);
+            Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z, player.FacingDir);
             StartCoroutine(StartDash(targetDirection));
         }
         #endregion
@@ -170,7 +170,7 @@ public class PlayerInput : MonoBehaviour
     #region RUN METHODS
     private void Run(float lerpAmount)
     {
-        Vector3 targetDirection = player.GetDirectionByCamera(MoveInput.z, MoveInput.x);
+        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z, MoveInput.x);
 
         float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         //Calculate the direction we want to move in and our desired velocity
@@ -285,15 +285,6 @@ public class PlayerInput : MonoBehaviour
         //NextDashTime = data.dashResetTime;
     }
 
-    //Short period before the player is able to dash again
-    /*private IEnumerator RefillDash(int amount)
-    {
-        //SHoet cooldown, so we can't constantly dash along the ground, again this is the implementation in Celeste, feel free to change it up
-        _dashRefilling = true;
-        yield return new WaitForSeconds(Data.dashRefillTime);
-        _dashRefilling = false;
-        _dashesLeft = Mathf.Min(Data.dashAmount, _dashesLeft + 1);
-    }*/
     #endregion
 
     #region PARRY METHODS

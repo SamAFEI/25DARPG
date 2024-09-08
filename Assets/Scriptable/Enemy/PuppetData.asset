@@ -19,10 +19,10 @@ MonoBehaviour:
   fastFallGravityMult: 10
   maxFastFallSpeed: 20
   runMaxSpeed: 9
-  runAcceleration: 7
-  runAccelAmount: 38.88889
-  runDecceleration: 7
-  runDeccelAmount: 38.88889
+  runAcceleration: 9
+  runAccelAmount: 50
+  runDecceleration: 9
+  runDeccelAmount: 50
   accelInAir: 1
   deccelInAir: 1
   hurtResetTime: 0.3
@@ -35,3 +35,4 @@ MonoBehaviour:
   jumpHangAccelerationMult: 0
   jumpHangMaxSpeedMult: 0
   attackResetTime: 1
+  alertDistance: 5

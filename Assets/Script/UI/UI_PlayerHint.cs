@@ -11,6 +11,7 @@ public class UI_PlayerHint : MonoBehaviour
         ui_ResistH_Hint.gameObject.SetActive(false);
     }
 
+
     public void SetResistHint(SexResistEnum _mode, bool _value)
     {
         if (_mode == SexResistEnum.Horizontal)

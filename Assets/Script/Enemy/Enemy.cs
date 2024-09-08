@@ -11,22 +11,28 @@ public class Enemy : Entity
     public EnemyStateHurt hurtState { get; set; }
     public EnemyStateAlert alertState { get; set; }
     public EnemyStateChase chaseState { get; set; }
+    public EnemyStateKeepaway keepawayState { get; set; }
+    public EnemyStateCatch catchState { get; set; }
     //public EnemyStateDash dashState { get; set; }
     //public EnemyStateStun stunState { get; set; }
     #endregion
     public new EnemyData Data => (EnemyData)base.Data;
 
     #region Timers
-    public float LastAlertTime;
+    public float LastAlertIdleTime;
     public float LastAttackTime;
+    public float LastCatchTime;
     #endregion
 
     public Vector3 MoveTarget;
     public bool IsAlerting;
     public bool IsAttacking;
+    public bool IsKeepawaying;
+    public bool IsCatching;
     public bool CanChase;
     public bool CanAttack;
     public bool CanSexPlayer;
+    public bool CanCatch;
 
     public float Attack1Distance;
 
@@ -37,13 +43,14 @@ public class Enemy : Entity
         CurrentHp = MaxHp;
         AttackDamage = 10;
         Attack1Distance = 2f;
-        IsAlerting = true;
         idleState = new EnemyStateIdle(this, FSM, "Idle");
         runState = new EnemyStateRun(this, FSM, "Run");
         swordState = new EnemyStateSword(this, FSM, "Sword1");
         hurtState = new EnemyStateHurt(this, FSM, "Hurt");
         alertState = new EnemyStateAlert(this, FSM, "Alert");
         chaseState = new EnemyStateChase(this, FSM, "Run");
+        keepawayState = new EnemyStateKeepaway(this, FSM, "Keepaway");
+        catchState = new EnemyStateCatch(this, FSM, "Catch");
         FSM.InitState(idleState);
         sexAnimName = "Sex01";
     }
@@ -52,6 +59,7 @@ public class Enemy : Entity
     {
         base.Start();
         uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
+        LastCatchTime = Random.Range(5.0f,10.0f);
     }
 
     protected override void Update()
@@ -59,15 +67,16 @@ public class Enemy : Entity
         base.Update();
 
         #region Timers
-        LastAlertTime -= Time.deltaTime;
+        LastAlertIdleTime -= Time.deltaTime;
         LastAttackTime -= Time.deltaTime;
+        LastCatchTime -= Time.deltaTime;
         #endregion
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-
+        CheckAlert();
         DoAlert();
     }
 
@@ -76,19 +85,16 @@ public class Enemy : Entity
         if (other.tag == "PlayerAttack")
         {
             Player _player = other.GetComponentInParent<Player>();
-            float power = 10;
-            float faceDir = 1;
-            float DirZ = 0;
-            if (_player.IsHeaveyAttack) { power *= power; }
-            if (_player.transform.position.x > transform.position.x)
-            {
-                faceDir *= -1;
-            }
-            if (_player.transform.position.z > transform.position.z) { DirZ = -10; }
-            if (_player.transform.position.z < transform.position.z) { DirZ = 10; }
-            CheckIsFacingRight(faceDir*-1 > 0);
-            entityFX.DoPlayHitFX(0, entityColider.ClosestPoint(other.transform.position));
-            rb.AddForce(new Vector3(faceDir * power, 0, DirZ), ForceMode.Impulse);
+            float power = 20;
+            if (_player.IsHeaveyAttack) { power *= 1.5f; }
+            Vector3 _vector = _player.transform.position - this.transform.position;
+            float faceRight = Vector3.Cross(transform.forward, _vector).y * -1;
+            float faceFoward = Vector3.Dot(transform.forward, _vector) * -10;
+            CheckIsFacingRight(faceRight * -1 > 0);
+            entityFX.DoPlayHitFX(0, entityCollider.ClosestPoint(other.transform.position));
+            _vector = new Vector3(faceRight * power, 0, faceFoward);
+            _vector =  CameraManager.GetDirectionByCamera(_vector);
+            rb.AddForce(_vector, ForceMode.Impulse);
             Hurt(_player.AttackDamage, _player.IsHeaveyAttack);
         }
     }
@@ -113,22 +119,36 @@ public class Enemy : Entity
         }
     }
 
+    public virtual void CheckAlert()
+    {
+        if (GameManager.GetPlayerDistance(this.transform.position) <= Data.alertDistance)
+        {
+            IsAlerting = true;
+        }
+    }
+
     public virtual void DoAlert()
     {
         if (!IsAlerting || IsAttacking) 
         {
             CanChase = false;
             CanAttack = false;
+            CanCatch = false;
+            IsKeepawaying = false;
             return; 
         }
         Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
-        if (_vector.x != 0)
+        float faceRight = Vector3.Cross(transform.forward, _vector).y;
+        if (faceRight != 0)
         {
-            CheckIsFacingRight(_vector.x > 0);
+            CheckIsFacingRight(faceRight > 0);
         }
 
+        IsKeepawaying = LastAttackTime > 0;
         CanChase = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) > Attack1Distance;
         CanAttack = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance 
+            && GameManager.CanAttackPlayer();
+        CanCatch = LastCatchTime < 0 && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance
             && GameManager.CanAttackPlayer();
         CanSexPlayer = GameManager.CanSexPlayer() && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance;
     }
@@ -141,6 +161,14 @@ public class Enemy : Entity
             MoveTarget = GameManager.GetPlayerDirection(this.transform.position);
             Run(1);
         }
+    }
+
+    public virtual void Keepaway()
+    {
+        if (IsHurting && IsAttacking) { return; }
+        Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
+        MoveTarget = new Vector3(_vector.x * -1, _vector.y, _vector.z * -1);
+        Run(0.4f);
     }
 
     #region RUN METHODS

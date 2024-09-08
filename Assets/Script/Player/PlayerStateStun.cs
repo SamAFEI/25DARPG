@@ -10,7 +10,6 @@ public class PlayerStateStun : PlayerState
     {
         base.OnEnter();
         player.SetZeroVelocity();
-        player.hurtCount = 0;
         stateTime = 3f;
         player.LastStunTime = stateTime;
     }

@@ -8,13 +8,12 @@ public class EnemyStateIdle : EnemyState
     {
         base.OnEnter();
         enemy.SetZeroVelocity();
-        stateTime = 0.2f;
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (stateTime < 0 && enemy.IsAlerting)
+        if (enemy.IsAlerting)
         {
             FSM.ChangeState(enemy.alertState);
             return;

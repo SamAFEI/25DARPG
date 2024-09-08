@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -23,7 +24,8 @@ public class Player : Entity
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
-    public int hurtCount;
+    public bool IsBreak1;
+    public bool IsBreak2;
 
     protected override void Awake()
     {
@@ -58,7 +60,6 @@ public class Player : Entity
     protected override void FixedUpdate()
     {
         base.FixedUpdate(); 
-        CheckCamera();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -67,6 +68,15 @@ public class Player : Entity
         {
             if (IsHurting || IsStunning || IsSuperArmeding) { return; }
             Enemy _enemy = other.GetComponentInParent<Enemy>();
+            if (_enemy.IsCatching)
+            {
+                sexAnimName = _enemy.sexAnimName;
+                IsSexing = true;
+                FSM.ChangeState(sexState);
+                StartCoroutine(Resist());
+                GameManager.AddSexEnemies(_enemy);
+                return;
+            }
             float faceDir = rb.mass * 5;
             if (_enemy.transform.position.x > transform.position.x)
             {
@@ -101,7 +111,6 @@ public class Player : Entity
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
-            hurtCount++;
         }
         //HealHp
         else
@@ -117,10 +126,32 @@ public class Player : Entity
         CameraManager.Instance.Shake(3f, 0.1f);
         foreach (Enemy _enemy in GameManager.Instance.sexEnemies)
         {
-            float _damage = 0;
-            _damage = _enemy.AttackDamage;
+            float _damage = _enemy.AttackDamage;
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
+        }
+    }
+
+    public void SetBreak(bool reset = false)
+    {
+        if (reset)
+        {
+            IsBreak1 = false;
+            IsBreak2 = false; 
+            SetSpriteLibraryAsset(SLAssetNormal);
+            return;
+        }
+        if (!IsBreak1)
+        {
+            IsBreak1 = true;
+            SetSpriteLibraryAsset(SLAssetBreak1);
+            return;
+        }
+        if (!IsBreak2)
+        {
+            IsBreak2 = true;
+            SetSpriteLibraryAsset(SLAssetBreak2);
+            return;
         }
     }
     #endregion
@@ -143,6 +174,10 @@ public class Player : Entity
         }
     }
 
+    /// <summary>
+    /// ±√§„Sex
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator Resist()
     {
         int _count = 1;
@@ -168,12 +203,4 @@ public class Player : Entity
         }
     }
     #endregion
-
-    public void CheckCamera()
-    {
-        if (transform.position.z >= 30)
-        {
-            CameraManager.Instance.ChangeCamera(1);
-        }
-    }
 }

@@ -78,6 +78,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: vfx_Slash01_Sword1 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6732159965556473812, guid: 665596fb56dd97e41bf849ab69b55b10,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6874448540634165428, guid: 665596fb56dd97e41bf849ab69b55b10,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -138,8 +143,35 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9186579122626621505, guid: 665596fb56dd97e41bf849ab69b55b10,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6732159965556473812, guid: 665596fb56dd97e41bf849ab69b55b10,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2714461973856500399}
   m_SourcePrefab: {fileID: 100100000, guid: 665596fb56dd97e41bf849ab69b55b10, type: 3}
+--- !u!1 &7231398956610094810 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6732159965556473812, guid: 665596fb56dd97e41bf849ab69b55b10,
+    type: 3}
+  m_PrefabInstance: {fileID: 4122615379689830670}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &2714461973856500399
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7231398956610094810}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0

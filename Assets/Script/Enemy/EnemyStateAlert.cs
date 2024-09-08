@@ -9,15 +9,16 @@ public class EnemyStateAlert : EnemyState
     {
         base.OnEnter();
         enemy.SetZeroVelocity();
-        stateTime = 0.1f;
+        stateTime = 0.2f;
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (!enemy.IsAlerting)
+        if (stateTime > 0) { return; }
+        if (enemy.IsKeepawaying)
         {
-            FSM.ChangeState(enemy.idleState);
+            FSM.ChangeState(enemy.keepawayState);
             return;
         }
         if (enemy.CanChase)
@@ -25,7 +26,12 @@ public class EnemyStateAlert : EnemyState
             FSM.ChangeState(enemy.chaseState);
             return;
         }
-        if (enemy.CanAttack && stateTime < 0f)
+        if (enemy.CanCatch)
+        {
+            FSM.ChangeState(enemy.catchState);
+            return;
+        }
+        if (enemy.CanAttack)
         {
             FSM.ChangeState(enemy.swordState);
             return;

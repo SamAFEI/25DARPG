@@ -111,14 +111,18 @@ MonoBehaviour:
   AttackDamage: 0
   CurrentHp: 0
   MaxHp: 0
-  LastAlertTime: 0
+  LastAlertIdleTime: 0
   LastAttackTime: 0
+  LastCatchTime: 0
   MoveTarget: {x: 0, y: 0, z: 0}
   IsAlerting: 0
   IsAttacking: 0
+  IsKeepawaying: 0
+  IsCatching: 0
   CanChase: 0
   CanAttack: 0
   CanSexPlayer: 0
+  CanCatch: 0
   Attack1Distance: 0
 --- !u!1 &3156869430831960134
 GameObject:
@@ -243,7 +247,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5046402526146326210}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c95be04aa195614690969e5ef3af47c, type: 3}
+  m_Script: {fileID: 11500000, guid: eac1747c3b069544e8d545fadc1124e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attackFXs: []
