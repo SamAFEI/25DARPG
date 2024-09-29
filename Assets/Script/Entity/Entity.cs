@@ -15,19 +15,29 @@ public abstract class Entity : MonoBehaviour
     public EntityFSM FSM { get; private set; }
     public EntityFX entityFX { get; private set; }
     public GameObject attackMesh { get; private set; }
+    public GameObject defendMesh { get; private set; }
     public List<SpriteRenderer> sprites { get; private set; } = new List<SpriteRenderer>();
     public Collider entityCollider { get; private set; }
     #endregion
 
     public EntityData Data;
+    public float AttackDamage { get; set; }
+    public int CurrentHp { get; set; }
+    public int MaxHp { get; set; }
     public bool IsHurting { get { return LastHurtTime > 0; } }
     public bool IsStunning { get { return LastStunTime > 0; } }
     public bool IsSuperArmeding { get { return LastSuperArmedTime > 0; } }
-    public bool IsSexing;
-
-    public bool IsHeaveyAttack;
-    public bool IsFacingRight;
+    public bool IsDied { get { return CurrentHp <= 0; } }
+    public bool IsSexing { get; set; }
+    public bool IsAttacking { get; set; }
+    public bool IsHeaveyAttack { get; set; }
+    public bool IsFacingRight { get; set; }
+    public bool IsAttackBeDefended { get; set; }
+    public bool CanDamage { get; set; }
+    public bool CanBeStunned { get; set; }
+    public bool IsMoveToTarget { get; set; }
     public int FacingDir => IsFacingRight ? 1 : -1;
+    public string myLayerName;
     [Header("重力係數")]
     public float gravityScale;
     [Header("重力")]
@@ -38,10 +48,6 @@ public abstract class Entity : MonoBehaviour
     public float LastStunTime;
     public float LastSuperArmedTime;
     #endregion
-    public string sexAnimName;
-    public float AttackDamage;
-    public int CurrentHp;
-    public int MaxHp;
 
     protected virtual void Awake()
     {
@@ -51,6 +57,8 @@ public abstract class Entity : MonoBehaviour
         skeleton = transform.Find("Skeleton").gameObject;
         attackMesh = skeleton.transform.Find("AttackMesh").gameObject;
         attackMesh.SetActive(false);
+        defendMesh = skeleton.transform.Find("DefendMesh").gameObject;
+        defendMesh.SetActive(false);
         anim = GetComponentInChildren<Animator>();
         spriteResolvers = skeleton.GetComponentsInChildren<SpriteResolver>().ToList();
         spriteLibrary = skeleton.GetComponentInChildren<SpriteLibrary>();
@@ -61,6 +69,7 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
+        myLayerName = LayerMask.LayerToName(gameObject.layer);
         SetGravityScale(Data.gravityScale);
     }
 
@@ -87,10 +96,28 @@ public abstract class Entity : MonoBehaviour
         DoBillboard();
     }
 
-
-    public void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
-    public void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
-    public void DoSexHurt() => SexHurt();
+    #region Animation Action
+    public virtual void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
+    public virtual void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
+    public virtual void DamageTrigger(int _value)
+    {
+        CanDamage = _value > 0;
+    }
+    public virtual void StunnedTrigger(int _value)
+    {
+        CanBeStunned = _value > 0;
+    }
+    public virtual void SetAttackMoveDirection() { }
+    public virtual void MoveToTargetTrigger(int _value)
+    {
+        IsMoveToTarget = _value > 0;
+        if (!IsMoveToTarget) { SetZeroVelocity(); }
+    }
+    public virtual void CameraShakeTrigger()
+    {
+        CameraManager.Shake(10f, 0.3f);
+    }
+    #endregion
 
     #region Flip
     public virtual void CheckIsFacingRight(bool isMovingRight)
@@ -138,7 +165,7 @@ public abstract class Entity : MonoBehaviour
     }
     #endregion
 
-    #region Hurt
+    #region Hurt About Action
     public virtual IEnumerator HurtFlasher()
     {
         SetFlashColor();
@@ -168,13 +195,33 @@ public abstract class Entity : MonoBehaviour
     }
     public virtual void SexHurt()
     {
-
+        //繼承用
     }
-    #endregion
+    #endregion 
 
-    protected virtual void Die(float _delay = 1f)
+    public virtual void ShotProjectile(int _index)
+    {
+        //繼承用
+    }
+
+    public virtual void Die(float _delay = 0.8f)
     {
         Destroy(gameObject, _delay);
+    }
+
+    public void IgnoreLayersTrigger(int _value)
+    {
+        if (_value > 0)
+        {
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            return;
+        }
+        gameObject.layer = LayerMask.NameToLayer(myLayerName);
+    }
+
+    public void SetDefendMeshActive(bool _value)
+    {
+        defendMesh.SetActive(_value);
     }
 
     /// <summary>
@@ -194,5 +241,19 @@ public abstract class Entity : MonoBehaviour
         transform.rotation = Camera.main.transform.rotation;
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
     }
+
+    /// <summary>
+    /// 計算相對位置
+    /// </summary>
+    /// <param name="_target"></param>
+    /// <returns> 右邊 X > 0  前方 Z > 0 </returns>
+    protected Vector3 CheckRelativeVector(Vector3 _target)
+    {
+        Vector3 _vector = _target - this.transform.position;
+        float faceRight = Vector3.Cross(transform.forward, _vector).y; //檢查是否在右邊 X > 0
+        float faceFoward = Vector3.Dot(transform.forward, _vector); //檢查是否在前方 Z > 0
+        return new Vector3(faceRight, 0, faceFoward);
+    }
+
 }
 

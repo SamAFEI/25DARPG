@@ -23,12 +23,18 @@ public class PlayerStateSex : PlayerState
         GameManager.ResetSexEnemies();
         player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, false);
         player.SetBreak();
+        player.IsSexing = false;
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
         player.SetZeroVelocity();
+        if (player.IsDied)
+        {
+            FSM.ChangeState(player.dieState);
+            return;
+        }
         if (!player.IsSexing)
         {
             FSM.ChangeState(player.idleState);

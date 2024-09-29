@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStateStun : PlayerState
@@ -10,7 +11,7 @@ public class PlayerStateStun : PlayerState
     {
         base.OnEnter();
         player.SetZeroVelocity();
-        stateTime = 3f;
+        stateTime = 1f;
         player.LastStunTime = stateTime;
     }
 
@@ -22,8 +23,12 @@ public class PlayerStateStun : PlayerState
 
     public override void OnUpdate()
     {
-        player.SearchSexEnemy();
+        //player.SearchSexEnemy();
         base.OnUpdate();
+        if (isAnimFinish)
+        {
+            player.SetZeroVelocity();
+        }
         if (!player.IsStunning)
         {
             FSM.ChangeState(player.idleState);

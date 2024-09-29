@@ -27,6 +27,7 @@ public class PlayerStateSword : PlayerStateGrounded
         lastTimeAttacked = Time.time;
         player.input.SetAttacking(false);
         player.IsHeaveyAttack = false;
+        player.IsCounter = false;
     }
     public override void OnUpdate()
     {

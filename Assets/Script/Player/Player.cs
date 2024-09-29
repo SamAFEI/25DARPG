@@ -1,13 +1,15 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
 public class Player : Entity
 {
+    #region Components
     public PlayerInput input { get; set; }
     public UI_PlayerStatus uiPlayerStatus { get; private set; }
     public UI_PlayerHint uiPlayerHint { get; private set; }
+    #endregion
+
     #region FSM States
     public PlayerStateIdle idleState { get; set; }
     public PlayerStateRun runState { get; set; }
@@ -17,6 +19,7 @@ public class Player : Entity
     public PlayerStateParry parryState { get; set; }
     public PlayerStateHurt hurtState { get; set; }
     public PlayerStateSex sexState { get; set; }
+    public PlayerStateDie dieState { get; set; }
     #endregion
     public new PlayerData Data => (PlayerData)base.Data;
     public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying && !IsStunning && !IsSexing; } }
@@ -24,15 +27,17 @@ public class Player : Entity
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
+    public bool IsCounter;
     public bool IsBreak1;
     public bool IsBreak2;
+    public string sexAnimName;
 
     protected override void Awake()
     {
-        MaxHp = 100;
-        CurrentHp = MaxHp;
-        AttackDamage = 10;
         base.Awake();
+        MaxHp = Data.MaxHP;
+        CurrentHp = MaxHp;
+        AttackDamage = Data.AttackDamage;
         input = GetComponent<PlayerInput>();
         uiPlayerHint = GetComponentInChildren<UI_PlayerHint>();
         idleState = new PlayerStateIdle(this, FSM, "Idle");
@@ -43,6 +48,7 @@ public class Player : Entity
         parryState = new PlayerStateParry(this, FSM, "Parry");
         hurtState = new PlayerStateHurt(this, FSM, "Hurt");
         sexState = new PlayerStateSex(this, FSM, "Sex");
+        dieState = new PlayerStateDie(this, FSM, "Die");
         FSM.InitState(idleState);
     }
 
@@ -55,36 +61,71 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            sexAnimName = "OrcSex02";
+            IsSexing = true;
+            FSM.ChangeState(sexState);
+        }
     }
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate(); 
+        base.FixedUpdate();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Projectile")
+        {
+            //¥Î§ðÀ»¥´±¼
+            if ((other.transform.position - entityCollider.ClosestPoint(other.transform.position)).magnitude > 0.3f) { return; }
+            if (IsHurting || IsStunning || IsSuperArmeding) { return; }
+            ProjectileBase _projectile = other.GetComponentInParent<ProjectileBase>();
+            Repel(_projectile.transform.position);
+            Hurt(_projectile.AttackDamage, _projectile.IsHeaveyAttack, _projectile.IsAttackBeDefended);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
         if (other.tag == "EnemyAttack")
         {
-            if (IsHurting || IsStunning || IsSuperArmeding) { return; }
             Enemy _enemy = other.GetComponentInParent<Enemy>();
+            if (input.CanCounter && _enemy.IsAttackBeDefended && _enemy.CanBeStunned)
+            {
+                IsCounter = true;
+                _enemy.LastStunTime = 3f;
+                return;
+            }
+            if (IsHurting || IsStunning || IsSuperArmeding || _enemy.CanDamage) { return; }
             if (_enemy.IsCatching)
             {
-                sexAnimName = _enemy.sexAnimName;
+                if (!IsBreak1)
+                {
+                    sexAnimName = _enemy.Data.foreplayAnims[Random.Range(0, _enemy.Data.foreplayAnims.Count)].name;
+                }
+                else
+                {
+                    sexAnimName = _enemy.Data.sexAnims[Random.Range(0, _enemy.Data.sexAnims.Count)].name;
+                }
                 IsSexing = true;
                 FSM.ChangeState(sexState);
                 StartCoroutine(Resist());
                 GameManager.AddSexEnemies(_enemy);
                 return;
             }
-            float faceDir = rb.mass * 5;
-            if (_enemy.transform.position.x > transform.position.x)
-            {
-                faceDir *= -1;
-            }
-            rb.AddForce(new Vector3(faceDir, 0, 0), ForceMode.Impulse);
-            Hurt(_enemy.AttackDamage);
+            float damage = _enemy.AttackDamage * Random.Range(0.80f, 1.20f);
+            Repel(_enemy.transform.position, _enemy.IsHeaveyAttack);
+            Hurt(damage, _enemy.IsHeaveyAttack, _enemy.IsAttackBeDefended);
         }
+    }
+
+    public override void Die(float _delay = 0.8f)
+    {
+        input.inputHandle.Character.Disable();
+        input.inputHandle.SexAction.Disable();
+        UI_Canvas.Instance.FadeInUI_Die();
     }
 
     #region Hurt
@@ -100,14 +141,19 @@ public class Player : Entity
         }
     }
 
-    public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
+    public virtual void Hurt(float _damage, bool _isHeaveyAttack = false, bool _isBeDefend = false)
     {
         //DoDamageHp
         if (_damage > 0)
         {
             if (IsHurting || IsStunning || IsSuperArmeding) { return; }
-            CameraManager.Instance.Shake(3f, 0.1f);
+            CameraManager.Shake(3f, 0.1f);
             LastHurtTime = Data.hurtResetTime;
+            if (_isBeDefend)
+            {
+                _damage *= 0.8f;
+                if (!_isHeaveyAttack) { LastHurtTime = 0f; }
+            }
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
@@ -118,12 +164,16 @@ public class Player : Entity
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
         }
+        if (_isHeaveyAttack)
+        {
+            LastStunTime = Data.hurtResetTime;
+        }
     }
 
     public override void SexHurt()
     {
         if (!IsSexing) { return; }
-        CameraManager.Instance.Shake(3f, 0.1f);
+        CameraManager.Shake(3f, 0.1f);
         foreach (Enemy _enemy in GameManager.Instance.sexEnemies)
         {
             float _damage = _enemy.AttackDamage;
@@ -137,7 +187,7 @@ public class Player : Entity
         if (reset)
         {
             IsBreak1 = false;
-            IsBreak2 = false; 
+            IsBreak2 = false;
             SetSpriteLibraryAsset(SLAssetNormal);
             return;
         }
@@ -154,6 +204,19 @@ public class Player : Entity
             return;
         }
     }
+
+    public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
+    {
+        Vector3 _vector = CheckRelativeVector(sourcePosition);
+        CheckIsFacingRight(_vector.x > 0);
+        float faceRight = _vector.x > 0 ? -1 : 1;
+        faceRight *= rb.mass * 3;
+        if (isHeavyAttack) { faceRight *= 5; }
+        _vector = new Vector3(faceRight, 0, 0);
+        _vector = CameraManager.GetDirectionByCamera(_vector);
+        SetZeroVelocity();
+        rb.AddForce(_vector, ForceMode.Impulse);
+    }
     #endregion
 
     #region Sex
@@ -165,7 +228,7 @@ public class Player : Entity
             if (collider.tag == "Enemy")
             {
                 Enemy enemy = collider.GetComponentInParent<Enemy>();
-                sexAnimName = enemy.sexAnimName;
+                sexAnimName = "";
                 IsSexing = true;
                 StartCoroutine(Resist());
                 GameManager.AddSexEnemies(enemy);
@@ -188,7 +251,7 @@ public class Player : Entity
             if (MoveInput.x != 0)
             {
                 _currentInput = MoveInput.x;
-                if (_currentInput == _nextInput) 
+                if (_currentInput == _nextInput)
                 {
                     _count++;
                     if (_count == 10)
@@ -203,4 +266,5 @@ public class Player : Entity
         }
     }
     #endregion
+
 }

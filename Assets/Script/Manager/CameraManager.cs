@@ -1,8 +1,5 @@
 using Cinemachine;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class CameraManager : MonoBehaviour
 {
@@ -55,15 +52,15 @@ public class CameraManager : MonoBehaviour
     #endregion
 
     #region ShakeCamera
-    public void Shake(float intensity, float time)
+    public static void Shake(float intensity, float time)
     {
-        if (isSharking) { return; }
-        if (shakeTimer <= 0)
+        if (Instance.isSharking) { return; }
+        if (Instance.shakeTimer <= 0)
         {
-            startingIntensity = intensity;
-            shakeTimer = time;
-            shakeTimerTotal = time;
-            isSharking = true;
+            Instance.startingIntensity = intensity;
+            Instance.shakeTimer = time;
+            Instance.shakeTimerTotal = time;
+            Instance.isSharking = true;
         }
     }
     public void DoShake()
@@ -75,13 +72,16 @@ public class CameraManager : MonoBehaviour
             if (shakeTimer <= 0)
             {
                 cbmPerlin.m_AmplitudeGain = 0f;
+                cbmPerlin.m_FrequencyGain = 0f;
                 isSharking = false;
             }
             else
             {
+                cbmPerlin.m_FrequencyGain = 0.1f;
                 cbmPerlin.m_AmplitudeGain = Mathf.Lerp(startingIntensity, 0f, shakeTimer / -shakeTimerTotal);
             }
         }
+        //Camera.main.transform.rotation = Quaternion.identity;
     }
     #endregion
 

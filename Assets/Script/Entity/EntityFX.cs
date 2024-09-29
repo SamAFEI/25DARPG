@@ -32,7 +32,17 @@ public class EntityFX : MonoBehaviour
     private IEnumerator PlayAttackFX(int _index)
     {
         attackFXs[_index].SetActive(true);
-        yield return new WaitForSeconds(0.3f);
+        ParticleSystem particle = attackFXs[_index].GetComponent<ParticleSystem>();
+        if (particle != null) 
+        { 
+            particle.Play();
+            yield return new WaitForSeconds(particle.startLifetime);
+            particle.Stop();
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.3f);
+        }
         attackFXs[_index].SetActive(false);
     }
 

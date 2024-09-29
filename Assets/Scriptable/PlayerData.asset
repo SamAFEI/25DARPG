@@ -25,7 +25,7 @@ MonoBehaviour:
   runDeccelAmount: 40
   accelInAir: 1
   deccelInAir: 1
-  hurtResetTime: 0.5
+  hurtResetTime: 0.2
   jumpHeight: 1.5
   jumpTimeToApex: 0.3
   jumpForce: 10
@@ -36,10 +36,12 @@ MonoBehaviour:
   jumpHangMaxSpeedMult: 0
   coyoteTime: 0.2
   jumpInputBufferTime: 0.2
-  attackInputBufferTime: 0.2
-  dashInputBufferTime: 0.2
-  parryInputBufferTime: 0.2
+  attackInputBufferTime: 0.05
+  dashInputBufferTime: 0.05
+  parryInputBufferTime: 0.05
   dashSpeed: 30
   dashDurationTime: 0.2
   dashResetTime: 0.5
   canCounterTime: 0.2
+  MaxHP: 500
+  AttackDamage: 10

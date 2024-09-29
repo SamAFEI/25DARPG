@@ -19,4 +19,8 @@ public class PlayerData : EntityData
 
     [Space(20)]
     public float canCounterTime = 0.2f;
+
+    [Header("State")]
+    public int MaxHP = 100;
+    public float AttackDamage = 10;
 }

@@ -1,0 +1,39 @@
+using UnityEngine;
+
+public class EnemyStateAttack1 : EnemyState
+{
+    public EnemyStateAttack1(Enemy _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
+    {
+    }
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        enemy.SetZeroVelocity();
+        enemy.IsAttacking = true;
+        enemy.IsAttackBeDefended = false;
+        enemy.IsHeaveyAttack = enemy.Data.attack1IsHeavy;
+        enemy.AttackDamage = enemy.Data.attack1Damage;
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
+        enemy.SetZeroVelocity();
+        enemy.IsAttacking = false;
+        enemy.LastAttack1Time = enemy.Data.attack1ResetTime + Random.Range(0.00f, 0.30f); 
+        enemy.DamageTrigger(0);
+        enemy.StunnedTrigger(0);
+        enemy.MoveToTargetTrigger(0);
+        enemy.IgnoreLayersTrigger(0);
+    }
+
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        if (isAnimFinish)
+        {
+            enemy.Attack1Finish();
+            return;
+        }
+    }
+}

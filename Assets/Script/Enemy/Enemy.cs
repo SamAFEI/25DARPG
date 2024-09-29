@@ -7,59 +7,57 @@ public class Enemy : Entity
     #region FSM States
     public EnemyStateIdle idleState { get; set; }
     public EnemyStateRun runState { get; set; }
-    public EnemyStateSword swordState { get; set; }
+    public EnemyStateAttack1 attack1State { get; set; }
+    public EnemyStateAttack2 attack2State { get; set; }
+    public EnemyStateAttack3 attack3State { get; set; }
     public EnemyStateHurt hurtState { get; set; }
     public EnemyStateAlert alertState { get; set; }
     public EnemyStateChase chaseState { get; set; }
     public EnemyStateKeepaway keepawayState { get; set; }
     public EnemyStateCatch catchState { get; set; }
+    public EnemyStateDie dieState { get; set; }
+    public EnemyStateStun stunState { get; set; }
+    public EnemyStateBeCountered beCounteredState { get; set; }
     //public EnemyStateDash dashState { get; set; }
-    //public EnemyStateStun stunState { get; set; }
     #endregion
     public new EnemyData Data => (EnemyData)base.Data;
 
     #region Timers
-    public float LastAlertIdleTime;
-    public float LastAttackTime;
-    public float LastCatchTime;
+    public float LastAlertIdleTime { get; set; }
+    public float LastAttack1Time { get; set; }
+    public float LastAttack2Time { get; set; }
+    public float LastAttack3Time { get; set; }
+    public float LastCatchTime { get; set; }
     #endregion
 
-    public Vector3 MoveTarget;
+    public float AttackMoveMaxSpeed { get; set; }
+
+    public Vector3 MoveDirection;
     public bool IsAlerting;
-    public bool IsAttacking;
     public bool IsKeepawaying;
     public bool IsCatching;
     public bool CanChase;
-    public bool CanAttack;
+    public bool CanAttack1;
+    public bool CanAttack2;
+    public bool CanAttack3;
     public bool CanSexPlayer;
     public bool CanCatch;
-
-    public float Attack1Distance;
 
     protected override void Awake()
     {
         base.Awake();
-        MaxHp = 100;
+        MaxHp = Data.maxHP;
         CurrentHp = MaxHp;
         AttackDamage = 10;
-        Attack1Distance = 2f;
-        idleState = new EnemyStateIdle(this, FSM, "Idle");
-        runState = new EnemyStateRun(this, FSM, "Run");
-        swordState = new EnemyStateSword(this, FSM, "Sword1");
-        hurtState = new EnemyStateHurt(this, FSM, "Hurt");
-        alertState = new EnemyStateAlert(this, FSM, "Alert");
-        chaseState = new EnemyStateChase(this, FSM, "Run");
-        keepawayState = new EnemyStateKeepaway(this, FSM, "Keepaway");
-        catchState = new EnemyStateCatch(this, FSM, "Catch");
-        FSM.InitState(idleState);
-        sexAnimName = "Sex01";
+        AttackMoveMaxSpeed = 3f;
+        SetFSMState();
     }
 
     protected override void Start()
     {
         base.Start();
         uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
-        LastCatchTime = Random.Range(5.0f,10.0f);
+        LastCatchTime = Random.Range(5.0f, 10.0f);
     }
 
     protected override void Update()
@@ -68,16 +66,23 @@ public class Enemy : Entity
 
         #region Timers
         LastAlertIdleTime -= Time.deltaTime;
-        LastAttackTime -= Time.deltaTime;
+        LastAttack1Time -= Time.deltaTime;
+        LastAttack2Time -= Time.deltaTime;
+        LastAttack3Time -= Time.deltaTime;
         LastCatchTime -= Time.deltaTime;
-        #endregion
+        # endregion
     }
 
     protected override void FixedUpdate()
     {
+        if (IsDied) { return; }
         base.FixedUpdate();
         CheckAlert();
         DoAlert();
+        if (IsMoveToTarget && !IsStunning)
+        {
+            DoMoveTarget();
+        }
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -85,29 +90,43 @@ public class Enemy : Entity
         if (other.tag == "PlayerAttack")
         {
             Player _player = other.GetComponentInParent<Player>();
-            float power = 20;
-            if (_player.IsHeaveyAttack) { power *= 1.5f; }
-            Vector3 _vector = _player.transform.position - this.transform.position;
-            float faceRight = Vector3.Cross(transform.forward, _vector).y * -1;
-            float faceFoward = Vector3.Dot(transform.forward, _vector) * -10;
-            CheckIsFacingRight(faceRight * -1 > 0);
             entityFX.DoPlayHitFX(0, entityCollider.ClosestPoint(other.transform.position));
-            _vector = new Vector3(faceRight * power, 0, faceFoward);
-            _vector =  CameraManager.GetDirectionByCamera(_vector);
-            rb.AddForce(_vector, ForceMode.Impulse);
             Hurt(_player.AttackDamage, _player.IsHeaveyAttack);
+            Repel(_player.transform.position, _player.IsHeaveyAttack);
         }
     }
 
+    protected virtual void SetFSMState()
+    {
+        idleState = new EnemyStateIdle(this, FSM, "Idle");
+        runState = new EnemyStateRun(this, FSM, "Run");
+        attack1State = new EnemyStateAttack1(this, FSM, "Attack1");
+        attack2State = new EnemyStateAttack2(this, FSM, "Attack2");
+        attack3State = new EnemyStateAttack3(this, FSM, "Attack3");
+        hurtState = new EnemyStateHurt(this, FSM, "Hurt");
+        alertState = new EnemyStateAlert(this, FSM, "Alert");
+        chaseState = new EnemyStateChase(this, FSM, "Run");
+        keepawayState = new EnemyStateKeepaway(this, FSM, "Keepaway");
+        catchState = new EnemyStateCatch(this, FSM, "Catch");
+        dieState = new EnemyStateDie(this, FSM, "Die");
+        stunState = new EnemyStateStun(this, FSM, "Stun");
+        beCounteredState = new EnemyStateBeCountered(this, FSM, "BeCountered");
+        FSM.InitState(idleState);
+    }
+    public float GetPlayerDistance() => GameManager.GetPlayerDistance(this.transform.position);
+    public Vector3 GetPlayerDirection() => GameManager.GetPlayerDirection(this.transform.position);
+
+    #region About Hurt
     public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
     {
         if (_damage > 0)
         {
             if (IsHurting) { return; }
             TimerManager.Instance.DoFrozenTime(0.1f);
-            CameraManager.Instance.Shake(1f, 0.1f);
+            CameraManager.Shake(1f, 0.1f);
             LastHurtTime = Data.hurtResetTime;
             if (_isHeaveyAttack) { LastHurtTime += 0.3f; }
+            if (IsSuperArmeding) { LastHurtTime = 0; }
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiEnityStatus.DoLerpHealth();
@@ -117,8 +136,36 @@ public class Enemy : Entity
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiEnityStatus.DoLerpHealth();
         }
-    }
 
+        if (IsDied)
+        {
+            FSM.ChangeState(dieState);
+        }
+    }
+    public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
+    {
+        if (IsSuperArmeding) return;
+        float power = 20;
+        if (isHeavyAttack) { power *= 1.5f; }
+        Vector3 _vector = CheckRelativeVector(sourcePosition);
+        float faceRight = _vector.x * -1;
+        float faceFoward = _vector.z * -10;
+        CheckIsFacingRight(faceRight * -1 > 0);
+        _vector = new Vector3(faceRight * power, 0, faceFoward);
+        _vector = CameraManager.GetDirectionByCamera(_vector);
+        rb.AddForce(_vector, ForceMode.Impulse);
+    }
+    #endregion
+
+    public override void ShotProjectile(int _index)
+    {
+        GameObject obj = Instantiate(Data.projectiles[_index], attackMesh.transform.position, Quaternion.identity);
+        ProjectileBase projectile = obj.GetComponent<ProjectileBase>();
+        projectile.AttackDamage = AttackDamage;
+        obj.transform.LookAt(GameManager.Instance.player.transform);
+        obj.GetComponent<Rigidbody>().velocity = obj.transform.forward * 15f;
+    }
+    #region Enemy AI
     public virtual void CheckAlert()
     {
         if (GameManager.GetPlayerDistance(this.transform.position) <= Data.alertDistance)
@@ -126,58 +173,118 @@ public class Enemy : Entity
             IsAlerting = true;
         }
     }
-
     public virtual void DoAlert()
     {
-        if (!IsAlerting || IsAttacking) 
+        if (!IsAlerting || IsAttacking)
         {
             CanChase = false;
-            CanAttack = false;
+            CanAttack1 = false;
             CanCatch = false;
             IsKeepawaying = false;
-            return; 
+            return;
         }
-        Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
-        float faceRight = Vector3.Cross(transform.forward, _vector).y;
+        float faceRight = CheckRelativeVector(GameManager.Instance.player.transform.position).x;
         if (faceRight != 0)
         {
             CheckIsFacingRight(faceRight > 0);
         }
-
-        IsKeepawaying = LastAttackTime > 0;
-        CanChase = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) > Attack1Distance;
-        CanAttack = LastAttackTime < 0 && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance 
-            && GameManager.CanAttackPlayer();
-        CanCatch = LastCatchTime < 0 && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance
-            && GameManager.CanAttackPlayer();
-        CanSexPlayer = GameManager.CanSexPlayer() && GameManager.GetPlayerDistance(this.transform.position) < Attack1Distance;
+        CheckAction();
     }
-
+    public virtual void CheckAction()
+    {
+        IsKeepawaying = LastAttack1Time > 0 && GetPlayerDistance() < Data.alertDistance;
+        CanChase = LastAttack1Time < 0 && GetPlayerDistance() > Data.attack1Distance;
+        CanAttack1 = LastAttack1Time < 0 && GetPlayerDistance() < Data.attack1Distance
+            && GameManager.CanAttackPlayer();
+        CanAttack2 = LastAttack2Time < 0 && GetPlayerDistance() < Data.attack2Distance
+            && GameManager.CanAttackPlayer();
+        CanAttack3 = LastAttack3Time < 0 && GetPlayerDistance() < Data.attack3Distance
+            && GameManager.CanAttackPlayer();
+        CanCatch = LastCatchTime < 0 && GetPlayerDistance() < Data.catchDistance
+            && GameManager.CanAttackPlayer();
+        CanSexPlayer = GameManager.CanSexPlayer() && GetPlayerDistance() < Data.catchDistance;
+    }
     public virtual void DoChase()
     {
-        if (IsHurting && IsAttacking) { return ; }
-        if (GameManager.GetPlayerDistance(this.transform.position) > Attack1Distance)
+        if (IsHurting && IsAttacking) { return; }
+        if (GetPlayerDistance() > Data.attack1Distance)
         {
-            MoveTarget = GameManager.GetPlayerDirection(this.transform.position);
+            SetAttackMoveDirection();
             Run(1);
         }
     }
-
     public virtual void Keepaway()
     {
         if (IsHurting && IsAttacking) { return; }
         Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
-        MoveTarget = new Vector3(_vector.x * -1, _vector.y, _vector.z * -1);
-        Run(0.4f);
+        MoveDirection = new Vector3(_vector.x * -1, _vector.y, _vector.z * -1);
+        Run(0.6f);
     }
+    public virtual void AlertStateAction()
+    {
+        if (CanCatch && Random.Range(0.00f, 100.00f) < 50f)
+        {
+            FSM.ChangeState(catchState);
+            return;
+        }
+        if (IsKeepawaying)
+        {
+            FSM.ChangeState(keepawayState);
+            return;
+        }
+        if (CanAttack1)
+        {
+            FSM.ChangeState(attack1State);
+            CheckIsFacingRight(CheckRelativeVector(GameManager.Instance.player.transform.position).x > 0);
+            return;
+        }
+        if (CanChase)
+        {
+            FSM.ChangeState(chaseState);
+            return;
+        }
+    }
+    public virtual void SetMoveDirection(Vector3 target)
+    {
+        MoveDirection = GameManager.GetPlayerDirection(target);
+    }
+    public override void SetAttackMoveDirection()
+    {
+        SetMoveDirection(attackMesh.transform.position);
+    }
+    public virtual void DoMoveTarget()
+    {
+        float faceRight = CheckRelativeVector(MoveDirection + transform.position).x;
+        if (faceRight != 0)
+        {
+            CheckIsFacingRight(faceRight > 0);
+        }
+        float Speed = MoveDirection.magnitude * 0.6f;
+        Speed = Mathf.Clamp(Speed, 1f, AttackMoveMaxSpeed);
+        Run(Speed);
+    }
+    public virtual void Attack1Finish()
+    {
+        FSM.ChangeState(alertState);
+    }
+    public virtual void Attack2Finish()
+    {
+        FSM.ChangeState(alertState);
+    }
+    public virtual void Attack3Finish()
+    {
+        FSM.ChangeState(alertState);
+    }
+    #endregion
 
     #region RUN METHODS
     private void Run(float lerpAmount)
     {
         float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         //Calculate the direction we want to move in and our desired velocity
-        float targetSpeed = MoveTarget.normalized.magnitude * Data.runMaxSpeed;
+        float targetSpeed = MoveDirection.normalized.magnitude * Data.runMaxSpeed;
         //We can reduce are control using Lerp() this smooths changes to are direction and speed
+        if (lerpAmount > 1) { targetSpeed *= lerpAmount; }
         targetSpeed = Mathf.Lerp(rbSpeed, targetSpeed, lerpAmount);
 
         #region Calculate AccelRate
@@ -214,7 +321,7 @@ public class Enemy : Entity
         float movement = speedDif * accelRate;
 
         //Convert this to a vector and apply to rigidbody
-        rb.AddForce(movement * MoveTarget.normalized, ForceMode.Force);
+        rb.AddForce(movement * MoveDirection.normalized * rb.mass / 10f, ForceMode.Force);
         /*
 		 * For those interested here is what AddForce() will do
 		 * RB.velocity = new Vector2(RB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,6 +31,7 @@ public class PlayerInput : MonoBehaviour
     public bool IsUpParry { get { return LastUpParryTime > 0; } }
     public bool IsPressedDash { get { return LastPressedDashTime > 0; } }
     public bool CanCounter { get { return CanCounterTime > 0; } }
+    public bool IsDefending { get { return IsParrying && !CanCounter; } }
     public bool IsJumping { get; private set; }
     public bool IsDashing { get; private set; }
     public bool IsParrying { get; private set; }
@@ -107,7 +107,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (player.CanMovement)
+        if (player.CanMovement && !player.IsDied)
         {
             if (MoveInput.x != 0)
             {
@@ -125,9 +125,9 @@ public class PlayerInput : MonoBehaviour
 
         inputHandle.Character.Movement.performed += InputMovement;
         inputHandle.Character.Movement.canceled += InputMovement;
-        inputHandle.Character.Dash.performed += InputDash;
+        inputHandle.Character.Dash.started += InputDash;
         inputHandle.Character.Attack.canceled += InputAttack;
-        inputHandle.Character.Defend.performed += InputDefend;
+        inputHandle.Character.Defend.started += InputDefend;
         inputHandle.Character.Defend.canceled += InputDefendCancel;
 
         inputHandle.SexAction.ResistHorizontal.started += InputResistHorizontal;
@@ -245,6 +245,7 @@ public class PlayerInput : MonoBehaviour
     public void SetAttacking(bool _isAttacking)
     {
         IsAttacking = _isAttacking;
+        player.IsAttacking = IsAttacking;
     }
     #endregion
 

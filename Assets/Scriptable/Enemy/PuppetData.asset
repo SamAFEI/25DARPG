@@ -36,3 +36,7 @@ MonoBehaviour:
   jumpHangMaxSpeedMult: 0
   attackResetTime: 1
   alertDistance: 5
+  foreplayAnims:
+  - {fileID: 7400000, guid: f9387b6fcf82123459fef36ab72a60fe, type: 2}
+  sexAnims:
+  - {fileID: 7400000, guid: f9387b6fcf82123459fef36ab72a60fe, type: 2}

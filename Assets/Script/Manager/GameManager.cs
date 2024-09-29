@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,11 +54,6 @@ public class GameManager : MonoBehaviour
         return GetPlayerDirection(_position).magnitude;
 
     }
-    public static float GetPlayerDistanceX(Vector3 _position)
-    {
-        if (Instance.playerObj == null) { return 0; }
-        return GetPlayerDirection(_position).magnitude;
-    }
     public static bool CanAttackPlayer()
     {
         if (Instance.playerObj == null) { return false; }
@@ -87,4 +83,10 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void RestarScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
 }

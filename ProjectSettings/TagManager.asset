@@ -8,6 +8,7 @@ TagManager:
   - EnemyAttack
   - Enemy
   - Wall
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -15,10 +16,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - MainCamera
+  - CloseupCamera
   - 
   - 
   - 

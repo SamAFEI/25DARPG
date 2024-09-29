@@ -6,6 +6,18 @@ public class PlayerStateDash : PlayerState
     {
     }
 
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        player.SetZeroVelocity();
+        player.IgnoreLayersTrigger(1);
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
+        player.IgnoreLayersTrigger(0);
+    }
+
     public override void OnUpdate()
     {
         base.OnUpdate();

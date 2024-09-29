@@ -17,7 +17,11 @@
     public override void OnUpdate()
     {
         base.OnUpdate(); 
-
+        
+        if (player.IsDied)
+        {
+            FSM.ChangeState(player.dieState);
+        }
         if (player.IsHurting && !player.IsSuperArmeding)
         {
             FSM.ChangeState(player.hurtState);
