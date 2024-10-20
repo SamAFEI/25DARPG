@@ -100,30 +100,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: cd3293e4fd7de5748b6d1ff96113e277, type: 2}
-  IsSexing: 0
-  IsHeaveyAttack: 0
-  IsFacingRight: 0
+  myLayerName: 
   gravityScale: 0
   LastHurtTime: 0
   LastStunTime: 0
   LastSuperArmedTime: 0
-  sexAnimName: 
-  AttackDamage: 0
-  CurrentHp: 0
-  MaxHp: 0
-  LastAlertIdleTime: 0
-  LastAttackTime: 0
-  LastCatchTime: 0
-  MoveTarget: {x: 0, y: 0, z: 0}
+  MoveDirection: {x: 0, y: 0, z: 0}
   IsAlerting: 0
-  IsAttacking: 0
   IsKeepawaying: 0
   IsCatching: 0
   CanChase: 0
-  CanAttack: 0
+  CanAttack1: 0
+  CanAttack2: 0
+  CanAttack3: 0
   CanSexPlayer: 0
   CanCatch: 0
-  Attack1Distance: 0
 --- !u!1 &3156869430831960134
 GameObject:
   m_ObjectHideFlags: 0

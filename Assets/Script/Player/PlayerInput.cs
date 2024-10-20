@@ -8,6 +8,8 @@ public class PlayerInput : MonoBehaviour
     public Player player => GetComponent<Player>();
     public Rigidbody rb => player.rb;
     public PlayerData data => player.Data;
+    public PlayerInteract playerInteract => GetComponent<PlayerInteract>();
+    public GameObject ui_Bag;
     public InputHandle inputHandle;
     #endregion
 
@@ -41,7 +43,7 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
-        InitInputHandle();
+        InitInputHandle(); 
     }
 
     private void Update()
@@ -61,6 +63,8 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             player.SetSpriteLibraryAsset(player.SLAssetNormal);
+            player.IsBreak1 = false;
+            player.IsBreak2 = false;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -129,35 +133,50 @@ public class PlayerInput : MonoBehaviour
         inputHandle.Character.Attack.canceled += InputAttack;
         inputHandle.Character.Defend.started += InputDefend;
         inputHandle.Character.Defend.canceled += InputDefendCancel;
+        inputHandle.Character.OpenBag.started += InputOpenBag;
+        inputHandle.Character.Interact.started += InputInteract;
+        inputHandle.Character.Item00.started += InputItem00;
+        inputHandle.Character.Item01.started += InputItem01;
 
         inputHandle.SexAction.ResistHorizontal.started += InputResistHorizontal;
     }
-
     private void InputMovement(InputAction.CallbackContext _context)
     {
         Vector2 vector = _context.ReadValue<Vector2>();
         MoveInput.x = vector.x;
         MoveInput.z = vector.y;
     }
-
     private void InputDash(InputAction.CallbackContext _context)
     {
         LastPressedDashTime = data.dashInputBufferTime;
     }
-
     private void InputAttack(InputAction.CallbackContext _context)
     {
         LastPressedAttackTime = data.attackInputBufferTime;
     }
-
     private void InputDefend(InputAction.CallbackContext _context)
     {
         LastPressedParryTime = data.parryInputBufferTime;
     }
-
     private void InputDefendCancel(InputAction.CallbackContext _context)
     {
         LastUpParryTime = data.parryInputBufferTime;
+    }
+    private void InputInteract(InputAction.CallbackContext _context)
+    {
+        playerInteract.DoInteract();
+    }
+    private void InputItem00(InputAction.CallbackContext _context)
+    {
+        player.ItemAction(0);
+    }
+    private void InputItem01(InputAction.CallbackContext _context)
+    {
+        player.ItemAction(1);
+    }
+    private void InputOpenBag(InputAction.CallbackContext _context)
+    {
+        OpenBag();
     }
 
     private void InputResistHorizontal(InputAction.CallbackContext _context)
@@ -320,5 +339,15 @@ public class PlayerInput : MonoBehaviour
         return !IsParrying && !IsDashing;
     }
 
+    #endregion
+
+    #region Shortcut Methods
+    private void OpenBag()
+    {
+        if (ui_Bag != null)
+        {
+            ui_Bag.SetActive(!ui_Bag.activeSelf);
+        }
+    }
     #endregion
 }

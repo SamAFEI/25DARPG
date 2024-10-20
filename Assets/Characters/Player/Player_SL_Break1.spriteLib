@@ -113,10 +113,10 @@ MonoBehaviour:
       m_Sprite: {fileID: -675165449064861784, guid: 324d768b9e3c34343853a7d8b11c2e1a,
         type: 3}
       m_FromMain: 1
-      m_SpriteOverride: {fileID: 2379827361218271905, guid: 01d97bec05637274aad148bb22311cb9,
+      m_SpriteOverride: {fileID: -675165449064861784, guid: 324d768b9e3c34343853a7d8b11c2e1a,
         type: 3}
     m_FromMain: 1
-    m_EntryOverrideCount: 1
+    m_EntryOverrideCount: 0
   - m_Name: MID BODY
     m_Hash: 525887131
     m_CategoryList: []
@@ -222,5 +222,5 @@ MonoBehaviour:
     m_FromMain: 1
     m_EntryOverrideCount: 0
   m_PrimaryLibraryGUID: 4a725532aa033284899e243e3e061d87
-  m_ModificationHash: 638570029753740853
+  m_ModificationHash: 638647880805354334
   m_Version: 1

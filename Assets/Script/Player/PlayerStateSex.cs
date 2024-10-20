@@ -13,6 +13,7 @@ public class PlayerStateSex : PlayerState
         player.input.inputHandle.Character.Disable();
         player.input.inputHandle.SexAction.Enable();
         player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, true);
+        player.IsSexing = true;
     }
 
     public override void OnExit()

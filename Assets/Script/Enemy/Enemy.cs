@@ -222,7 +222,7 @@ public class Enemy : Entity
     }
     public virtual void AlertStateAction()
     {
-        if (CanCatch && Random.Range(0.00f, 100.00f) < 50f)
+        if (CanCatch && Random.Range(0.00f, 100.00f) < 100f)
         {
             FSM.ChangeState(catchState);
             return;

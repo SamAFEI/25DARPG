@@ -21,15 +21,14 @@ public class UI_PlayerStatus : MonoBehaviour
         hpSlider.value = hpSlider.maxValue;
     }
 
-    public void DoLerpHealth()
+    public void DoLerpHealth(float smooth = 10)
     {
         hpSmooth = 0;
-        StartCoroutine(LerpHealth());
+        StartCoroutine(LerpHealth(smooth));
     }
 
-    private IEnumerator LerpHealth()
+    private IEnumerator LerpHealth(float smooth = 10)
     {
-        float smooth = 10;
         float startHP = hpSlider.value;
         while (hpSmooth < 1)
         {

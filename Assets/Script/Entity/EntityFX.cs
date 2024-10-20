@@ -6,6 +6,7 @@ public class EntityFX : MonoBehaviour
 {
     public List<GameObject> attackFXs;
     public List<GameObject> hitFXs;
+    public List<GameObject> buffFXs;
 
     private void Awake()
     {
@@ -52,5 +53,28 @@ public class EntityFX : MonoBehaviour
         GameObject obj = Instantiate(hitFXs[_index], _point, Quaternion.identity, transform);
         obj.SetActive(true);
         Destroy(obj, 0.3f);
+    }
+
+    public void DoPlayBuffFX(int _index)
+    {
+        if (attackFXs.Count <= _index) { return; }
+        StartCoroutine(PlayBuffFX(_index));
+    }
+
+    private IEnumerator PlayBuffFX(int _index)
+    {
+        buffFXs[_index].SetActive(true);
+        ParticleSystem particle = buffFXs[_index].GetComponent<ParticleSystem>();
+        if (particle != null)
+        {
+            particle.Play();
+            yield return new WaitForSeconds(particle.startLifetime);
+            particle.Stop();
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.3f);
+        }
+        buffFXs[_index].SetActive(false);
     }
 }

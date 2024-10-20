@@ -107,6 +107,10 @@ public abstract class Entity : MonoBehaviour
     {
         CanBeStunned = _value > 0;
     }
+    public virtual void SuperArmedTrigger(int _value)
+    {
+        LastSuperArmedTime = _value;
+    }
     public virtual void SetAttackMoveDirection() { }
     public virtual void MoveToTargetTrigger(int _value)
     {

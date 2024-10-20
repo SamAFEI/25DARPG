@@ -31,6 +31,8 @@ public class Player : Entity
     public bool IsBreak1;
     public bool IsBreak2;
     public string sexAnimName;
+    public string testSexAnim;
+    public int testSexAnimIndex;
 
     protected override void Awake()
     {
@@ -60,11 +62,25 @@ public class Player : Entity
 
     protected override void Update()
     {
-        base.Update();
+        base.Update(); 
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            testSexAnimIndex++;
+            if (testSexAnimIndex > 3) testSexAnimIndex = 1;
+            testSexAnim = "OrcForeplay" + testSexAnimIndex.ToString().PadLeft(2, '0');
+            sexAnimName = testSexAnim;
+            IsSexing = true;
+            Debug.Log(sexAnimName);
+            FSM.ChangeState(sexState);
+        }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            sexAnimName = "OrcSex02";
+            testSexAnimIndex++;
+            if (testSexAnimIndex > 4) testSexAnimIndex = 1;
+            testSexAnim = "OrcSex" + testSexAnimIndex.ToString().PadLeft(2, '0');
+            sexAnimName = testSexAnim;
             IsSexing = true;
+            Debug.Log(sexAnimName);
             FSM.ChangeState(sexState);
         }
     }
@@ -162,7 +178,8 @@ public class Player : Entity
         else
         {
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-            uiPlayerStatus.DoLerpHealth();
+            uiPlayerStatus.DoLerpHealth(5f);
+            entityFX.DoPlayBuffFX(0);
         }
         if (_isHeaveyAttack)
         {
@@ -266,5 +283,18 @@ public class Player : Entity
         }
     }
     #endregion
+
+    public void ItemAction(int _index)
+    {
+        Inventory inventory = UI_Shortcut.Instance.GetSlotItemData(_index);
+        if (inventory == null || inventory.amount == 0) return;
+
+        ItemData item = inventory.item;
+        if (item.name == "HPPotion")
+        {
+            Hurt(-MaxHp * item.effectsVaule);
+        }
+        InventoryManager.SaveInventory(item, -1);
+    }
 
 }

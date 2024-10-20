@@ -28,6 +28,10 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.StunnedTrigger(_value);
     }
+    private void SuperArmedTrigger(int _value)
+    {
+        entity.SuperArmedTrigger(_value);
+    }
     private void SetAttackMoveDirection()
     {
         entity.SetAttackMoveDirection();

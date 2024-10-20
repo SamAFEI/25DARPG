@@ -25,6 +25,7 @@ public class EnemyStateAttack1 : EnemyState
         enemy.StunnedTrigger(0);
         enemy.MoveToTargetTrigger(0);
         enemy.IgnoreLayersTrigger(0);
+        enemy.SuperArmedTrigger(0);
     }
 
     public override void OnUpdate()
