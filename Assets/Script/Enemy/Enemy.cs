@@ -3,6 +3,7 @@ using UnityEngine;
 public class Enemy : Entity
 {
     public UI_EntityStatus uiEnityStatus { get; private set; }
+    public UI_BossStatus uiBossStatus { get; private set; }
 
     #region FSM States
     public EnemyStateIdle idleState { get; set; }
@@ -31,17 +32,21 @@ public class Enemy : Entity
     #endregion
 
     public float AttackMoveMaxSpeed { get; set; }
-
+    public bool IsAlerting { get; set; }
+    public bool IsKeepawaying { get; set; }
+    public bool IsCatching { get; set; }
+    public bool CanChase { get; set; }
+    public bool CanAttack1 { get; set; }
+    public bool CanAttack2 { get; set; }
+    public bool CanAttack3 { get; set; }
+    public bool CanSexPlayer { get; set; }
+    public bool CanCatch { get; set; }
     public Vector3 MoveDirection;
-    public bool IsAlerting;
-    public bool IsKeepawaying;
-    public bool IsCatching;
-    public bool CanChase;
-    public bool CanAttack1;
-    public bool CanAttack2;
-    public bool CanAttack3;
-    public bool CanSexPlayer;
-    public bool CanCatch;
+
+    public AudioClip sfxAttack;
+    public AudioClip sfxAttack2;
+    public AudioClip sfxAttack3;
+    public AudioClip sfxHurt;
 
     protected override void Awake()
     {
@@ -56,8 +61,15 @@ public class Enemy : Entity
     protected override void Start()
     {
         base.Start();
-        uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
-        LastCatchTime = Random.Range(5.0f, 10.0f);
+        if (Data.isBoos)
+        {
+            uiBossStatus = GameObject.FindAnyObjectByType<UI_BossStatus>();
+        }
+        else
+        {
+            uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
+        }
+        LastCatchTime = Random.Range(3.0f, 5.0f);
     }
 
     protected override void Update()
@@ -91,6 +103,7 @@ public class Enemy : Entity
         {
             Player _player = other.GetComponentInParent<Player>();
             entityFX.DoPlayHitFX(0, entityCollider.ClosestPoint(other.transform.position));
+            PlaySFXTrigger(3);
             Hurt(_player.AttackDamage, _player.IsHeaveyAttack);
             Repel(_player.transform.position, _player.IsHeaveyAttack);
         }
@@ -116,6 +129,22 @@ public class Enemy : Entity
     public float GetPlayerDistance() => GameManager.GetPlayerDistance(this.transform.position);
     public Vector3 GetPlayerDirection() => GameManager.GetPlayerDirection(this.transform.position);
 
+    #region Animation Action
+    public override void PlaySFXTrigger(int _value)
+    {
+        AudioClip clip = null;
+        if (_value == 0) { clip = sfxAttack; }
+        else if (_value == 1) { clip = sfxAttack2; }
+        else if (_value == 2) { clip = sfxAttack3; }
+        else if (_value == 3) { clip = sfxHurt; }
+        if (clip != null)
+        {
+            AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        }
+    }
+
+    #endregion
+
     #region About Hurt
     public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
     {
@@ -125,16 +154,18 @@ public class Enemy : Entity
             TimerManager.Instance.DoFrozenTime(0.1f);
             CameraManager.Shake(1f, 0.1f);
             LastHurtTime = Data.hurtResetTime;
-            if (_isHeaveyAttack) { LastHurtTime += 0.3f; }
+            if (_isHeaveyAttack) { LastHurtTime += 0.3f; _damage *= 2; }
             if (IsSuperArmeding) { LastHurtTime = 0; }
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-            uiEnityStatus.DoLerpHealth();
+            if (Data.isBoos) { uiBossStatus.DoLerpHealth(); }
+            else { uiEnityStatus.DoLerpHealth(); }
         }
         else
         {
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-            uiEnityStatus.DoLerpHealth();
+            if (Data.isBoos) { uiBossStatus.DoLerpHealth(); }
+            else { uiEnityStatus.DoLerpHealth(); }
         }
 
         if (IsDied)
@@ -145,8 +176,8 @@ public class Enemy : Entity
     public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
     {
         if (IsSuperArmeding) return;
-        float power = 20;
-        if (isHeavyAttack) { power *= 1.5f; }
+        float power = rb.mass * 1.5f;
+        if (isHeavyAttack) { power *= 3f; }
         Vector3 _vector = CheckRelativeVector(sourcePosition);
         float faceRight = _vector.x * -1;
         float faceFoward = _vector.z * -10;
@@ -163,7 +194,7 @@ public class Enemy : Entity
         ProjectileBase projectile = obj.GetComponent<ProjectileBase>();
         projectile.AttackDamage = AttackDamage;
         obj.transform.LookAt(GameManager.Instance.player.transform);
-        obj.GetComponent<Rigidbody>().velocity = obj.transform.forward * 15f;
+        obj.GetComponent<Rigidbody>().velocity = obj.transform.forward * projectile.Speed;
     }
     #region Enemy AI
     public virtual void CheckAlert()

@@ -14,10 +14,6 @@ public class PlayerFX : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-    }
-
     public void DoPlayShalsh(int _index)
     {
         if (shalshFXs.Count <= _index) { return; }

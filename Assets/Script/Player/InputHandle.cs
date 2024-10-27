@@ -55,7 +55,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Defend"",
+                    ""name"": ""Parry"",
                     ""type"": ""Button"",
                     ""id"": ""7134b0b8-55b9-492e-8248-04fbc6e30433"",
                     ""expectedControlType"": ""Button"",
@@ -159,7 +159,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8ff7152d-628a-40f8-937f-844371ec958b"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -196,7 +196,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Defend"",
+                    ""action"": ""Parry"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -207,7 +207,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Defend"",
+                    ""action"": ""Parry"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -315,7 +315,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         m_Character_Movement = m_Character.FindAction("Movement", throwIfNotFound: true);
         m_Character_Dash = m_Character.FindAction("Dash", throwIfNotFound: true);
         m_Character_Attack = m_Character.FindAction("Attack", throwIfNotFound: true);
-        m_Character_Defend = m_Character.FindAction("Defend", throwIfNotFound: true);
+        m_Character_Parry = m_Character.FindAction("Parry", throwIfNotFound: true);
         m_Character_Interact = m_Character.FindAction("Interact", throwIfNotFound: true);
         m_Character_Item00 = m_Character.FindAction("Item00", throwIfNotFound: true);
         m_Character_Item01 = m_Character.FindAction("Item01", throwIfNotFound: true);
@@ -387,7 +387,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Movement;
     private readonly InputAction m_Character_Dash;
     private readonly InputAction m_Character_Attack;
-    private readonly InputAction m_Character_Defend;
+    private readonly InputAction m_Character_Parry;
     private readonly InputAction m_Character_Interact;
     private readonly InputAction m_Character_Item00;
     private readonly InputAction m_Character_Item01;
@@ -399,7 +399,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Character_Movement;
         public InputAction @Dash => m_Wrapper.m_Character_Dash;
         public InputAction @Attack => m_Wrapper.m_Character_Attack;
-        public InputAction @Defend => m_Wrapper.m_Character_Defend;
+        public InputAction @Parry => m_Wrapper.m_Character_Parry;
         public InputAction @Interact => m_Wrapper.m_Character_Interact;
         public InputAction @Item00 => m_Wrapper.m_Character_Item00;
         public InputAction @Item01 => m_Wrapper.m_Character_Item01;
@@ -422,9 +422,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
-            @Defend.started += instance.OnDefend;
-            @Defend.performed += instance.OnDefend;
-            @Defend.canceled += instance.OnDefend;
+            @Parry.started += instance.OnParry;
+            @Parry.performed += instance.OnParry;
+            @Parry.canceled += instance.OnParry;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -450,9 +450,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
-            @Defend.started -= instance.OnDefend;
-            @Defend.performed -= instance.OnDefend;
-            @Defend.canceled -= instance.OnDefend;
+            @Parry.started -= instance.OnParry;
+            @Parry.performed -= instance.OnParry;
+            @Parry.canceled -= instance.OnParry;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -533,7 +533,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnDefend(InputAction.CallbackContext context);
+        void OnParry(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnItem00(InputAction.CallbackContext context);
         void OnItem01(InputAction.CallbackContext context);

@@ -11,6 +11,7 @@ public class PlayerStateDash : PlayerState
         base.OnEnter();
         player.SetZeroVelocity();
         player.IgnoreLayersTrigger(1);
+        player.input.ResetDashTime = 0.6f;
     }
     public override void OnExit()
     {

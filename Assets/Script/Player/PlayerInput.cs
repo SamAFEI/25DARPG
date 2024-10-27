@@ -1,14 +1,15 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class PlayerInput : MonoBehaviour
 {
     #region Components
-    public Player player => GetComponent<Player>();
-    public Rigidbody rb => player.rb;
-    public PlayerData data => player.Data;
-    public PlayerInteract playerInteract => GetComponent<PlayerInteract>();
+    public Player player { get; set; }
+    public Rigidbody rb { get; set; }
+    public PlayerData data { get; set; }
+    public PlayerInteract playerInteract { get; set; }
     public GameObject ui_Bag;
     public InputHandle inputHandle;
     #endregion
@@ -23,27 +24,31 @@ public class PlayerInput : MonoBehaviour
     public float LastPressedDashTime;
     public float LastPressedAttackTime;
     public float LastPressedParryTime;
-    public float LastUpParryTime;
-    public float CanCounterTime;
+    public float ResetDashTime;
     #endregion
 
     #region CONTROL PARAMETERS
     public bool IsPressedAttack { get { return LastPressedAttackTime > 0; } }
     public bool IsPressedParry { get { return LastPressedParryTime > 0; } }
-    public bool IsUpParry { get { return LastUpParryTime > 0; } }
     public bool IsPressedDash { get { return LastPressedDashTime > 0; } }
-    public bool CanCounter { get { return CanCounterTime > 0; } }
-    public bool IsDefending { get { return IsParrying && !CanCounter; } }
-    public bool IsJumping { get; private set; }
-    public bool IsDashing { get; private set; }
-    public bool IsParrying { get; private set; }
-    public bool IsSuperArmoring { get; private set; }
-    public bool IsAttacking { get; private set; }
+    public bool IsJumping { get; set; }
+    public bool IsDashing { get; set; }
+    public bool IsParrying { get; set; }
+    public bool IsSuperArmoring { get; set; }
+    public bool IsAttacking { get; set; }
     #endregion
 
     private void Awake()
     {
         InitInputHandle(); 
+    }
+
+    private void Start()
+    {
+        player = GetComponent<Player>();
+        rb = player.rb;
+        data = player.Data;
+        playerInteract = GetComponent<PlayerInteract>();
     }
 
     private void Update()
@@ -53,8 +58,7 @@ public class PlayerInput : MonoBehaviour
         LastPressedDashTime -= Time.deltaTime;
         LastPressedAttackTime -= Time.deltaTime;
         LastPressedParryTime -= Time.deltaTime;
-        LastUpParryTime -= Time.deltaTime;
-        CanCounterTime -= Time.deltaTime;
+        ResetDashTime -= Time.deltaTime;
         #endregion
 
         #region Input Handler
@@ -102,10 +106,6 @@ public class PlayerInput : MonoBehaviour
         {
             SetParrying(true);
         }
-        if (IsParrying && IsUpParry)
-        {
-            SetParrying(false);
-        }
         #endregion
     }
 
@@ -121,24 +121,32 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        inputHandle.Character.Disable();
+        inputHandle.SexAction.Disable();
+    }
+
     #region InputHandle 
     private void InitInputHandle()
     {
         inputHandle = new InputHandle();
         inputHandle.Enable();
 
+        inputHandle.Character.Movement.started += InputMovement;
         inputHandle.Character.Movement.performed += InputMovement;
         inputHandle.Character.Movement.canceled += InputMovement;
         inputHandle.Character.Dash.started += InputDash;
-        inputHandle.Character.Attack.canceled += InputAttack;
-        inputHandle.Character.Defend.started += InputDefend;
-        inputHandle.Character.Defend.canceled += InputDefendCancel;
+        inputHandle.Character.Attack.started += InputAttack;
+        inputHandle.Character.Parry.started += InputParry;
         inputHandle.Character.OpenBag.started += InputOpenBag;
         inputHandle.Character.Interact.started += InputInteract;
         inputHandle.Character.Item00.started += InputItem00;
         inputHandle.Character.Item01.started += InputItem01;
 
-        inputHandle.SexAction.ResistHorizontal.started += InputResistHorizontal;
+        inputHandle.SexAction.ResistHorizontal.performed += InputResistHorizontal;
+        inputHandle.Character.Enable();
+        inputHandle.SexAction.Disable();
     }
     private void InputMovement(InputAction.CallbackContext _context)
     {
@@ -154,13 +162,9 @@ public class PlayerInput : MonoBehaviour
     {
         LastPressedAttackTime = data.attackInputBufferTime;
     }
-    private void InputDefend(InputAction.CallbackContext _context)
+    private void InputParry(InputAction.CallbackContext _context)
     {
         LastPressedParryTime = data.parryInputBufferTime;
-    }
-    private void InputDefendCancel(InputAction.CallbackContext _context)
-    {
-        LastUpParryTime = data.parryInputBufferTime;
     }
     private void InputInteract(InputAction.CallbackContext _context)
     {
@@ -183,6 +187,7 @@ public class PlayerInput : MonoBehaviour
     {
         float input = _context.ReadValue<float>();
         MoveInput.x = input;
+        player.StartCoroutine(player.DoShark());
     }
     #endregion
 
@@ -311,14 +316,6 @@ public class PlayerInput : MonoBehaviour
     public void SetParrying(bool value)
     {
         IsParrying = value;
-        if (value)
-        {
-            CanCounterTime = data.canCounterTime;
-        }
-        else
-        {
-            CanCounterTime = 0;
-        }
     }
     #endregion
 
@@ -326,7 +323,7 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDash()
     {
-        return !IsDashing && !IsParrying;
+        return !IsDashing && !IsParrying && ResetDashTime < 0;
     }
 
     private bool CanAttack()

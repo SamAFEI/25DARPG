@@ -9,7 +9,7 @@ public class PlayerStateRun : PlayerStateGrounded
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (player.MoveInput == Vector3.zero)
+        if (player.MoveInput == Vector3.zero || !player.CanMovement)
         {
             FSM.ChangeState(player.idleState);
             return;

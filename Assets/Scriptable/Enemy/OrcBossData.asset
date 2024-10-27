@@ -34,7 +34,7 @@ MonoBehaviour:
   jumpHangTimeThreshold: 0.5
   jumpHangAccelerationMult: 0
   jumpHangMaxSpeedMult: 0
-  maxHP: 500
+  maxHP: 1000
   isBoos: 1
   attack1ResetTime: 3
   attack1Damage: 20

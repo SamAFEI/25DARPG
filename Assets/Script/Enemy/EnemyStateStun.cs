@@ -8,6 +8,7 @@ public class EnemyStateStun : EnemyState
     {
         base.OnEnter();
         enemy.SetZeroVelocity();
+        enemy.entityFX.DoPlayBuffFX(0, 2f);
     }
     public override void OnUpdate()
     {

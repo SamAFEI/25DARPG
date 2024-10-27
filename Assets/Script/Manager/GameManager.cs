@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public static string LoadSceneName;
     public GameObject playerObj { get; private set; }
     public Player player { get; private set; }
     public List<Enemy> sexEnemies { get; private set; } = new List<Enemy>();
+    public bool isStartScene;
 
     private void Awake()
     {
@@ -26,6 +28,10 @@ public class GameManager : MonoBehaviour
     {
         playerObj = GameObject.FindWithTag("Player");
         player = playerObj.GetComponent<Player>();
+        if (isStartScene)
+        {
+            player.StartCoroutine(player.DoStartAnimation());
+        }
     }
 
     #region About Player
@@ -77,6 +83,7 @@ public class GameManager : MonoBehaviour
         foreach(Enemy enemy in enemies)
         {
             enemy.skeleton.SetActive(true);
+            enemy.LastCatchTime = Random.Range(3f, 5f);
             enemy.FSM.ChangeState(enemy.alertState);
             Instance.sexEnemies.Remove(enemy);
         }
@@ -84,9 +91,20 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    public void LoadScene(string _sceneName)
+    {
+        LoadSceneName = _sceneName;
+        SceneManager.LoadScene("LoadingScene");
+    }
     public void RestarScene()
     {
         Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        LoadScene(scene.name);
+    }
+
+    public void LoadStarScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        LoadScene("StartScene");
     }
 }

@@ -11,7 +11,6 @@ public class EnemyStateAttack1 : EnemyState
         base.OnEnter();
         enemy.SetZeroVelocity();
         enemy.IsAttacking = true;
-        enemy.IsAttackBeDefended = false;
         enemy.IsHeaveyAttack = enemy.Data.attack1IsHeavy;
         enemy.AttackDamage = enemy.Data.attack1Damage;
     }

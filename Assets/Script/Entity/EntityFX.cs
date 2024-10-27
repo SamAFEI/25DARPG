@@ -55,20 +55,21 @@ public class EntityFX : MonoBehaviour
         Destroy(obj, 0.3f);
     }
 
-    public void DoPlayBuffFX(int _index)
+    public void DoPlayBuffFX(int _index, float time = 0)
     {
-        if (attackFXs.Count <= _index) { return; }
-        StartCoroutine(PlayBuffFX(_index));
+        if (buffFXs.Count <= _index) { return; }
+        StartCoroutine(PlayBuffFX(_index, time));
     }
 
-    private IEnumerator PlayBuffFX(int _index)
+    private IEnumerator PlayBuffFX(int _index, float time = 0)
     {
         buffFXs[_index].SetActive(true);
         ParticleSystem particle = buffFXs[_index].GetComponent<ParticleSystem>();
         if (particle != null)
         {
+            if (time == 0) { time = particle.startLifetime; }
             particle.Play();
-            yield return new WaitForSeconds(particle.startLifetime);
+            yield return new WaitForSeconds(time);
             particle.Stop();
         }
         else

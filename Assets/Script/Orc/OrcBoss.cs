@@ -1,10 +1,35 @@
+using UnityEngine;
+
 public class OrcBoss : Enemy
 {
+    public AudioClip voiceAlter;
+    public AudioClip voiceDie;
+    public GameObject dropItem;
+
+    private bool isAlter;
+
     protected override void Update()
     {
         LastSuperArmedTime = 10f;
         base.Update();
+
+        if (!isAlter && IsAlerting)
+        {
+            PlayVoiceTrigger(0);
+            isAlter = true;
+        }
     }
+
+    public override void Hurt(float _damage, bool _isHeaveyAttack = false)
+    {
+        base.Hurt(_damage, _isHeaveyAttack);
+        if (IsDied)
+        {
+            PlayVoiceTrigger(1);
+            Instantiate(dropItem, gameObject.transform.position, Quaternion.identity);
+        }
+    }
+
     public override void AlertStateAction()
     {
         if (IsKeepawaying)
@@ -38,5 +63,17 @@ public class OrcBoss : Enemy
     {
         AttackMoveMaxSpeed = 3f;
         FSM.ChangeState(attack2State);
+    }
+
+    public override void PlayVoiceTrigger(int _value)
+    {
+        AudioClip clip = null;
+        float volume = 0.8f;
+        if (_value == 0) { clip = voiceAlter; }
+        else if (_value == 1) { clip = voiceDie; }
+        if (clip != null)
+        {
+            AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position, volume);
+        }
     }
 }

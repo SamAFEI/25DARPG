@@ -1,0 +1,79 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class EnemyPoint : MonoBehaviour
+{
+    private UI_BossStatus uibossStatus;
+    private bool isActiveAlter;
+    private bool isClear;
+    public List<Enemy> enemies = new List<Enemy>();
+    public List<Enemy> hideEnemies = new List<Enemy>();
+    public bool isBoss;
+    public GameObject activeEvent;
+
+    private void Start()
+    {
+        enemies = GetComponentsInChildren<Enemy>().ToList();
+        foreach (Enemy enemy in hideEnemies)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        ActiveAlter();
+        CheckAreClear();
+    }
+
+    private void ActiveAlter()
+    {
+        if (isActiveAlter) { return; }
+        if (enemies.Where(x => x.IsAlerting).ToList().Count() > 0)
+        {
+            if (isBoss) { AudioManager.PlayBGM(2); }
+            else { AudioManager.PlayBGM(1); }
+            StartCoroutine(Ambush());
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy.gameObject.activeSelf)
+                { enemy.IsAlerting = true; }
+                if (enemy.Data.isBoos)
+                {
+                    uibossStatus = enemy.uiBossStatus.SetUIStateActive(true, enemy);
+                }
+            }
+            isActiveAlter = true;
+        }
+    }
+
+    private IEnumerator Ambush()
+    {
+        yield return new WaitForSeconds(15f);
+        foreach (Enemy enemy in hideEnemies)
+        {
+            enemy.gameObject.SetActive(true);
+            enemy.IsAlerting = true;
+        }
+    }
+
+    private void CheckAreClear()
+    {
+        if (!isActiveAlter || isClear) { return; }
+        if (enemies.Where(x => x != null).ToList().Count() == 0)
+        {
+            AudioManager.PlayBGM(0);
+            isClear = true;
+            if (uibossStatus != null)
+            {
+                uibossStatus.SetUIStateActive(false);
+            }
+            if (activeEvent != null)
+            {
+                activeEvent.SetActive(true);
+            }
+        }
+    }
+}

@@ -11,15 +11,17 @@ public class EnemyStateAttack3 : EnemyState
         base.OnEnter();
         enemy.SetZeroVelocity();
         enemy.IsAttacking = true;
-        enemy.IsAttackBeDefended = false;
         enemy.AttackDamage = enemy.Data.attack3Damage;
         enemy.IsHeaveyAttack = enemy.Data.attack3IsHeavy;
+        enemy.IsRockAttack = true;
     }
     public override void OnExit()
     {
         base.OnExit();
         enemy.SetZeroVelocity();
         enemy.IsAttacking = false;
+        enemy.IsHeaveyAttack = false;
+        enemy.IsRockAttack = false;
         enemy.LastAttack3Time = enemy.Data.attack3ResetTime + Random.Range(0.00f, 0.30f);
         enemy.DamageTrigger(0);
         enemy.StunnedTrigger(0);

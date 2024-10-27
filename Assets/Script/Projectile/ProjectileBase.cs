@@ -28,7 +28,7 @@ public class ProjectileBase : MonoBehaviour
     public void DoPlayHitFX()
     {
         if (hitFX == null) { return; }
-        GameObject obj = Instantiate(hitFX, transform.position, Quaternion.identity, transform);
+        GameObject obj = Instantiate(hitFX, transform.position, Quaternion.identity);
         obj.SetActive(true);
         Destroy(obj, 0.3f);
     }

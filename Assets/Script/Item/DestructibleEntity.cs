@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static UnityEditor.BaseShaderGUI;
 
 public class DestructibleEntity : MonoBehaviour
 {
@@ -13,14 +12,15 @@ public class DestructibleEntity : MonoBehaviour
     public GameObject broken { get; private set; }
     public List<MeshRenderer> breakenRenderers { get; private set; }
 
-    public GameObject hitFX;
+    public bool isCrush { get; set; }
 
-    public bool isCrush;
+    public DestructibleType destructibleType = 0;
+    public GameObject hitFX;
     public int hp = 10;
     public int droppedItemRate = 5;
     public float explosionForce = 200f;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         collider = GetComponent<Collider>();
@@ -29,22 +29,31 @@ public class DestructibleEntity : MonoBehaviour
         breakenRenderers = broken.GetComponentsInChildren<MeshRenderer>().ToList();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         broken.SetActive(false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "PlayerAttack")
+        if (other.tag == "PlayerAttack" || other.tag == "EnemyAttack")
         {
+            Entity _entity = other.GetComponentInParent<Entity>();
             DoPlayHitFX(GetComponent<Collider>().ClosestPoint(other.transform.position));
-            Player _player = other.GetComponentInParent<Player>();
-            Hurt(_player.AttackDamage);
+            if (destructibleType == DestructibleType.rock)
+            {
+                AudioManager.PlayRockHitSFX(transform.position);
+                if (!_entity.IsRockAttack) { return; }
+            }
+            else
+            {
+                AudioManager.PlayWoodHitSFX(transform.position);
+            }
+            Hurt(_entity.AttackDamage);
         }
     }
 
-    private void Hurt(float _damage)
+    protected virtual void Hurt(float _damage)
     {
         if (isCrush) return;
         hp -= (int)_damage;
@@ -56,11 +65,12 @@ public class DestructibleEntity : MonoBehaviour
         StartCoroutine(DoShark());
     }
 
-    private void Crush()
+    protected virtual void Crush()
     {
         isCrush = true;
         meshRenderer.enabled = false; 
-        collider.excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Destructible");
+        collider.excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") 
+                | 1 << LayerMask.NameToLayer("Destructible") | 1 << LayerMask.NameToLayer("Interactable");
         broken.SetActive(true);
         List<UnfreezeFragment> fragments = broken.GetComponentsInChildren<UnfreezeFragment>().ToList();
         foreach (UnfreezeFragment fragment in fragments)
@@ -69,15 +79,23 @@ public class DestructibleEntity : MonoBehaviour
             fragment.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 1f, 1f, ForceMode.Impulse);
             fragment.GetComponent<Collider>().excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy");
         }
+        if (destructibleType == DestructibleType.rock)
+        {
+            AudioManager.PlayRockBreakenSFX(transform.position);
+        }
+        else
+        {
+            AudioManager.PlayWoodBreakenSFX(transform.position);
+        }
         StartCoroutine(Disappear());
     }
 
-    private IEnumerator Disappear()
+    protected virtual IEnumerator Disappear()
     {
         yield return new WaitForSeconds(1f); 
         float alpha = 1;
         MaterialToFadeMode();
-        while (alpha > 0)
+        while (alpha > 0f)
         {
             alpha -= Time.deltaTime * 20;
             foreach (MeshRenderer renderer in breakenRenderers)
@@ -85,14 +103,16 @@ public class DestructibleEntity : MonoBehaviour
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
                 foreach (Material material in renderer.materials)
                 {
-                    material.SetFloat("_Surface", (float)SurfaceType.Transparent);
+                    //material.SetFloat("_Surface", (float)SurfaceType.Transparent);
+                    material.SetFloat("_Surface", 1);
                     Color color = material.color;
                     material.color = new Color(color.r, color.g, color.b, alpha);
                 }
             }
             yield return new WaitForSeconds(.1f);
+            if (alpha <= 0.1f) alpha = 0f;
         }
-        Destroy(transform.root.gameObject, 0.5f);
+        Destroy(gameObject);
     }
 
     private void MaterialToFadeMode()
@@ -127,4 +147,9 @@ public class DestructibleEntity : MonoBehaviour
         obj.SetActive(true);
         Destroy(obj, 0.3f);
     }
+}
+
+public enum DestructibleType
+{
+    wood, rock,
 }

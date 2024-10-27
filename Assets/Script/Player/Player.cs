@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -8,6 +9,8 @@ public class Player : Entity
     public PlayerInput input { get; set; }
     public UI_PlayerStatus uiPlayerStatus { get; private set; }
     public UI_PlayerHint uiPlayerHint { get; private set; }
+    public UI_Interactable uiInteractable { get; private set; }
+    public GameObject weaponPoint;
     #endregion
 
     #region FSM States
@@ -22,17 +25,27 @@ public class Player : Entity
     public PlayerStateDie dieState { get; set; }
     #endregion
     public new PlayerData Data => (PlayerData)base.Data;
-    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying && !IsStunning && !IsSexing; } }
+    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying && !IsStunning && !IsSexing && !IsSystem; } }
     public Vector3 MoveInput { get { return input.MoveInput; } }
+    public bool IsSystem { get; set; }
+    public bool IsBreak1 { get; set; }
+    public bool IsBreak2 { get; set; }
+    public string sexAnimName { get; set; }
+    public string testSexAnim { get; set; }
+    public int testSexAnimIndex { get; set; }
+    public bool hasRockAttack { get { return InventoryManager.Instance.inventories.Where(x => x.item.name == "Magic Sword Fragment").ToList().Count() > 0; } }
+
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
-    public bool IsCounter;
-    public bool IsBreak1;
-    public bool IsBreak2;
-    public string sexAnimName;
-    public string testSexAnim;
-    public int testSexAnimIndex;
+    public AudioClip sfxParrySuccess;
+    public AudioClip voiceParrySuccess;
+    public AudioClip sfxAttack;
+    public AudioClip voiceAttack;
+    public AudioClip sfxHPPotion;
+    public AudioClip voiceHurt;
+    public AudioClip voiceSex;
+    public AudioClip sfxRockAttack;
 
     protected override void Awake()
     {
@@ -58,6 +71,7 @@ public class Player : Entity
     {
         base.Start();
         uiPlayerStatus = GameObject.FindObjectOfType<UI_PlayerStatus>();
+        uiInteractable = GameObject.Find("UI_Canvas").transform.Find("UI_Interactable").GetComponent<UI_Interactable>();
     }
 
     protected override void Update()
@@ -82,6 +96,22 @@ public class Player : Entity
             IsSexing = true;
             Debug.Log(sexAnimName);
             FSM.ChangeState(sexState);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            Hurt(10000);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            entityFX.DoPlayBuffFX(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            StartCoroutine(DemoSword3());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            Hurt(-10000);
         }
     }
 
@@ -108,9 +138,12 @@ public class Player : Entity
         if (other.tag == "EnemyAttack")
         {
             Enemy _enemy = other.GetComponentInParent<Enemy>();
-            if (input.CanCounter && _enemy.IsAttackBeDefended && _enemy.CanBeStunned)
+            if (CanBeStunned && _enemy.CanBeStunned)
             {
-                IsCounter = true;
+
+                PlaySFXTrigger(1);
+                PlayVoiceTrigger(1);
+                entityFX.DoPlayHitFX(0, weaponPoint.transform.position);
                 _enemy.LastStunTime = 3f;
                 return;
             }
@@ -143,6 +176,34 @@ public class Player : Entity
         input.inputHandle.SexAction.Disable();
         UI_Canvas.Instance.FadeInUI_Die();
     }
+
+    #region Animation Action
+    public override void PlaySFXTrigger(int _value)
+    {
+        AudioClip clip = null;
+        if (_value == 0) { clip = sfxAttack; }
+        else if (_value == 1) { clip = sfxParrySuccess; }
+        else if (_value == 2) { clip = sfxHPPotion; }
+        else if (_value == 4) { clip = sfxRockAttack; }
+        if (clip != null)
+        {
+            AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        }
+    }
+
+    public override void PlayVoiceTrigger(int _value)
+    {
+        AudioClip clip = null;
+        if (_value == 0) { clip = voiceAttack; }
+        else if (_value == 1) { clip = voiceParrySuccess; }
+        else if (_value == 2) { clip = voiceHurt; }
+        else if (_value == 3) { clip = voiceSex; }
+        if (clip != null)
+        {
+            AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+        }
+    }
+    #endregion
 
     #region Hurt
     public override IEnumerator HurtFlasher()
@@ -190,7 +251,7 @@ public class Player : Entity
     public override void SexHurt()
     {
         if (!IsSexing) { return; }
-        CameraManager.Shake(3f, 0.1f);
+        CameraManager.Shake(8f, 0.2f);
         foreach (Enemy _enemy in GameManager.Instance.sexEnemies)
         {
             float _damage = _enemy.AttackDamage;
@@ -284,6 +345,20 @@ public class Player : Entity
     }
     #endregion
 
+    public IEnumerator DoShark()
+    {
+        Vector3 original = transform.position;
+        float time = 0.1f;
+        while (time > 0)
+        {
+            time -= Time.deltaTime;
+            float offset = Mathf.Sin(Time.time * .1f) * .1f;
+            transform.position = original + new Vector3(offset, 0, offset);
+            yield return new WaitForSeconds(0.001f);
+        }
+        transform.position = original;
+    }
+
     public void ItemAction(int _index)
     {
         Inventory inventory = UI_Shortcut.Instance.GetSlotItemData(_index);
@@ -292,9 +367,54 @@ public class Player : Entity
         ItemData item = inventory.item;
         if (item.name == "HPPotion")
         {
+            PlaySFXTrigger(2);
             Hurt(-MaxHp * item.effectsVaule);
         }
         InventoryManager.SaveInventory(item, -1);
     }
 
+    public IEnumerator DemoSword3()
+    {
+        IsSystem = true;
+        input.inputHandle.Character.Disable();
+        input.MoveInput = Vector2.zero;
+        yield return new WaitForSeconds(0.5f);
+        input.SetAttacking(true);
+        yield return new WaitForSeconds(0.4f);
+        input.SetAttacking(true);
+        yield return new WaitForSeconds(0.4f);
+        input.SetAttacking(true);
+        yield return new WaitForSeconds(1f);
+        input.inputHandle.Character.Enable();
+        IsSystem = false;
+    }
+
+    public IEnumerator DoStartAnimation()
+    {
+        IsSystem = true;
+        input.inputHandle.Character.Disable();
+        input.inputHandle.SexAction.Disable();
+        while (true)
+        {
+            float index = Random.Range(1, 5);
+            if (index < 3)
+            {
+                if (index == 1)
+                    testSexAnim = "OrcForeplay01"; 
+                else if (index == 2)
+                    testSexAnim = "OrcForeplay03"; 
+                SetSpriteLibraryAsset(SLAssetBreak1);
+            }
+            else 
+            {
+                if (index == 3)
+                    testSexAnim = "OrcSex01";
+                else if (index == 4)
+                    testSexAnim = "OrcSex04";
+                SetSpriteLibraryAsset(SLAssetBreak2);
+            }
+            anim.Play(testSexAnim);
+            yield return new WaitForSeconds(5f);
+        }
+    }
 }

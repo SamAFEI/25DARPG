@@ -15,7 +15,6 @@ public abstract class Entity : MonoBehaviour
     public EntityFSM FSM { get; private set; }
     public EntityFX entityFX { get; private set; }
     public GameObject attackMesh { get; private set; }
-    public GameObject defendMesh { get; private set; }
     public List<SpriteRenderer> sprites { get; private set; } = new List<SpriteRenderer>();
     public Collider entityCollider { get; private set; }
     #endregion
@@ -36,6 +35,7 @@ public abstract class Entity : MonoBehaviour
     public bool CanDamage { get; set; }
     public bool CanBeStunned { get; set; }
     public bool IsMoveToTarget { get; set; }
+    public bool IsRockAttack { get; set; }
     public int FacingDir => IsFacingRight ? 1 : -1;
     public string myLayerName;
     [Header("­«¤O«Y¼Æ")]
@@ -57,8 +57,6 @@ public abstract class Entity : MonoBehaviour
         skeleton = transform.Find("Skeleton").gameObject;
         attackMesh = skeleton.transform.Find("AttackMesh").gameObject;
         attackMesh.SetActive(false);
-        defendMesh = skeleton.transform.Find("DefendMesh").gameObject;
-        defendMesh.SetActive(false);
         anim = GetComponentInChildren<Animator>();
         spriteResolvers = skeleton.GetComponentsInChildren<SpriteResolver>().ToList();
         spriteLibrary = skeleton.GetComponentInChildren<SpriteLibrary>();
@@ -120,6 +118,12 @@ public abstract class Entity : MonoBehaviour
     public virtual void CameraShakeTrigger()
     {
         CameraManager.Shake(10f, 0.3f);
+    }
+    public virtual void PlaySFXTrigger(int _value)
+    {
+    }
+    public virtual void PlayVoiceTrigger(int _value)
+    {
     }
     #endregion
 
@@ -221,11 +225,6 @@ public abstract class Entity : MonoBehaviour
             return;
         }
         gameObject.layer = LayerMask.NameToLayer(myLayerName);
-    }
-
-    public void SetDefendMeshActive(bool _value)
-    {
-        defendMesh.SetActive(_value);
     }
 
     /// <summary>

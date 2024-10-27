@@ -1,12 +1,13 @@
 using Cinemachine;
 using UnityEngine;
+using static Cinemachine.CinemachineBrain;
 
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager Instance { get; private set; }
-    private CinemachineBrain CameraBrain;
-    private CinemachineVirtualCamera CurrentCamera;
-    private CinemachineBasicMultiChannelPerlin cbmPerlin;
+    public CinemachineBrain cameraBrain;
+    public CinemachineVirtualCamera activeCamera;
+    public CinemachineBasicMultiChannelPerlin cbmPerlin;
     private float shakeTimer = 0;
     private float shakeTimerTotal;
     private float startingIntensity;
@@ -23,31 +24,47 @@ public class CameraManager : MonoBehaviour
             Instance = this;
             //DontDestroyOnLoad(this.gameObject);
         }
-        CameraBrain = Camera.main.GetComponent<CinemachineBrain>();
+        cameraBrain = Camera.main.GetComponent<CinemachineBrain>();
     }
 
-    private void Start()
-    {
-        CurrentCamera = CameraBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-    }
 
     private void Update()
     {
+        GetActiveCamera();
         DoShake();
     }
 
+    public void GetActiveCamera()
+    {
+        Instance.activeCamera = Instance.cameraBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+        if (Instance.activeCamera == null){ return; }
+        Instance.cbmPerlin = Instance.activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        Instance.cbmPerlin.m_AmplitudeGain = 0f;
+        Instance.cbmPerlin.m_FrequencyGain = 0f;
+    }
+
     #region AreaCamera
+    public static void ChangeCamera(ref CinemachineVirtualCamera nextCamera)
+    {
+        Instance.activeCamera.Priority = 10;
+        nextCamera.Priority = 11;
+        Instance.GetActiveCamera();
+    }
+
     public static void ChangeCamera(ref CinemachineVirtualCamera current, ref CinemachineVirtualCamera next)
     {
         current.Priority = 10;
         next.Priority = 11;
-        Instance.SetCurrentCamera(next);
+        Instance.GetActiveCamera();
+        //Instance.SetActiveCamera(next);
     }
 
-    public void SetCurrentCamera(CinemachineVirtualCamera camera)
+    public void SetActiveCamera(CinemachineVirtualCamera camera)
     {
-        CurrentCamera = camera;
-        cbmPerlin = CurrentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        activeCamera = camera;
+        cbmPerlin = activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        Instance.cbmPerlin.m_AmplitudeGain = 0f;
+        Instance.cbmPerlin.m_FrequencyGain = 0f;
     }
     #endregion
 
@@ -67,7 +84,8 @@ public class CameraManager : MonoBehaviour
     {
         if (shakeTimer > 0)
         {
-            SetCurrentCamera(CameraBrain.ActiveVirtualCamera as CinemachineVirtualCamera);
+            GetActiveCamera();
+            //SetActiveCamera(cameraBrain.ActiveVirtualCamera as CinemachineVirtualCamera);
             shakeTimer -= Time.deltaTime;
             if (shakeTimer <= 0)
             {

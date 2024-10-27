@@ -6595,21 +6595,28 @@ AnimationClip:
     floatParameter: 0
     intParameter: 10
     messageOptions: 0
-  - time: 0.36666667
+  - time: 0.3
+    functionName: PlaySFXTrigger
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
     functionName: StunnedTrigger
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.43333334
+  - time: 0.46666667
     functionName: StunnedTrigger
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.46666667
+  - time: 0.5
     functionName: DamageTrigger
     data: 
     objectReferenceParameter: {fileID: 0}

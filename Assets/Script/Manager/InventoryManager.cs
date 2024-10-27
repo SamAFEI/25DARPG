@@ -5,8 +5,8 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
-    public static List<ItemData> items = new List<ItemData>();
-    public static List<Inventory> inventories = new List<Inventory>();
+    public List<ItemData> items = new List<ItemData>();
+    public List<Inventory> inventories = new List<Inventory>();
 
     public delegate void OnInventoryChanged();
     public OnInventoryChanged onInventoryChangedCallback;
@@ -30,16 +30,16 @@ public class InventoryManager : MonoBehaviour
         {
             for (int i = 0; i < amount; i++)
             {
-                items.Add(itemData);
+                Instance.items.Add(itemData);
             }
         }
         else
         {
             for (int i = 0; i > amount; i--)
             {
-                if (items.Contains(itemData))
+                if (Instance.items.Contains(itemData))
                 {
-                    items.Remove(itemData); 
+                    Instance.items.Remove(itemData); 
                 }
             }
         }
@@ -51,8 +51,8 @@ public class InventoryManager : MonoBehaviour
 
     public static List<Inventory> GetInventories()
     {
-        inventories = items.GroupBy(x => x).Select(x => new Inventory(x.Key, x.Count())).ToList();
-        return inventories;
+        Instance.inventories = Instance.items.GroupBy(x => x).Select(x => new Inventory(x.Key, x.Count())).ToList();
+        return Instance.inventories;
     }
     public static Inventory GetInventoy(string itemName)
     {

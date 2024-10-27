@@ -19,10 +19,10 @@ MonoBehaviour:
   fastFallGravityMult: 10
   maxFastFallSpeed: 20
   runMaxSpeed: 10
-  runAcceleration: 8
-  runAccelAmount: 40
-  runDecceleration: 8
-  runDeccelAmount: 40
+  runAcceleration: 10
+  runAccelAmount: 50
+  runDecceleration: 10
+  runDeccelAmount: 50
   accelInAir: 1
   deccelInAir: 1
   hurtResetTime: 0.2
@@ -44,4 +44,4 @@ MonoBehaviour:
   dashResetTime: 0.5
   canCounterTime: 0.2
   MaxHP: 200
-  AttackDamage: 10
+  AttackDamage: 30

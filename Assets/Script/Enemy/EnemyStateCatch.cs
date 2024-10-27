@@ -20,7 +20,8 @@ public class EnemyStateCatch : EnemyState
         base.OnExit();
         enemy.IsAttacking = false;
         enemy.IsCatching = false;
-        enemy.LastCatchTime = 5f + Random.Range(5f,10f);
+        enemy.LastCatchTime = Random.Range(3f,5f);
+        enemy.SuperArmedTrigger(0);
     }
 
     public override void OnUpdate()

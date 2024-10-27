@@ -38,7 +38,7 @@
             FSM.ChangeState(player.dashState);
             return;
         }
-        if (player.input.IsParrying)
+        if (player.input.IsParrying && FSM.currentState != player.parryState)
         {
             FSM.ChangeState(player.parryState);
             return;

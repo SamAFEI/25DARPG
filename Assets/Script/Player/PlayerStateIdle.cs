@@ -15,7 +15,7 @@ public class PlayerStateIdle : PlayerStateGrounded
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (player.MoveInput.x != 0 || player.MoveInput.z != 0)
+        if (player.CanMovement && (player.MoveInput.x != 0 || player.MoveInput.z != 0))
         {
             FSM.ChangeState(player.runState);
             return;

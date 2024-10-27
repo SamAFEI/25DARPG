@@ -48,4 +48,12 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.CameraShakeTrigger();
     }
+    private void PlaySFXTrigger(int _value)
+    {
+        entity.PlaySFXTrigger(_value);
+    }
+    private void PlayVoiceTrigger(int _value)
+    {
+        entity.PlayVoiceTrigger(_value);
+    }
 }

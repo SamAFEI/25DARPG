@@ -8,6 +8,7 @@ public class PlayerStateHurt : PlayerState
     {
         base.OnEnter();
         player.SetZeroVelocity();
+        player.PlayVoiceTrigger(2);
         player.LastSuperArmedTime = player.Data.hurtResetTime;
     }
 

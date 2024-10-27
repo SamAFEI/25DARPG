@@ -12,7 +12,9 @@ public class PlayerStateSex : PlayerState
         base.OnEnter();
         player.input.inputHandle.Character.Disable();
         player.input.inputHandle.SexAction.Enable();
-        player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, true);
+        player.PlayVoiceTrigger(3);
+        //player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, true);
+        player.uiInteractable.Resist();
         player.IsSexing = true;
     }
 
@@ -22,7 +24,8 @@ public class PlayerStateSex : PlayerState
         player.input.inputHandle.Character.Enable();
         player.input.inputHandle.SexAction.Disable();
         GameManager.ResetSexEnemies();
-        player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, false);
+        //player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, false);
+        player.uiInteractable.Disable();
         player.SetBreak();
         player.IsSexing = false;
     }

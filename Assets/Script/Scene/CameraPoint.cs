@@ -6,6 +6,7 @@ public class CameraPoint : MonoBehaviour
     public AreaCheckEnum AreaCheck;
     public CinemachineVirtualCamera AreaCamera01;
     public CinemachineVirtualCamera AreaCamera02;
+    public Collider collider => GetComponent<Collider>();
 
 
     private void OnTriggerExit(Collider other)
@@ -13,19 +14,20 @@ public class CameraPoint : MonoBehaviour
         if (other.tag == "Player")
         {
             Vector3 playerPos = other.transform.position;
+            Vector3 closestPoint = collider.ClosestPoint(playerPos);
             if (AreaCheck == AreaCheckEnum.PosZ)
             {
-                if (transform.position.z < playerPos.z) //往Z+
-                { CameraManager.ChangeCamera(ref AreaCamera01, ref AreaCamera02); }
+                if (closestPoint.z < playerPos.z) //往Z+
+                { CameraManager.ChangeCamera(ref AreaCamera02); }
                 else //往Z-
-                { CameraManager.ChangeCamera(ref AreaCamera02, ref AreaCamera01); }
+                { CameraManager.ChangeCamera(ref AreaCamera01); }
             }
             else if (AreaCheck == AreaCheckEnum.PosX)
             {
-                if (transform.position.x < playerPos.x) //往X+
-                { CameraManager.ChangeCamera(ref AreaCamera01, ref AreaCamera02); }
+                if (closestPoint.x < playerPos.x) //往X+
+                { CameraManager.ChangeCamera(ref AreaCamera02); }
                 else //往X-
-                { CameraManager.ChangeCamera(ref AreaCamera02, ref AreaCamera01); }
+                { CameraManager.ChangeCamera(ref AreaCamera01); }
             }
         }
     }
@@ -33,5 +35,5 @@ public class CameraPoint : MonoBehaviour
 
 public enum AreaCheckEnum
 {
-    PosZ, PosX
+    PosZ, PosX, RightTo2RightTo1, RightTo2LeftTo1
 }
