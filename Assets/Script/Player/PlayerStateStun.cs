@@ -10,7 +10,6 @@ public class PlayerStateStun : PlayerState
     public override void OnEnter()
     {
         base.OnEnter();
-        player.SetZeroVelocity();
         stateTime = 1f;
         player.LastStunTime = stateTime;
     }
@@ -31,12 +30,12 @@ public class PlayerStateStun : PlayerState
         }
         if (!player.IsStunning)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
         if (player.IsSexing)
         {
-            FSM.ChangeState(player.sexState);
+            FSM.SetNextState(player.sexState);
             return;
         }
     }

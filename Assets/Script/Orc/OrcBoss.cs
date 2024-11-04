@@ -34,35 +34,35 @@ public class OrcBoss : Enemy
     {
         if (IsKeepawaying)
         {
-            FSM.ChangeState(keepawayState);
+            FSM.SetNextState(keepawayState);
             return;
         }
         if (CanAttack3)
         {
             AttackMoveMaxSpeed = 3f;
-            FSM.ChangeState(attack3State);
+            FSM.SetNextState(attack3State);
             return;
         }
         if (CanAttack1)
         {
-            FSM.ChangeState(attack1State);
+            FSM.SetNextState(attack1State);
             return;
         }
         if (CanChase)
         {
-            FSM.ChangeState(chaseState);
+            FSM.SetNextState(chaseState);
             return;
         }
         if (CanCatch)
         {
-            FSM.ChangeState(catchState);
+            FSM.SetNextState(catchState);
             return;
         }
     }
     public override void Attack1Finish()
     {
         AttackMoveMaxSpeed = 3f;
-        FSM.ChangeState(attack2State);
+        FSM.SetNextState(attack2State);
     }
 
     public override void PlayVoiceTrigger(int _value)

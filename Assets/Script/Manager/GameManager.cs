@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
     public static void AddSexEnemies(Enemy enemy)
     {
         Instance.sexEnemies.Add(enemy);
-        enemy.FSM.ChangeState(enemy.alertState);
+        enemy.FSM.SetNextState(enemy.alertState);
         enemy.skeleton.SetActive(false);
     }
     public static void ResetSexEnemies()
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         {
             enemy.skeleton.SetActive(true);
             enemy.LastCatchTime = Random.Range(3f, 5f);
-            enemy.FSM.ChangeState(enemy.alertState);
+            enemy.FSM.SetNextState(enemy.alertState);
             Instance.sexEnemies.Remove(enemy);
         }
     }

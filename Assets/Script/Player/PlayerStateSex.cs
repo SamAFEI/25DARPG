@@ -36,12 +36,12 @@ public class PlayerStateSex : PlayerState
         player.SetZeroVelocity();
         if (player.IsDied)
         {
-            FSM.ChangeState(player.dieState);
+            FSM.SetNextState(player.dieState);
             return;
         }
         if (!player.IsSexing)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
     }

@@ -4,7 +4,6 @@ public class ProjectileBase : MonoBehaviour
 {
     public Rigidbody rb { get; private set; }
     public bool IsHeaveyAttack { get; set; }
-    public bool IsAttackBeDefended { get; set; }
     public GameObject hitFX;
     public float AttackDamage;
     public float Speed;

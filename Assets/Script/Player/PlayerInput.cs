@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -111,11 +111,16 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (player.CanMovement && !player.IsDied)
+        if (player.CanMovement)
         {
             if (MoveInput.x != 0)
             {
                 player.CheckIsFacingRight(MoveInput.x > 0);
+            }
+            if (MoveInput.x > 0 != player.IsFacingRight)
+            {   
+                //避免轉向滑行
+                player.SetZeroVelocity();
             }
             Run(1);
         }
@@ -194,7 +199,7 @@ public class PlayerInput : MonoBehaviour
     #region RUN METHODS
     private void Run(float lerpAmount)
     {
-        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z, MoveInput.x);
+        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z * 3f, MoveInput.x);
 
         float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         //Calculate the direction we want to move in and our desired velocity

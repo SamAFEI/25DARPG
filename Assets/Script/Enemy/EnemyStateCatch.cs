@@ -29,7 +29,7 @@ public class EnemyStateCatch : EnemyState
         base.OnUpdate();
         if (isAnimFinish)
         {
-            FSM.ChangeState(enemy.alertState);
+            FSM.SetNextState(enemy.alertState);
             return;
         }
     }

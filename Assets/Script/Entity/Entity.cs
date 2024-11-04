@@ -44,9 +44,9 @@ public abstract class Entity : MonoBehaviour
     public static float GlobalGravity = -9.81f;
 
     #region Timers
-    public float LastHurtTime;
-    public float LastStunTime;
-    public float LastSuperArmedTime;
+    public float LastHurtTime { get; set; }
+    public float LastStunTime { get; set; }
+    public float LastSuperArmedTime { get; set; }
     #endregion
 
     protected virtual void Awake()
@@ -78,7 +78,7 @@ public abstract class Entity : MonoBehaviour
         LastStunTime -= Time.deltaTime;
         LastSuperArmedTime -= Time.deltaTime;
         #endregion
-
+        FSM.ChangeNextState();
         FSM.currentState.OnUpdate();
     }
 
@@ -131,7 +131,9 @@ public abstract class Entity : MonoBehaviour
     public virtual void CheckIsFacingRight(bool isMovingRight)
     {
         if (isMovingRight != IsFacingRight)
+        {
             Flip();
+        }
     }
     public virtual void Flip()
     {

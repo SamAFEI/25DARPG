@@ -170,7 +170,7 @@ public class Enemy : Entity
 
         if (IsDied)
         {
-            FSM.ChangeState(dieState);
+            FSM.SetNextState(dieState);
         }
     }
     public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
@@ -215,7 +215,7 @@ public class Enemy : Entity
             return;
         }
         float faceRight = CheckRelativeVector(GameManager.Instance.player.transform.position).x;
-        if (faceRight != 0)
+        if (faceRight != 0 && !IsStunning)
         {
             CheckIsFacingRight(faceRight > 0);
         }
@@ -255,23 +255,23 @@ public class Enemy : Entity
     {
         if (CanCatch && Random.Range(0.00f, 100.00f) < 100f)
         {
-            FSM.ChangeState(catchState);
+            FSM.SetNextState(catchState);
             return;
         }
         if (IsKeepawaying)
         {
-            FSM.ChangeState(keepawayState);
+            FSM.SetNextState(keepawayState);
             return;
         }
         if (CanAttack1)
         {
-            FSM.ChangeState(attack1State);
+            FSM.SetNextState(attack1State);
             CheckIsFacingRight(CheckRelativeVector(GameManager.Instance.player.transform.position).x > 0);
             return;
         }
         if (CanChase)
         {
-            FSM.ChangeState(chaseState);
+            FSM.SetNextState(chaseState);
             return;
         }
     }
@@ -296,15 +296,15 @@ public class Enemy : Entity
     }
     public virtual void Attack1Finish()
     {
-        FSM.ChangeState(alertState);
+        FSM.SetNextState(alertState);
     }
     public virtual void Attack2Finish()
     {
-        FSM.ChangeState(alertState);
+        FSM.SetNextState(alertState);
     }
     public virtual void Attack3Finish()
     {
-        FSM.ChangeState(alertState);
+        FSM.SetNextState(alertState);
     }
     #endregion
 

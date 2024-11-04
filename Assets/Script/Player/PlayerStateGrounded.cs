@@ -1,4 +1,6 @@
-﻿public class PlayerStateGrounded : PlayerState
+﻿using UnityEngine;
+
+public class PlayerStateGrounded : PlayerState
 {
     public PlayerStateGrounded(Player _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
     {
@@ -20,11 +22,12 @@
         
         if (player.IsDied)
         {
-            FSM.ChangeState(player.dieState);
+            FSM.SetNextState(player.dieState);
+            return;
         }
         if (player.IsHurting && !player.IsSuperArmeding)
         {
-            FSM.ChangeState(player.hurtState);
+            FSM.SetNextState(player.hurtState);
             return;
         }
         /* 由 Hurt 進入 Stun
@@ -35,17 +38,17 @@
         }*/
         if (player.input.IsDashing)
         {
-            FSM.ChangeState(player.dashState);
+            FSM.SetNextState(player.dashState);
             return;
         }
-        if (player.input.IsParrying && FSM.currentState != player.parryState)
+        if (player.input.IsParrying)
         {
-            FSM.ChangeState(player.parryState);
+            FSM.SetNextState(player.parryState);
             return;
         }
-        if (player.input.IsAttacking && FSM.currentState != player.swordState)
+        if (player.input.IsAttacking)
         {
-            FSM.ChangeState(player.swordState);
+            FSM.SetNextState(player.swordState);
             return;
         }
     }

@@ -303,9 +303,6 @@ MonoBehaviour:
   Data: {fileID: 11400000, guid: c6725ce81db14424581dc492688f9015, type: 2}
   myLayerName: 
   gravityScale: 1
-  LastHurtTime: 0
-  LastStunTime: 0
-  LastSuperArmedTime: 0
   weaponPoint: {fileID: 466464121441977570}
   SLAssetNormal: {fileID: 7108339969198208228, guid: 4a725532aa033284899e243e3e061d87,
     type: 3}
@@ -340,6 +337,7 @@ MonoBehaviour:
   LastPressedDashTime: 0
   LastPressedAttackTime: 0
   LastPressedParryTime: 0
+  ResetDashTime: 0
 --- !u!114 &8845922078669395565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,7 +466,7 @@ Transform:
   m_GameObject: {fileID: 9117225283209638510}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17418034, y: 0.0000041456947, z: 0.0000063371835, w: 0.9847138}
-  m_LocalPosition: {x: 0.13345337, y: 1.0158457, z: -0.46966553}
+  m_LocalPosition: {x: 0.13345337, y: 1.0158426, z: -0.46966553}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -685,7 +683,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -5058640651826141470, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      objectReference: {fileID: 2830250817860635936, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
     - target: {fileID: -1257185993192928346, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
@@ -736,7 +734,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -3216642295422256775, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      objectReference: {fileID: -5264386008807048701, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
     - target: {fileID: 7077661543198129248, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
@@ -1340,6 +1338,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slash01
       objectReference: {fileID: 0}
+    - target: {fileID: 8295662664470655598, guid: 1c6fc2c8c16427e4e837bb840d09679b,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1371,6 +1374,16 @@ PrefabInstance:
       value: Rock_Attack_FX
       objectReference: {fileID: 0}
     - target: {fileID: 648730127294067824, guid: 634c928703d5bd74aabb8f4c510a9f0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 870605038074730907, guid: 634c928703d5bd74aabb8f4c510a9f0d,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471130787651585487, guid: 634c928703d5bd74aabb8f4c510a9f0d,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1450,6 +1463,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2776752920622620883}
     m_Modifications:
+    - target: {fileID: 1637745818446166530, guid: 0c48d65b874930d4f898a338741f62f7,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3654833737517744699, guid: 0c48d65b874930d4f898a338741f62f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1534,6 +1552,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Slash02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898744706785671002, guid: e7a395212c5870640a9cb32148ad96e6,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7759152376344056695, guid: e7a395212c5870640a9cb32148ad96e6,
         type: 3}
@@ -1936,6 +1959,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealBuff
       objectReference: {fileID: 0}
+    - target: {fileID: 419411002348774512, guid: cd9502fda131cb04998600aa76def2e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7604325560951443450, guid: cd9502fda131cb04998600aa76def2e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1944,7 +1972,7 @@ PrefabInstance:
     - target: {fileID: 7604325560951443450, guid: cd9502fda131cb04998600aa76def2e7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.097
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7604325560951443450, guid: cd9502fda131cb04998600aa76def2e7,
         type: 3}
@@ -1985,6 +2013,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9027470221571850155, guid: cd9502fda131cb04998600aa76def2e7,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

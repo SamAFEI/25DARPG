@@ -17,7 +17,7 @@ public class PlayerStateIdle : PlayerStateGrounded
         base.OnUpdate();
         if (player.CanMovement && (player.MoveInput.x != 0 || player.MoveInput.z != 0))
         {
-            FSM.ChangeState(player.runState);
+            FSM.SetNextState(player.runState);
             return;
         }
     }

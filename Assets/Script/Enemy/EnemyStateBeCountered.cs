@@ -14,7 +14,7 @@ public class EnemyStateBeCountered : EnemyState
         base.OnUpdate();
         if (isAnimFinish)
         {
-            FSM.ChangeState(enemy.stunState);
+            FSM.SetNextState(enemy.stunState);
             return;
         }
     }

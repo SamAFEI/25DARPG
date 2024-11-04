@@ -5,7 +5,7 @@ public abstract class EntityState
     protected float stateTime;
     public EntityFSM FSM;
     public Entity Entity;
-    protected string animName;
+    public string animName;
     protected bool isAnimFinish;
 
     public EntityState(Entity _entity, EntityFSM _FSM, string _animName)

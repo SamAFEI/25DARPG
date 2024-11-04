@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PlayerStateHurt : PlayerState
 {
     public PlayerStateHurt(Player _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
@@ -7,7 +9,6 @@ public class PlayerStateHurt : PlayerState
     public override void OnEnter()
     {
         base.OnEnter();
-        player.SetZeroVelocity();
         player.PlayVoiceTrigger(2);
         player.LastSuperArmedTime = player.Data.hurtResetTime;
     }
@@ -15,24 +16,25 @@ public class PlayerStateHurt : PlayerState
     public override void OnExit()
     {
         base.OnExit();
+        player.LastHurtTime = 0f;
     }
 
     public override void OnUpdate()
     {
-        base.OnUpdate(); 
+        base.OnUpdate();
         if (player.CurrentHp <= 0)
         {
-            FSM.ChangeState(player.dieState);
+            FSM.SetNextState(player.dieState);
             return;
         }
         if (player.IsStunning)
         {
-            FSM.ChangeState(player.stunState);
+            FSM.SetNextState(player.stunState);
             return;
         }
         if (isAnimFinish)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
     }

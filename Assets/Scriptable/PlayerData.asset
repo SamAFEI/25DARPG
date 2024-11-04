@@ -43,5 +43,5 @@ MonoBehaviour:
   dashDurationTime: 0.2
   dashResetTime: 0.5
   canCounterTime: 0.2
-  MaxHP: 200
+  MaxHP: 500
   AttackDamage: 30

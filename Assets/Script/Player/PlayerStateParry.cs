@@ -24,7 +24,7 @@ public class PlayerStateParry : PlayerStateGrounded
         base.OnUpdate();
         if (isAnimFinish)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
     }

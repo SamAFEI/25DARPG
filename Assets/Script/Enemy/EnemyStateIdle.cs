@@ -15,7 +15,7 @@ public class EnemyStateIdle : EnemyState
         base.OnUpdate();
         if (enemy.IsAlerting)
         {
-            FSM.ChangeState(enemy.alertState);
+            FSM.SetNextState(enemy.alertState);
             return;
         }
     }

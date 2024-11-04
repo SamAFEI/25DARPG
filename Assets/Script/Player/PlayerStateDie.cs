@@ -27,7 +27,7 @@ public class PlayerStateDie : PlayerState
         }
         if (!player.IsDied)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
     }

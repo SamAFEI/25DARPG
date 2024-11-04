@@ -19,7 +19,7 @@ public class EnemyStateHurt : EnemyState
         base.OnUpdate();
         if (!enemy.IsHurting)
         {
-            FSM.ChangeState(enemy.idleState);
+            FSM.SetNextState(enemy.idleState);
             return;
         }
     }

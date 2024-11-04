@@ -17,6 +17,7 @@ public class PlayerStateDash : PlayerState
     {
         base.OnExit();
         player.IgnoreLayersTrigger(0);
+        player.SetZeroVelocity();
     }
 
     public override void OnUpdate()
@@ -24,7 +25,7 @@ public class PlayerStateDash : PlayerState
         base.OnUpdate();
         if (!player.input.IsDashing)
         {
-            FSM.ChangeState(player.idleState);
+            FSM.SetNextState(player.idleState);
             return;
         }
     }

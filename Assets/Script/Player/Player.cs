@@ -25,7 +25,8 @@ public class Player : Entity
     public PlayerStateDie dieState { get; set; }
     #endregion
     public new PlayerData Data => (PlayerData)base.Data;
-    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying && !IsStunning && !IsSexing && !IsSystem; } }
+    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying 
+                && !IsStunning && !IsSexing && !IsSystem && !IsHurting && !IsDied; } }
     public Vector3 MoveInput { get { return input.MoveInput; } }
     public bool IsSystem { get; set; }
     public bool IsBreak1 { get; set; }
@@ -85,7 +86,7 @@ public class Player : Entity
             sexAnimName = testSexAnim;
             IsSexing = true;
             Debug.Log(sexAnimName);
-            FSM.ChangeState(sexState);
+            FSM.SetNextState(sexState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
@@ -95,7 +96,7 @@ public class Player : Entity
             sexAnimName = testSexAnim;
             IsSexing = true;
             Debug.Log(sexAnimName);
-            FSM.ChangeState(sexState);
+            FSM.SetNextState(sexState);
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -129,7 +130,7 @@ public class Player : Entity
             if (IsHurting || IsStunning || IsSuperArmeding) { return; }
             ProjectileBase _projectile = other.GetComponentInParent<ProjectileBase>();
             Repel(_projectile.transform.position);
-            Hurt(_projectile.AttackDamage, _projectile.IsHeaveyAttack, _projectile.IsAttackBeDefended);
+            Hurt(_projectile.AttackDamage, _projectile.IsHeaveyAttack);
         }
     }
 
@@ -159,14 +160,14 @@ public class Player : Entity
                     sexAnimName = _enemy.Data.sexAnims[Random.Range(0, _enemy.Data.sexAnims.Count)].name;
                 }
                 IsSexing = true;
-                FSM.ChangeState(sexState);
+                FSM.SetNextState(sexState);
                 StartCoroutine(Resist());
                 GameManager.AddSexEnemies(_enemy);
                 return;
             }
             float damage = _enemy.AttackDamage * Random.Range(0.80f, 1.20f);
             Repel(_enemy.transform.position, _enemy.IsHeaveyAttack);
-            Hurt(damage, _enemy.IsHeaveyAttack, _enemy.IsAttackBeDefended);
+            Hurt(damage, _enemy.IsHeaveyAttack);
         }
     }
 
@@ -218,7 +219,7 @@ public class Player : Entity
         }
     }
 
-    public virtual void Hurt(float _damage, bool _isHeaveyAttack = false, bool _isBeDefend = false)
+    public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
     {
         //DoDamageHp
         if (_damage > 0)
@@ -226,11 +227,6 @@ public class Player : Entity
             if (IsHurting || IsStunning || IsSuperArmeding) { return; }
             CameraManager.Shake(3f, 0.1f);
             LastHurtTime = Data.hurtResetTime;
-            if (_isBeDefend)
-            {
-                _damage *= 0.8f;
-                if (!_isHeaveyAttack) { LastHurtTime = 0f; }
-            }
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
@@ -285,15 +281,21 @@ public class Player : Entity
 
     public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
     {
+        if (input.IsDashing) { return; }
+        IsSystem = true;
         Vector3 _vector = CheckRelativeVector(sourcePosition);
-        CheckIsFacingRight(_vector.x > 0);
-        float faceRight = _vector.x > 0 ? -1 : 1;
-        faceRight *= rb.mass * 3;
-        if (isHeavyAttack) { faceRight *= 5; }
-        _vector = new Vector3(faceRight, 0, 0);
+        float faceRight = rb.mass * -5;
+        if (isHeavyAttack) 
+        { 
+            faceRight *= 4;
+            CheckIsFacingRight(_vector.x > 0);
+        }
+        _vector = new Vector3(_vector.x, 0, _vector.z).normalized * faceRight;
         _vector = CameraManager.GetDirectionByCamera(_vector);
         SetZeroVelocity();
         rb.AddForce(_vector, ForceMode.Impulse);
+        Debug.Log(_vector);
+        IsSystem = false;
     }
     #endregion
 
@@ -380,9 +382,9 @@ public class Player : Entity
         input.MoveInput = Vector2.zero;
         yield return new WaitForSeconds(0.5f);
         input.SetAttacking(true);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.5f);
         input.SetAttacking(true);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.5f);
         input.SetAttacking(true);
         yield return new WaitForSeconds(1f);
         input.inputHandle.Character.Enable();

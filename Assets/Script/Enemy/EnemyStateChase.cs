@@ -9,7 +9,7 @@ public class EnemyStateChase : EnemyState
         base.OnUpdate();
         if (!enemy.CanChase)
         {
-            FSM.ChangeState(enemy.alertState);
+            FSM.SetNextState(enemy.alertState);
             return;
         }
     }

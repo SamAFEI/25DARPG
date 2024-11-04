@@ -15,7 +15,7 @@ public class EnemyStateStun : EnemyState
         base.OnUpdate();
         if (!enemy.IsStunning)
         {
-            FSM.ChangeState(enemy.idleState);
+            FSM.SetNextState(enemy.idleState);
             return;
         }
     }

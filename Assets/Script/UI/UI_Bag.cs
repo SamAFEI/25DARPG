@@ -31,6 +31,7 @@ public class UI_Bag : MonoBehaviour
         inventoryManager = InventoryManager.Instance;
         inventoryManager.onInventoryChangedCallback += UpdateUI;
         gameObject.SetActive(false);
+        UpdateUI();
     }
 
     private void InitUI()
@@ -96,9 +97,5 @@ public class UI_Bag : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        UpdateUI();
-    }
 }
 

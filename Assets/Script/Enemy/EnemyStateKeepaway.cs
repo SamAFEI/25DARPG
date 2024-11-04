@@ -15,7 +15,7 @@ public class EnemyStateKeepaway : EnemyState
         base.OnUpdate();
         if (stateTime < 0 || !enemy.IsKeepawaying)
         {
-            FSM.ChangeState(enemy.alertState);
+            FSM.SetNextState(enemy.alertState);
         }
     }
 

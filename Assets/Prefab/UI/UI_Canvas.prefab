@@ -1779,7 +1779,7 @@ MonoBehaviour:
   interactHint: {fileID: 21300000, guid: dae49ba1187c4654aa40ae056562bcf8, type: 3}
   resistLeft: {fileID: 21300000, guid: 058322658f7103e4f9d0bd1815b8c72e, type: 3}
   resistRight: {fileID: 21300000, guid: 0bcd8910173eaee4ea663a3977dbcb1a, type: 3}
-  isActiving: 0
+  isMessaging: 0
 --- !u!1 &7279353043544843350
 GameObject:
   m_ObjectHideFlags: 0
