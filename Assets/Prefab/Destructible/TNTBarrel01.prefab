@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 345687497540962085}
   m_Layer: 11
   m_Name: Fragment7
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 6601888545472504921}
   m_Layer: 11
   m_Name: Fragment1
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: 6061562747323421813}
   m_Layer: 11
   m_Name: Fragment5
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -493,7 +493,7 @@ GameObject:
   - component: {fileID: 6495730552990405630}
   m_Layer: 11
   m_Name: Fragment10
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -652,7 +652,7 @@ GameObject:
   - component: {fileID: 5090275471326946954}
   m_Layer: 11
   m_Name: Fragment6
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -984,8 +984,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45cefea7ada4b55409955f8216f07ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destructibleType: 0
   hitFX: {fileID: 1518655715659774, guid: 7d91db3260583a04884fd1d5b635bb70, type: 3}
-  isCrush: 0
   hp: 10
   droppedItemRate: 5
   explosionForce: 30
@@ -1005,7 +1005,7 @@ GameObject:
   - component: {fileID: 5130790762470588366}
   m_Layer: 11
   m_Name: Fragment4
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1164,7 +1164,7 @@ GameObject:
   - component: {fileID: 7789740985718122680}
   m_Layer: 11
   m_Name: Fragment8
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1318,7 +1318,7 @@ GameObject:
   - component: {fileID: 1593790051384803373}
   m_Layer: 11
   m_Name: Breaken
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1365,7 +1365,7 @@ GameObject:
   - component: {fileID: 6813155803387006086}
   m_Layer: 11
   m_Name: Fragment2
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1524,7 +1524,7 @@ GameObject:
   - component: {fileID: 1799210499211407727}
   m_Layer: 11
   m_Name: Fragment0
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1683,7 +1683,7 @@ GameObject:
   - component: {fileID: 1204901571165153006}
   m_Layer: 11
   m_Name: Fragment3
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1842,7 +1842,7 @@ GameObject:
   - component: {fileID: 4008151028921503630}
   m_Layer: 11
   m_Name: Fragment9
-  m_TagString: Untagged
+  m_TagString: Destructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

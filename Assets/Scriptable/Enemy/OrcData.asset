@@ -18,10 +18,10 @@ MonoBehaviour:
   maxFallSpeed: 20
   fastFallGravityMult: 10
   maxFastFallSpeed: 20
-  runMaxSpeed: 9
-  runAcceleration: 9
+  runMaxSpeed: 10
+  runAcceleration: 10
   runAccelAmount: 50
-  runDecceleration: 9
+  runDecceleration: 10
   runDeccelAmount: 50
   accelInAir: 1
   deccelInAir: 1
@@ -45,7 +45,7 @@ MonoBehaviour:
   attack3ResetTime: 1
   attack3Damage: 10
   attack3IsHeavy: 0
-  alertDistance: 5
+  alertDistance: 6
   catchDistance: 3
   attack1Distance: 3
   attack2Distance: 5

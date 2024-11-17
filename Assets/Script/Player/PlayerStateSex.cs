@@ -23,7 +23,7 @@ public class PlayerStateSex : PlayerState
         base.OnExit();
         player.input.inputHandle.Character.Enable();
         player.input.inputHandle.SexAction.Disable();
-        GameManager.ResetSexEnemies();
+        GameManager.ResetSexEnemies(player.transform.position);
         //player.uiPlayerHint.SetResistHint(SexResistEnum.Horizontal, false);
         player.uiInteractable.Disable();
         player.SetBreak();

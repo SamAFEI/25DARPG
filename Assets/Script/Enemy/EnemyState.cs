@@ -11,19 +11,15 @@ public class EnemyState : EntityState
         base.OnUpdate();
         if (enemy.IsDied)
         {
-            if (FSM.currentState != enemy.dieState)
-            { FSM.SetNextState(enemy.dieState); }
+            FSM.SetNextState(enemy.dieState);
             return;
         }
-        if (enemy.IsStunning)
+        if (enemy.IsStunning && FSM.currentState != enemy.stunState)
         {
-            if (FSM.currentState != enemy.beCounteredState && FSM.currentState != enemy.stunState)
-            {
-                FSM.SetNextState(enemy.beCounteredState);
-            }
+            FSM.SetNextState(enemy.beCounteredState);
             return;
         }
-        if (enemy.IsHurting && FSM.currentState != enemy.hurtState)
+        if (enemy.IsHurting && !enemy.IsStunning)
         {
             FSM.SetNextState(enemy.hurtState);
             return;

@@ -19,7 +19,9 @@ public class EnemyStateAttack1 : EnemyState
         base.OnExit();
         enemy.SetZeroVelocity();
         enemy.IsAttacking = false;
-        enemy.LastAttack1Time = enemy.Data.attack1ResetTime + Random.Range(0.00f, 0.30f); 
+        enemy.LastAttack1Time = enemy.Data.attack1ResetTime + Random.Range(0.00f, 0.30f);
+        if (enemy.IsNoCDAttack){ enemy.LastAttack1Time = 0; }
+        enemy.IsNoCDAttack = false;
         enemy.DamageTrigger(0);
         enemy.StunnedTrigger(0);
         enemy.MoveToTargetTrigger(0);

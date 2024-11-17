@@ -23,6 +23,8 @@ public class EnemyStateAttack3 : EnemyState
         enemy.IsHeaveyAttack = false;
         enemy.IsRockAttack = false;
         enemy.LastAttack3Time = enemy.Data.attack3ResetTime + Random.Range(0.00f, 0.30f);
+        if (enemy.IsNoCDAttack) { enemy.LastAttack3Time = 0; }
+        enemy.IsNoCDAttack = false;
         enemy.DamageTrigger(0);
         enemy.StunnedTrigger(0);
         enemy.MoveToTargetTrigger(0);

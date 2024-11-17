@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 
 public class DestructibleEntity : MonoBehaviour
@@ -11,6 +12,7 @@ public class DestructibleEntity : MonoBehaviour
     public Rigidbody rb { get; private set; }
     public GameObject broken { get; private set; }
     public List<MeshRenderer> breakenRenderers { get; private set; }
+    public NavMeshObstacle obstacle { get; private set; }
 
     public bool isCrush { get; set; }
 
@@ -27,6 +29,7 @@ public class DestructibleEntity : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         broken = transform.Find("Breaken").gameObject;
         breakenRenderers = broken.GetComponentsInChildren<MeshRenderer>().ToList();
+        obstacle = GetComponent<NavMeshObstacle>();
     }
 
     protected virtual void Start()
@@ -68,7 +71,10 @@ public class DestructibleEntity : MonoBehaviour
     protected virtual void Crush()
     {
         isCrush = true;
-        meshRenderer.enabled = false; 
+        meshRenderer.enabled = false;
+        //gameObject.layer = LayerMask.NameToLayer("Ignore");
+        obstacle.enabled = false;
+        collider.isTrigger = true;
         collider.excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") 
                 | 1 << LayerMask.NameToLayer("Destructible") | 1 << LayerMask.NameToLayer("Interactable");
         broken.SetActive(true);
@@ -76,8 +82,8 @@ public class DestructibleEntity : MonoBehaviour
         foreach (UnfreezeFragment fragment in fragments)
         {
             fragment.Unfreeze();
-            fragment.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 1f, 1f, ForceMode.Impulse);
             fragment.GetComponent<Collider>().excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy");
+            fragment.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 1f, 1f, ForceMode.Impulse);
         }
         if (destructibleType == DestructibleType.rock)
         {
@@ -92,7 +98,7 @@ public class DestructibleEntity : MonoBehaviour
 
     protected virtual IEnumerator Disappear()
     {
-        yield return new WaitForSeconds(1f); 
+        yield return new WaitForSeconds(0.5f); 
         float alpha = 1;
         MaterialToFadeMode();
         while (alpha > 0f)

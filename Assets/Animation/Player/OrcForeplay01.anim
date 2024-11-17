@@ -17381,7 +17381,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -17393,7 +17393,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -17405,7 +17405,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18245,7 +18245,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
+    path: Weapon/B_WEAPON
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18257,7 +18257,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
+    path: Weapon/B_WEAPON
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18269,7 +18269,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM
+    path: Weapon/B_WEAPON
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18353,7 +18353,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18365,7 +18365,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18377,7 +18377,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18533,7 +18533,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Weapon/B_WEAPON
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18545,7 +18545,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Weapon/B_WEAPON
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -18557,7 +18557,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Weapon/B_WEAPON
+    path: Orc/B_DOWN BODY/B_MID BODY/B_UP BODY/B_R UP ARM/B_R DOWN ARM/B_R HAND
     classID: 4
     script: {fileID: 0}
     flags: 0

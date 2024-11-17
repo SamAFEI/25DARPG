@@ -1,14 +1,14 @@
-using Cinemachine;
 using UnityEngine;
 
 public class CameraPoint : MonoBehaviour
 {
     public AreaCheckEnum AreaCheck;
-    public CinemachineVirtualCamera AreaCamera01;
-    public CinemachineVirtualCamera AreaCamera02;
+    public CameraViewEnum CameraViewUp;
+    public Collider ColliderUp;
+    public CameraViewEnum CameraViewDown;
+    public Collider ColliderDown;
+
     public Collider collider => GetComponent<Collider>();
-
-
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
@@ -18,16 +18,16 @@ public class CameraPoint : MonoBehaviour
             if (AreaCheck == AreaCheckEnum.PosZ)
             {
                 if (closestPoint.z < playerPos.z) //往Z+
-                { CameraManager.ChangeCamera(ref AreaCamera02); }
+                { CameraManager.ChangeCamera((int)CameraViewUp, ColliderUp); }
                 else //往Z-
-                { CameraManager.ChangeCamera(ref AreaCamera01); }
+                { CameraManager.ChangeCamera((int)CameraViewDown, ColliderDown); }
             }
             else if (AreaCheck == AreaCheckEnum.PosX)
             {
                 if (closestPoint.x < playerPos.x) //往X+
-                { CameraManager.ChangeCamera(ref AreaCamera02); }
+                { CameraManager.ChangeCamera((int)CameraViewUp, ColliderUp); }
                 else //往X-
-                { CameraManager.ChangeCamera(ref AreaCamera01); }
+                { CameraManager.ChangeCamera((int)CameraViewDown, ColliderDown); }
             }
         }
     }
@@ -35,5 +35,9 @@ public class CameraPoint : MonoBehaviour
 
 public enum AreaCheckEnum
 {
-    PosZ, PosX, RightTo2RightTo1, RightTo2LeftTo1
+    PosZ, PosX
+}
+public enum CameraViewEnum
+{
+    ViewZ, ViewX
 }

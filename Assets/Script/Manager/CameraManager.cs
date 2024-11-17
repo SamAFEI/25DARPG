@@ -1,10 +1,16 @@
 using Cinemachine;
 using UnityEngine;
-using static Cinemachine.CinemachineBrain;
 
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager Instance { get; private set; }
+    public GameObject CameraViewZ;
+    public GameObject CameraViewX;
+    public Collider InitCameraCollider;
+    public CinemachineVirtualCamera VCameraViewZ { get; private set; }
+    public CinemachineVirtualCamera VCameraViewX { get; private set; }
+    public CinemachineConfiner ConfinerViewZ;
+    public CinemachineConfiner ConfinerViewX;
     public CinemachineBrain cameraBrain;
     public CinemachineVirtualCamera activeCamera;
     public CinemachineBasicMultiChannelPerlin cbmPerlin;
@@ -25,8 +31,13 @@ public class CameraManager : MonoBehaviour
             //DontDestroyOnLoad(this.gameObject);
         }
         cameraBrain = Camera.main.GetComponent<CinemachineBrain>();
+        VCameraViewZ = CameraViewZ.GetComponent<CinemachineVirtualCamera>();
+        ConfinerViewZ = CameraViewZ.GetComponent<CinemachineConfiner>();
+        VCameraViewX = CameraViewX.GetComponent<CinemachineVirtualCamera>();
+        ConfinerViewX = CameraViewX.GetComponent<CinemachineConfiner>();
+        ConfinerViewZ.m_BoundingVolume = InitCameraCollider;
+        ConfinerViewX.m_BoundingVolume = InitCameraCollider;
     }
-
 
     private void Update()
     {
@@ -34,29 +45,42 @@ public class CameraManager : MonoBehaviour
         DoShake();
     }
 
+    private void OnDisable()
+    {
+        ConfinerViewZ.m_BoundingVolume = InitCameraCollider;
+        ConfinerViewX.m_BoundingVolume = InitCameraCollider;
+    }
+
+    private void OnValidate()
+    {
+        ConfinerViewZ.m_BoundingVolume = InitCameraCollider;
+        ConfinerViewX.m_BoundingVolume = InitCameraCollider;
+    }
+
     public void GetActiveCamera()
     {
         Instance.activeCamera = Instance.cameraBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-        if (Instance.activeCamera == null){ return; }
+        if (Instance.activeCamera == null) { return; }
         Instance.cbmPerlin = Instance.activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         Instance.cbmPerlin.m_AmplitudeGain = 0f;
         Instance.cbmPerlin.m_FrequencyGain = 0f;
     }
 
     #region AreaCamera
-    public static void ChangeCamera(ref CinemachineVirtualCamera nextCamera)
+    public static void ChangeCamera(int index, Collider collider)
     {
         Instance.activeCamera.Priority = 10;
-        nextCamera.Priority = 11;
+        if (index == 0)
+        {
+            Instance.ConfinerViewZ.m_BoundingVolume = collider;
+            Instance.VCameraViewZ.Priority = 11;
+        }
+        else if (index == 1)
+        {
+            Instance.ConfinerViewX.m_BoundingVolume = collider;
+            Instance.VCameraViewX.Priority = 11;
+        }
         Instance.GetActiveCamera();
-    }
-
-    public static void ChangeCamera(ref CinemachineVirtualCamera current, ref CinemachineVirtualCamera next)
-    {
-        current.Priority = 10;
-        next.Priority = 11;
-        Instance.GetActiveCamera();
-        //Instance.SetActiveCamera(next);
     }
 
     public void SetActiveCamera(CinemachineVirtualCamera camera)
@@ -102,7 +126,6 @@ public class CameraManager : MonoBehaviour
         //Camera.main.transform.rotation = Quaternion.identity;
     }
     #endregion
-
 
     #region ¨Ì Camera ¶b¦V
     public static Vector3 GetDirectionByCamera(float vertical, float horizontal)

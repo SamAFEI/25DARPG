@@ -36,6 +36,8 @@ public class Player : Entity
     public int testSexAnimIndex { get; set; }
     public bool hasRockAttack { get { return InventoryManager.Instance.inventories.Where(x => x.item.name == "Magic Sword Fragment").ToList().Count() > 0; } }
 
+    public float LastResistTime;
+
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
@@ -77,7 +79,9 @@ public class Player : Entity
 
     protected override void Update()
     {
-        base.Update(); 
+        base.Update();
+        LastResistTime -= Time.deltaTime;
+
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             testSexAnimIndex++;
@@ -141,16 +145,16 @@ public class Player : Entity
             Enemy _enemy = other.GetComponentInParent<Enemy>();
             if (CanBeStunned && _enemy.CanBeStunned)
             {
-
                 PlaySFXTrigger(1);
                 PlayVoiceTrigger(1);
                 entityFX.DoPlayHitFX(0, weaponPoint.transform.position);
                 _enemy.LastStunTime = 3f;
                 return;
             }
-            if (IsHurting || IsStunning || IsSuperArmeding || _enemy.CanDamage) { return; }
+            if (IsHurting || IsStunning || IsSuperArmeding || !_enemy.CanDamage) { return; }
             if (_enemy.IsCatching)
             {
+                if (_enemy.IsDied) { return; }
                 if (!IsBreak1)
                 {
                     sexAnimName = _enemy.Data.foreplayAnims[Random.Range(0, _enemy.Data.foreplayAnims.Count)].name;
@@ -287,14 +291,13 @@ public class Player : Entity
         float faceRight = rb.mass * -5;
         if (isHeavyAttack) 
         { 
-            faceRight *= 4;
+            faceRight *= 3;
             CheckIsFacingRight(_vector.x > 0);
         }
         _vector = new Vector3(_vector.x, 0, _vector.z).normalized * faceRight;
         _vector = CameraManager.GetDirectionByCamera(_vector);
         SetZeroVelocity();
         rb.AddForce(_vector, ForceMode.Impulse);
-        Debug.Log(_vector);
         IsSystem = false;
     }
     #endregion
@@ -334,6 +337,7 @@ public class Player : Entity
                 if (_currentInput == _nextInput)
                 {
                     _count++;
+                    StartCoroutine(DoShark());
                     if (_count == 10)
                     {
                         IsSexing = false;
@@ -354,7 +358,7 @@ public class Player : Entity
         while (time > 0)
         {
             time -= Time.deltaTime;
-            float offset = Mathf.Sin(Time.time * .1f) * .1f;
+            float offset = Mathf.Sin(Time.time * .5f) * .1f;
             transform.position = original + new Vector3(offset, 0, offset);
             yield return new WaitForSeconds(0.001f);
         }

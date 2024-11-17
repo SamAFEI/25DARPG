@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -40,7 +39,7 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
-        InitInputHandle(); 
+        InitInputHandle();
     }
 
     private void Start()
@@ -118,7 +117,7 @@ public class PlayerInput : MonoBehaviour
                 player.CheckIsFacingRight(MoveInput.x > 0);
             }
             if (MoveInput.x > 0 != player.IsFacingRight)
-            {   
+            {
                 //避免轉向滑行
                 player.SetZeroVelocity();
             }
@@ -192,7 +191,6 @@ public class PlayerInput : MonoBehaviour
     {
         float input = _context.ReadValue<float>();
         MoveInput.x = input;
-        player.StartCoroutine(player.DoShark());
     }
     #endregion
 
@@ -328,7 +326,7 @@ public class PlayerInput : MonoBehaviour
 
     private bool CanDash()
     {
-        return !IsDashing && !IsParrying && ResetDashTime < 0;
+        return !IsDashing && !IsParrying && !IsAttacking && ResetDashTime < 0 && player.CanMovement;
     }
 
     private bool CanAttack()

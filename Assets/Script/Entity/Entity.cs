@@ -63,6 +63,7 @@ public abstract class Entity : MonoBehaviour
         sprites = skeleton.GetComponentsInChildren<SpriteRenderer>().ToList();
         entityFX = GetComponentInChildren<EntityFX>();
         FSM = new EntityFSM();
+        IsFacingRight = transform.localScale.x < 0;
     }
 
     protected virtual void Start()
@@ -119,12 +120,8 @@ public abstract class Entity : MonoBehaviour
     {
         CameraManager.Shake(10f, 0.3f);
     }
-    public virtual void PlaySFXTrigger(int _value)
-    {
-    }
-    public virtual void PlayVoiceTrigger(int _value)
-    {
-    }
+    public virtual void PlaySFXTrigger(int _value){ }
+    public virtual void PlayVoiceTrigger(int _value){ }
     #endregion
 
     #region Flip
@@ -143,10 +140,15 @@ public abstract class Entity : MonoBehaviour
 
         IsFacingRight = !IsFacingRight;
     }
+
+    public virtual void FacingToPlayer()
+    {
+        CheckIsFacingRight(CheckRelativeVector(GameManager.Instance.player.transform.position).x > 0);
+    }
     #endregion
 
     #region Velocity
-    public void SetZeroVelocity()
+    public virtual void SetZeroVelocity()
     {
         rb.velocity = Vector3.zero;
     }
@@ -216,6 +218,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Die(float _delay = 0.8f)
     {
+        entityFX.enabled = false;
         Destroy(gameObject, _delay);
     }
 

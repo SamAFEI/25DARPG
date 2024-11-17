@@ -1,9 +1,13 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : Entity
 {
     public UI_EntityStatus uiEnityStatus { get; private set; }
     public UI_BossStatus uiBossStatus { get; private set; }
+    public NavMeshAgent navMeshAgent { get; private set; }
 
     #region FSM States
     public EnemyStateIdle idleState { get; set; }
@@ -19,7 +23,9 @@ public class Enemy : Entity
     public EnemyStateDie dieState { get; set; }
     public EnemyStateStun stunState { get; set; }
     public EnemyStateBeCountered beCounteredState { get; set; }
-    //public EnemyStateDash dashState { get; set; }
+    public EnemyStatePatrolMove patrolMoveState { get; set; }
+    public EnemyStatePatrolIdle patrolIdleState { get; set; }
+    public EnemyStateDash dashState { get; set; }
     #endregion
     public new EnemyData Data => (EnemyData)base.Data;
 
@@ -33,6 +39,7 @@ public class Enemy : Entity
 
     public float AttackMoveMaxSpeed { get; set; }
     public bool IsAlerting { get; set; }
+    public bool IsPatroling { get; set; }
     public bool IsKeepawaying { get; set; }
     public bool IsCatching { get; set; }
     public bool CanChase { get; set; }
@@ -41,20 +48,29 @@ public class Enemy : Entity
     public bool CanAttack3 { get; set; }
     public bool CanSexPlayer { get; set; }
     public bool CanCatch { get; set; }
+    public bool IsNoCDAttack { get; set; }
+    public float ChaseSpeed;
+    public Vector3 MoveTarget;
     public Vector3 MoveDirection;
 
     public AudioClip sfxAttack;
     public AudioClip sfxAttack2;
     public AudioClip sfxAttack3;
     public AudioClip sfxHurt;
+    public PatrolData patrolData = new PatrolData();
+
 
     protected override void Awake()
     {
         base.Awake();
+        navMeshAgent = GetComponent<NavMeshAgent>();
         MaxHp = Data.maxHP;
         CurrentHp = MaxHp;
         AttackDamage = 10;
         AttackMoveMaxSpeed = 3f;
+        ChaseSpeed = 1f;
+        patrolData.Index = 0;
+        patrolData.Order = 1;
         SetFSMState();
     }
 
@@ -70,6 +86,10 @@ public class Enemy : Entity
             uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
         }
         LastCatchTime = Random.Range(3.0f, 5.0f);
+        if (patrolData.Points.Count > 0)
+        {
+            FSM.SetNextState(patrolMoveState);
+        }
     }
 
     protected override void Update()
@@ -124,6 +144,9 @@ public class Enemy : Entity
         dieState = new EnemyStateDie(this, FSM, "Die");
         stunState = new EnemyStateStun(this, FSM, "Stun");
         beCounteredState = new EnemyStateBeCountered(this, FSM, "BeCountered");
+        patrolIdleState = new EnemyStatePatrolIdle(this, FSM, "Alert");
+        patrolMoveState = new EnemyStatePatrolMove(this, FSM, "Run");
+        dashState = new EnemyStateDash(this, FSM, "Dash");
         FSM.InitState(idleState);
     }
     public float GetPlayerDistance() => GameManager.GetPlayerDistance(this.transform.position);
@@ -142,7 +165,6 @@ public class Enemy : Entity
             AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
         }
     }
-
     #endregion
 
     #region About Hurt
@@ -188,6 +210,16 @@ public class Enemy : Entity
     }
     #endregion
 
+    public override void SetZeroVelocity()
+    {
+        base.SetZeroVelocity();
+        if (navMeshAgent != null)
+        {
+            navMeshAgent.velocity = Vector3.zero;
+            navMeshAgent.isStopped = true;
+        }
+    }
+
     public override void ShotProjectile(int _index)
     {
         GameObject obj = Instantiate(Data.projectiles[_index], attackMesh.transform.position, Quaternion.identity);
@@ -196,7 +228,17 @@ public class Enemy : Entity
         obj.transform.LookAt(GameManager.Instance.player.transform);
         obj.GetComponent<Rigidbody>().velocity = obj.transform.forward * projectile.Speed;
     }
+
     #region Enemy AI
+    public virtual bool CheckPlayerDistance(float minBorder, float minZ = 1.5f)
+    {
+        Vector3 vector = CheckRelativeVector(GameManager.Instance.player.transform.position);
+        if (GetPlayerDistance() < minBorder && Mathf.Abs(vector.z) < minZ)
+        {
+            return true;
+        }
+        return false;
+    }
     public virtual void CheckAlert()
     {
         if (GameManager.GetPlayerDistance(this.transform.position) <= Data.alertDistance)
@@ -206,14 +248,15 @@ public class Enemy : Entity
     }
     public virtual void DoAlert()
     {
-        if (!IsAlerting || IsAttacking)
-        {
-            CanChase = false;
-            CanAttack1 = false;
-            CanCatch = false;
-            IsKeepawaying = false;
-            return;
-        }
+        if (!IsAlerting) { return; }
+        //if (IsAlerting || IsAttacking)
+        //{
+        //    CanChase = false;
+        //    CanAttack1 = false;
+        //    CanCatch = false;
+        //    IsKeepawaying = false;
+        //    return;
+        //}
         float faceRight = CheckRelativeVector(GameManager.Instance.player.transform.position).x;
         if (faceRight != 0 && !IsStunning)
         {
@@ -223,32 +266,33 @@ public class Enemy : Entity
     }
     public virtual void CheckAction()
     {
-        IsKeepawaying = LastAttack1Time > 0 && GetPlayerDistance() < Data.alertDistance;
-        CanChase = LastAttack1Time < 0 && GetPlayerDistance() > Data.attack1Distance;
-        CanAttack1 = LastAttack1Time < 0 && GetPlayerDistance() < Data.attack1Distance
+        IsKeepawaying = !GameManager.CanAttackPlayer() || (LastAttack1Time > 0 && CheckPlayerDistance(Data.alertDistance));
+        CanChase = LastAttack1Time < 0 && !CheckPlayerDistance(Data.attack1Distance);
+        CanAttack1 = LastAttack1Time < 0 && CheckPlayerDistance(Data.attack1Distance)
             && GameManager.CanAttackPlayer();
-        CanAttack2 = LastAttack2Time < 0 && GetPlayerDistance() < Data.attack2Distance
+        CanAttack2 = LastAttack2Time < 0 && CheckPlayerDistance(Data.attack2Distance)
             && GameManager.CanAttackPlayer();
-        CanAttack3 = LastAttack3Time < 0 && GetPlayerDistance() < Data.attack3Distance
+        CanAttack3 = LastAttack3Time < 0 && CheckPlayerDistance(Data.attack3Distance)
             && GameManager.CanAttackPlayer();
-        CanCatch = LastCatchTime < 0 && GetPlayerDistance() < Data.catchDistance
+        CanCatch = LastCatchTime < 0 && CheckPlayerDistance(Data.catchDistance)
             && GameManager.CanAttackPlayer();
-        CanSexPlayer = GameManager.CanSexPlayer() && GetPlayerDistance() < Data.catchDistance;
+        CanSexPlayer = GameManager.CanSexPlayer() && CheckPlayerDistance(Data.catchDistance);
     }
     public virtual void DoChase()
     {
         if (IsHurting && IsAttacking) { return; }
-        if (GetPlayerDistance() > Data.attack1Distance)
+        //float distance = GetPlayerDistance();
+        //if (distance > Data.attack1Distance)
         {
             SetAttackMoveDirection();
-            Run(1);
+            Run(ChaseSpeed);
         }
     }
     public virtual void Keepaway()
     {
         if (IsHurting && IsAttacking) { return; }
         Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
-        MoveDirection = new Vector3(_vector.x * -1, _vector.y, _vector.z * -1);
+        MoveDirection = new Vector3(_vector.x * -2f, _vector.y, _vector.z * -1.5f);
         Run(0.6f);
     }
     public virtual void AlertStateAction()
@@ -265,19 +309,29 @@ public class Enemy : Entity
         }
         if (CanAttack1)
         {
+            FacingToPlayer();
             FSM.SetNextState(attack1State);
-            CheckIsFacingRight(CheckRelativeVector(GameManager.Instance.player.transform.position).x > 0);
             return;
         }
         if (CanChase)
         {
+            ChaseSpeed = 1;
+            if (Random.Range(0,100) > 80)
+            { ChaseSpeed = 1.6f; }
             FSM.SetNextState(chaseState);
             return;
         }
     }
-    public virtual void SetMoveDirection(Vector3 target)
+    public virtual void SetMoveDirection(Vector3 start)
     {
-        MoveDirection = GameManager.GetPlayerDirection(target);
+        MoveTarget = GameManager.Instance.playerObj.transform.position;
+        MoveDirection = GameManager.GetPlayerDirection(start);
+    }
+    public virtual void SetMoveDirection(Vector3 start, Vector3 target)
+    {
+        MoveTarget = target;
+        MoveDirection = (target - start);
+        MoveDirection.y = 0;
     }
     public override void SetAttackMoveDirection()
     {
@@ -306,10 +360,61 @@ public class Enemy : Entity
     {
         FSM.SetNextState(alertState);
     }
+    public virtual void DoPatrol()
+    {
+        if (IsAlerting || patrolData.Points.Count == 0) { return; }
+        SetMoveDirection(transform.position, patrolData.Points[patrolData.Index].transform.position);
+        Run(0.6f);
+    }
+    public bool ArriveaPatrolPoing()
+    {
+        if (patrolData.NextPoint == Vector3.zero) 
+        { 
+            patrolData.NextPoint = patrolData.Points[0].position; 
+        }
+        float dis = Vector3.Distance(patrolData.NextPoint, transform.position);
+        if (dis < 3f)
+        {
+            patrolData.Index += patrolData.Order;
+            if (patrolData.Index >= patrolData.Points.Count || patrolData.Index <= -1)
+            {
+                patrolData.Order *= -1;
+                patrolData.Index += patrolData.Order;
+            }
+            patrolData.NextPoint = patrolData.Points[patrolData.Index].position;
+            patrolData.NextPoint.x += Random.Range(-2f, 2f);
+            patrolData.NextPoint.z += Random.Range(-2f, 2f);
+            return true;
+        }
+        return false;
+    }
+    public virtual IEnumerator DoBreakAndDash()
+    {
+        FacingToPlayer();
+        IsNoCDAttack = true;
+        FSM.SetNextState(attack1State);
+        yield return new WaitForSeconds(0.3f);
+        CanChase = true; //ObstacleAvoidance 用
+        FSM.SetNextState(dashState);
+    }
+    public virtual void DashAttack()
+    {
+        if (Random.Range(0, 100) > 40)
+        {
+            FSM.SetNextState(attack1State);
+            return;
+        }
+        FSM.SetNextState(catchState);
+    }
+    public virtual bool CheckDashAttack()
+    {
+        return CheckPlayerDistance(Data.attack1Distance)
+            && GameManager.CanAttackPlayer();
+    }
     #endregion
 
     #region RUN METHODS
-    private void Run(float lerpAmount)
+    public void Run(float lerpAmount)
     {
         float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         //Calculate the direction we want to move in and our desired velocity
@@ -324,7 +429,7 @@ public class Enemy : Entity
         //Gets an acceleration value based on if we are accelerating (includes turning) 
         //or trying to decelerate (stop). As well as applying a multiplier if we're air borne.
 
-        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount;
+        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount; 
         #endregion
 
         #region Add Bonus Jump Apex Acceleration
@@ -351,14 +456,64 @@ public class Enemy : Entity
 
         float movement = speedDif * accelRate;
 
+        if (ObstacleAvoidance()) { return; }
+
+        navMeshAgent.isStopped = true; //避免NavMeshAgent干擾AddForce
         //Convert this to a vector and apply to rigidbody
         rb.AddForce(movement * MoveDirection.normalized * rb.mass / 10f, ForceMode.Force);
+
+        float faceRight = CheckRelativeVector(transform.position + MoveDirection).x;
+        if (faceRight != 0)
+        {
+            CheckIsFacingRight(faceRight > 0);
+        }
         /*
 		 * For those interested here is what AddForce() will do
 		 * RB.velocity = new Vector2(RB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);
 		 * Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second
 		*/
     }
+    public bool ObstacleAvoidance()
+    {
+        Vector3 pos = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        List<Vector3> directions = new List<Vector3>()
+        {
+            MoveDirection.normalized,
+            Quaternion.AngleAxis(30f, Vector3.up) * MoveDirection.normalized,
+            Quaternion.AngleAxis(-30f, Vector3.up) * MoveDirection.normalized,
+        };
+        foreach (Vector3 direction in directions)
+        {
+            DrawRay(pos, direction);
+            RaycastHit hit;
+            if (Physics.Raycast(pos, direction, out hit, 2f))
+            {
+                if (CanChase && hit.transform.tag == "Destructible")
+                {
+                    DestructibleEntity destructible = hit.transform.GetComponentInParent<DestructibleEntity>();
+                    if (destructible != null)
+                    {
+                        if (destructible.hp == 0) { return false; }
+                        if (destructible.hp <= Data.attack1Damage && LastAttack1Time < 0 
+                            && destructible.destructibleType == DestructibleType.wood && Random.Range(0, 100) > 70)
+                        {
+                            FSM.SetNextState(attack1State);
+                            IsNoCDAttack = true;
+                        }
+                    }
+                }
+                navMeshAgent.SetDestination(MoveTarget);
+                navMeshAgent.isStopped = false;
+                return true;
+            }
+        }
+        return false;
+    }
     #endregion
+
+    private void DrawRay(Vector3 pos, Vector3 rayDirections)
+    {
+        Debug.DrawRay(pos, rayDirections.normalized * 2f, Color.blue);
+    }
 }
 

@@ -153,6 +153,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2789898264351693903, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2963110063933061879, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988063550285714892, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3089066314729940954, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_Layer
@@ -187,6 +202,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4074329800930088162, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4159620977302066623, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
@@ -298,6 +318,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5627432362000343897, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4009134943244293249, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    - target: {fileID: 5627432362000343897, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5955784171875858100, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_Layer
@@ -319,10 +350,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 6547754109836753054, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_BoneTransforms.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7171692147862142267, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7311527787493356201, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7362688651652491357, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
@@ -354,6 +395,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8670445662830103884, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_labelHash
+      value: 1.2817245e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670445662830103884, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_SpriteHash
+      value: 766795948
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670445662830103884, guid: 4ef60dea8e106344e87b3fc787fcf479,
+        type: 3}
+      propertyPath: m_CategoryHash
+      value: 3.3013246e-18
+      objectReference: {fileID: 0}
     - target: {fileID: 8772261827338685902, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_Layer
@@ -371,6 +427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6444800195729360012, guid: 4ef60dea8e106344e87b3fc787fcf479, type: 3}
+    - {fileID: 8670445662830103884, guid: 4ef60dea8e106344e87b3fc787fcf479, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6586817797430822592, guid: 4ef60dea8e106344e87b3fc787fcf479,
@@ -404,14 +461,18 @@ MonoBehaviour:
   Data: {fileID: 11400000, guid: 7297b71ecde2af145981e1241efe43f2, type: 2}
   myLayerName: 
   gravityScale: 0
-  LastHurtTime: 0
-  LastStunTime: 0
-  LastSuperArmedTime: 0
+  ChaseSpeed: 0
+  MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
   sfxAttack: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
   sfxAttack2: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
   sfxAttack3: {fileID: 8300000, guid: 76a58106628841447b1c8a704eba5946, type: 3}
   sfxHurt: {fileID: 8300000, guid: ea22c125df3a3ef44b7de4e2f7833050, type: 3}
+  patrolData:
+    Points: []
+    Index: 0
+    Order: 0
+    NextPoint: {x: 0, y: 0, z: 0}
   voiceAlter: {fileID: 8300000, guid: 8643fc3fa81c4b04c95c15471484f2d9, type: 3}
   voiceDie: {fileID: 8300000, guid: 6e99c256505efbc4fbdc0923e8bd829a, type: 3}
   dropItem: {fileID: 183498414915139310, guid: 744385a6b41e92a4c89d08d67cb399f0, type: 3}

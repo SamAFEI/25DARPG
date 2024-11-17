@@ -9,6 +9,7 @@ public class EnemyPoint : MonoBehaviour
     private bool isActiveAlter;
     private bool isClear;
     public List<Enemy> enemies = new List<Enemy>();
+    public float ambushTime = 0f;
     public List<Enemy> hideEnemies = new List<Enemy>();
     public bool isBoss;
     public GameObject activeEvent;
@@ -18,7 +19,7 @@ public class EnemyPoint : MonoBehaviour
         enemies = GetComponentsInChildren<Enemy>().ToList();
         foreach (Enemy enemy in hideEnemies)
         {
-            enemy.gameObject.SetActive(false);
+            enemy.gameObject.SetActive(false); 
         }
     }
 
@@ -51,7 +52,7 @@ public class EnemyPoint : MonoBehaviour
 
     private IEnumerator Ambush()
     {
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(ambushTime);
         foreach (Enemy enemy in hideEnemies)
         {
             enemy.gameObject.SetActive(true);

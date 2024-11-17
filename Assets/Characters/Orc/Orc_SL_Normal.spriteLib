@@ -19,18 +19,13 @@ MonoBehaviour:
     m_OverrideEntries:
     - m_Name: DICK
       m_Hash: 807609063
-      m_Sprite: {fileID: 0}
-      m_FromMain: 0
-      m_SpriteOverride: {fileID: 0}
-    - m_Name: DICK_0
-      m_Hash: 511457060
       m_Sprite: {fileID: 4412384758054955530, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 4412384758054955530, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 2
+    m_EntryOverrideCount: 1
   - m_Name: DOWN BODY
     m_Hash: 189938911
     m_CategoryList: []
@@ -57,6 +52,19 @@ MonoBehaviour:
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 1
+  - m_Name: L ANKLE BAND
+    m_Hash: 420405996
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L ANKLE BAND
+      m_Hash: 420405996
+      m_Sprite: {fileID: 8666986618850094227, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 8666986618850094227, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
   - m_Name: L DOWN ARM
     m_Hash: 497766441
     m_CategoryList: []
@@ -67,6 +75,19 @@ MonoBehaviour:
         type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 325692911180502685, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: L DOWN LEG
+    m_Hash: 807775986
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L DOWN LEG
+      m_Hash: 807775986
+      m_Sprite: {fileID: -8584138697886816442, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -8584138697886816442, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 1
@@ -96,13 +117,26 @@ MonoBehaviour:
         type: 3}
     - m_Name: L HAND_0
       m_Hash: 93827978
-      m_Sprite: {fileID: -5058640651826141470, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      m_Sprite: {fileID: 6807300902636652575, guid: 7dc253a6d9601074cb2de9bbc609cf66,
         type: 3}
       m_FromMain: 0
-      m_SpriteOverride: {fileID: -5058640651826141470, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      m_SpriteOverride: {fileID: 6807300902636652575, guid: 7dc253a6d9601074cb2de9bbc609cf66,
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 2
+  - m_Name: L SHOULDERS
+    m_Hash: 585370554
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L SHOULDERS
+      m_Hash: 585370554
+      m_Sprite: {fileID: -8887384620503511592, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -8887384620503511592, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
   - m_Name: L UP ARM
     m_Hash: 561458666
     m_CategoryList: []
@@ -129,6 +163,19 @@ MonoBehaviour:
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 1
+  - m_Name: L WRIST BAND
+    m_Hash: 578000962
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L WRIST BAND
+      m_Hash: 578000962
+      m_Sprite: {fileID: -4009134943244293249, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -4009134943244293249, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
   - m_Name: MID BODY
     m_Hash: 525887131
     m_CategoryList: []
@@ -152,6 +199,32 @@ MonoBehaviour:
         type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 8793850057507170122, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: PANTS
+    m_Hash: 187187034
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: PANTS
+      m_Hash: 187187034
+      m_Sprite: {fileID: 2188526794728679619, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 2188526794728679619, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: R ANKLE BAND
+    m_Hash: 1009245198
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: R ANKLE BAND
+      m_Hash: 1009245198
+      m_Sprite: {fileID: 3114205241642425569, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 3114205241642425569, guid: b85da26e5d168ee49985f341e2db6166,
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 1
@@ -207,10 +280,10 @@ MonoBehaviour:
         type: 3}
     - m_Name: R HAND_0
       m_Hash: 749113491
-      m_Sprite: {fileID: -3216642295422256775, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      m_Sprite: {fileID: -8797574979824389222, guid: 7dc253a6d9601074cb2de9bbc609cf66,
         type: 3}
       m_FromMain: 0
-      m_SpriteOverride: {fileID: -3216642295422256775, guid: 72e70abd1d494ed4ea359ec54ef2c31b,
+      m_SpriteOverride: {fileID: -8797574979824389222, guid: 7dc253a6d9601074cb2de9bbc609cf66,
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 2
@@ -240,6 +313,19 @@ MonoBehaviour:
         type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 1
+  - m_Name: R WRIST BAND
+    m_Hash: 123381408
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: R WRIST BAND
+      m_Hash: 123381408
+      m_Sprite: {fileID: -8446188440797539200, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -8446188440797539200, guid: b85da26e5d168ee49985f341e2db6166,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
   - m_Name: UP BODY
     m_Hash: 766969735
     m_CategoryList: []
@@ -254,5 +340,5 @@ MonoBehaviour:
     m_FromMain: 0
     m_EntryOverrideCount: 1
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638648633604491598
+  m_ModificationHash: 638672877702363164
   m_Version: 1

@@ -20,6 +20,8 @@ public class EnemyStateAttack2 : EnemyState
         enemy.SetZeroVelocity();
         enemy.IsAttacking = false;
         enemy.LastAttack2Time = enemy.Data.attack2ResetTime + Random.Range(0.00f, 0.30f);
+        if (enemy.IsNoCDAttack) { enemy.LastAttack2Time = 0; }
+        enemy.IsNoCDAttack = false;
         enemy.DamageTrigger(0);
         enemy.StunnedTrigger(0);
         enemy.MoveToTargetTrigger(0);

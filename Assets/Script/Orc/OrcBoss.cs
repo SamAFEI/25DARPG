@@ -50,6 +50,11 @@ public class OrcBoss : Enemy
         }
         if (CanChase)
         {
+            if (Random.Range(0, 100) > 80)
+            {
+                FSM.SetNextState(dashState);
+                return;
+            }
             FSM.SetNextState(chaseState);
             return;
         }

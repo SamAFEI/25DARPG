@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerObj { get; private set; }
     public Player player { get; private set; }
     public List<Enemy> sexEnemies { get; private set; } = new List<Enemy>();
+    public LayerMask enemyLayerMask;
     public bool isStartScene;
 
     private void Awake()
@@ -75,6 +77,7 @@ public class GameManager : MonoBehaviour
         Instance.sexEnemies.Add(enemy);
         enemy.FSM.SetNextState(enemy.alertState);
         enemy.skeleton.SetActive(false);
+        enemy.uiEnityStatus.enabled = false;
     }
     public static void ResetSexEnemies()
     {
@@ -83,12 +86,23 @@ public class GameManager : MonoBehaviour
         foreach(Enemy enemy in enemies)
         {
             enemy.skeleton.SetActive(true);
+            enemy.uiEnityStatus.enabled = true;
             enemy.LastCatchTime = Random.Range(3f, 5f);
             enemy.FSM.SetNextState(enemy.alertState);
             Instance.sexEnemies.Remove(enemy);
         }
     }
-
+    public static void ResetSexEnemies(Vector3 postion)
+    {
+        ResetSexEnemies();
+        float range = 10f;
+        List<Collider> colliders = Physics.OverlapSphere(postion, range, Instance.enemyLayerMask).ToList();
+        foreach (Collider collider in colliders)
+        {
+            Enemy enemy = collider.GetComponentInParent<Enemy>();
+            enemy.LastCatchTime = Random.Range(3f, 5f);
+        }
+    }
     #endregion
 
     public void LoadScene(string _sceneName)
