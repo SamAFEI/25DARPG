@@ -7,6 +7,7 @@ public class EnemyData : EntityData
     [Header("State")]
     public int maxHP = 100;
     public bool isBoos;
+    public float dashSpeed = 1.4f;
 
     [Header("Attack")]
     public float attack1ResetTime = 1f;

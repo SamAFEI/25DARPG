@@ -216,7 +216,7 @@ public abstract class Entity : MonoBehaviour
         //Ä~©Ó¥Î
     }
 
-    public virtual void Die(float _delay = 0.8f)
+    public virtual void Die(float _delay = 0.5f)
     {
         entityFX.enabled = false;
         Destroy(gameObject, _delay);

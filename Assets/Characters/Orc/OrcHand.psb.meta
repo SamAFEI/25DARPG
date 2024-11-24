@@ -8467,14 +8467,14 @@ ScriptedImporter:
       guid: 8ae3ec1692cc84944ae86aa17f64422a
       position: {x: 401.18747, y: -0.000100808786, z: 0}
       rotation: {x: 0, y: 0, z: -0.008736347, w: 0.99996185}
-      length: 349.01187
+      length: 349.0126
       parentId: 1
       color:
         serializedVersion: 2
         rgba: 4278255360
     - name: B_NECK
       guid: a2f7ee9e53466134480e14a97751587a
-      position: {x: 349.012, y: 0.00014069895, z: 0}
+      position: {x: 349.01273, y: 0.00014754193, z: 0}
       rotation: {x: 0, y: 0, z: 0.045105267, w: 0.99898225}
       length: 121.07396
       parentId: 2
@@ -8483,7 +8483,7 @@ ScriptedImporter:
         rgba: 4294967040
     - name: B_HEAD
       guid: af5802c9933a8934a90ab04bacd8ed68
-      position: {x: 121.07399, y: -0.000105944804, z: 0}
+      position: {x: 121.07399, y: -0.00016513171, z: 0}
       rotation: {x: 0, y: 0, z: 0.023484563, w: 0.99972427}
       length: 230.18967
       parentId: 3
@@ -8557,14 +8557,14 @@ ScriptedImporter:
       guid: 45e00ebdcd80bce4d85fb62474e4cf97
       position: {x: 479.6288, y: 0.00017498358, z: 0}
       rotation: {x: 0, y: 0, z: 0.06579986, w: 0.99783283}
-      length: 515.29663
+      length: 515.29645
       parentId: 11
       color:
         serializedVersion: 2
         rgba: 4278255615
     - name: B_L FOOT
       guid: 947dcd7db3af4b5429e9043f25bc4e30
-      position: {x: 515.2966, y: -0.000120605706, z: 0}
+      position: {x: 515.2964, y: -0.000091632435, z: 0}
       rotation: {x: 0, y: 0, z: 0.5640929, w: -0.8257114}
       length: 238.29613
       parentId: 12
@@ -8601,16 +8601,16 @@ ScriptedImporter:
     - name: B_DICK
       guid: 7b74a934aea834641aa69a7640db205d
       position: {x: -122.012505, y: 124.53286, z: 0}
-      rotation: {x: 0, y: 0, z: 0.2670323, w: 0.9636876}
-      length: 97.30895
+      rotation: {x: 0, y: 0, z: 0.2670322, w: 0.9636876}
+      length: 97.30896
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4278190335
     - name: B_DICK_1
       guid: 4884f446664901d4bb4c48b0af680f9d
-      position: {x: 97.30902, y: 0.00002488245, z: 0}
-      rotation: {x: 0, y: 0, z: -0.05249565, w: 0.99862117}
+      position: {x: 97.308914, y: 0.000006242568, z: 0}
+      rotation: {x: 0, y: 0, z: -0.0524956, w: 0.99862117}
       length: 233.3386
       parentId: 17
       color:
@@ -8619,12 +8619,21 @@ ScriptedImporter:
     - name: B_PANTS
       guid: 0fb3f20aa2ffe39419ad4bfbf84eb932
       position: {x: -15.48055, y: 139.27934, z: 0}
-      rotation: {x: 0, y: -0, z: -0.9992472, w: 0.038795944}
-      length: 417.9681
+      rotation: {x: 0, y: -0, z: -0.99886334, w: 0.0476662}
+      length: 221.50172
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4286643968
+    - name: B_PANTS_2
+      guid: e91a6b4643c57a441ba76d8cf3427f70
+      position: {x: 221.50175, y: 0.000030445024, z: 0}
+      rotation: {x: 0, y: 0, z: 0.018237997, w: 0.9998337}
+      length: 201.5685
+      parentId: 19
+      color:
+        serializedVersion: 2
+        rgba: 4294934528
     parts:
     - spritePosition:
         x: 2788

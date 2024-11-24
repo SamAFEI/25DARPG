@@ -49,7 +49,7 @@ public class Enemy : Entity
     public bool CanSexPlayer { get; set; }
     public bool CanCatch { get; set; }
     public bool IsNoCDAttack { get; set; }
-    public float ChaseSpeed;
+    public float ChaseSpeed { get; set; }
     public Vector3 MoveTarget;
     public Vector3 MoveDirection;
 
@@ -84,6 +84,7 @@ public class Enemy : Entity
         else
         {
             uiEnityStatus = GetComponentInChildren<UI_EntityStatus>();
+            uiEnityStatus.GetComponent<RectTransform>().localScale = transform.localScale * 0.01f;
         }
         LastCatchTime = Random.Range(3.0f, 5.0f);
         if (patrolData.Points.Count > 0)
@@ -258,7 +259,7 @@ public class Enemy : Entity
         //    return;
         //}
         float faceRight = CheckRelativeVector(GameManager.Instance.player.transform.position).x;
-        if (faceRight != 0 && !IsStunning)
+        if (faceRight != 0 && !IsStunning && !IsCatching)
         {
             CheckIsFacingRight(faceRight > 0);
         }
@@ -266,8 +267,9 @@ public class Enemy : Entity
     }
     public virtual void CheckAction()
     {
-        IsKeepawaying = !GameManager.CanAttackPlayer() || (LastAttack1Time > 0 && CheckPlayerDistance(Data.alertDistance));
-        CanChase = LastAttack1Time < 0 && !CheckPlayerDistance(Data.attack1Distance);
+        IsKeepawaying = (!GameManager.CanAttackPlayer() || LastAttack1Time > 0) && CheckPlayerDistance(Data.alertDistance);
+        CanChase = LastAttack1Time < 0 && !CheckPlayerDistance(Data.attack1Distance)
+            && GameManager.CanAttackPlayer();
         CanAttack1 = LastAttack1Time < 0 && CheckPlayerDistance(Data.attack1Distance)
             && GameManager.CanAttackPlayer();
         CanAttack2 = LastAttack2Time < 0 && CheckPlayerDistance(Data.attack2Distance)
@@ -297,7 +299,7 @@ public class Enemy : Entity
     }
     public virtual void AlertStateAction()
     {
-        if (CanCatch && Random.Range(0.00f, 100.00f) < 100f)
+        if (CanCatch && Random.Range(0.00f, 100.00f) < 50f)
         {
             FSM.SetNextState(catchState);
             return;
@@ -317,7 +319,7 @@ public class Enemy : Entity
         {
             ChaseSpeed = 1;
             if (Random.Range(0,100) > 80)
-            { ChaseSpeed = 1.6f; }
+            { ChaseSpeed = Data.dashSpeed; }
             FSM.SetNextState(chaseState);
             return;
         }
@@ -394,7 +396,7 @@ public class Enemy : Entity
         IsNoCDAttack = true;
         FSM.SetNextState(attack1State);
         yield return new WaitForSeconds(0.3f);
-        CanChase = true; //ObstacleAvoidance 用
+        CanChase = true; //避開 ObstacleAvoidance 用
         FSM.SetNextState(dashState);
     }
     public virtual void DashAttack()

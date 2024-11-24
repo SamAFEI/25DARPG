@@ -20,6 +20,7 @@ public class Player : Entity
     public PlayerStateDash dashState { get; set; }
     public PlayerStateStun stunState { get; set; }
     public PlayerStateParry parryState { get; set; }
+    public PlayerStateParrySuscces parrySusccesState { get; set; }
     public PlayerStateHurt hurtState { get; set; }
     public PlayerStateSex sexState { get; set; }
     public PlayerStateDie dieState { get; set; }
@@ -64,6 +65,7 @@ public class Player : Entity
         dashState = new PlayerStateDash(this, FSM, "Dash");
         stunState = new PlayerStateStun(this, FSM, "Stun");
         parryState = new PlayerStateParry(this, FSM, "Parry");
+        parrySusccesState = new PlayerStateParrySuscces(this, FSM, "ParrySuscces");
         hurtState = new PlayerStateHurt(this, FSM, "Hurt");
         sexState = new PlayerStateSex(this, FSM, "Sex");
         dieState = new PlayerStateDie(this, FSM, "Die");
@@ -143,12 +145,14 @@ public class Player : Entity
         if (other.tag == "EnemyAttack")
         {
             Enemy _enemy = other.GetComponentInParent<Enemy>();
-            if (CanBeStunned && _enemy.CanBeStunned)
+            if (CanBeStunned && _enemy.CanBeStunned && !_enemy.IsStunning)
             {
+                TimerManager.Instance.DoFrozenTime(0.1f);
                 PlaySFXTrigger(1);
                 PlayVoiceTrigger(1);
                 entityFX.DoPlayHitFX(0, weaponPoint.transform.position);
                 _enemy.LastStunTime = 3f;
+                FSM.SetNextState(parrySusccesState);
                 return;
             }
             if (IsHurting || IsStunning || IsSuperArmeding || !_enemy.CanDamage) { return; }
@@ -239,7 +243,7 @@ public class Player : Entity
         else
         {
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
-            uiPlayerStatus.DoLerpHealth(5f);
+            uiPlayerStatus.DoLerpHealth(1f);
             entityFX.DoPlayBuffFX(0);
         }
         if (_isHeaveyAttack)

@@ -36,13 +36,14 @@ MonoBehaviour:
   jumpHangMaxSpeedMult: 0
   maxHP: 100
   isBoos: 0
+  dashSpeed: 1.4
   attack1ResetTime: 1
   attack1Damage: 10
   attack1IsHeavy: 0
   attack2ResetTime: 1
   attack2Damage: 10
   attack2IsHeavy: 0
-  attack3ResetTime: 1
+  attack3ResetTime: 3
   attack3Damage: 10
   attack3IsHeavy: 0
   alertDistance: 6

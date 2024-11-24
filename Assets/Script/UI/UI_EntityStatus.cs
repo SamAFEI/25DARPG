@@ -42,4 +42,9 @@ public class UI_EntityStatus : MonoBehaviour
         yield return new WaitForSeconds(2f);
         hpSlider.gameObject.SetActive(false);
     }
+
+    public void CloseHpSlider()
+    {
+        hpSlider.gameObject.SetActive(false);
+    }
 }

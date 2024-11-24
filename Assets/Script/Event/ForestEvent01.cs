@@ -9,6 +9,7 @@ public class ForestEvent01 : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            if (enemy == null || !enemy.isActiveAndEnabled) { return; }
             enemy.StartCoroutine(enemy.DoBreakAndDash());
             collider.enabled = false;
         }

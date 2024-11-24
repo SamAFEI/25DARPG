@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce5baecd1c1c4d84db0cbc74081ced88, type: 3}
+  m_Name: OrcStrData
+  m_EditorClassIdentifier: 
+  gravityStrength: -33.333332
+  gravityScale: 3.397893
+  fallGravityMult: 10
+  maxFallSpeed: 20
+  fastFallGravityMult: 10
+  maxFastFallSpeed: 20
+  runMaxSpeed: 11
+  runAcceleration: 11
+  runAccelAmount: 50
+  runDecceleration: 11
+  runDeccelAmount: 50
+  accelInAir: 1
+  deccelInAir: 1
+  hurtResetTime: 0.1
+  jumpHeight: 1.5
+  jumpTimeToApex: 0.3
+  jumpForce: 10
+  jumpCutGravityMult: 10
+  jumpHangGravityMult: 1
+  jumpHangTimeThreshold: 0.5
+  jumpHangAccelerationMult: 0
+  jumpHangMaxSpeedMult: 0
+  maxHP: 150
+  isBoos: 0
+  dashSpeed: 1.4
+  attack1ResetTime: 1
+  attack1Damage: 10
+  attack1IsHeavy: 0
+  attack2ResetTime: 1
+  attack2Damage: 10
+  attack2IsHeavy: 0
+  attack3ResetTime: 1
+  attack3Damage: 20
+  attack3IsHeavy: 0
+  alertDistance: 6
+  catchDistance: 3
+  attack1Distance: 3
+  attack2Distance: 3
+  attack3Distance: 20
+  projectiles: []
+  foreplayAnims:
+  - {fileID: 7400000, guid: 05fb3227eb158f34eabc5e7daaf20e79, type: 2}
+  - {fileID: 7400000, guid: eb6b1668e07d57947b6b8d919ff3e6e3, type: 2}
+  - {fileID: 7400000, guid: cfdc64d79d276c94eafb0bbce15bcda2, type: 2}
+  sexAnims:
+  - {fileID: 7400000, guid: 9553879f64b6aed49a4fd8f040075f8c, type: 2}
+  - {fileID: 7400000, guid: 124e56db1f7f35747bdfa68aa42fb298, type: 2}
+  - {fileID: 7400000, guid: 0739aa97be14fe944b08224551779f65, type: 2}
+  - {fileID: 7400000, guid: 60fb6ffe73da8bc44b4a4f25585bb140, type: 2}

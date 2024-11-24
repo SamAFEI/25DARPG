@@ -9,7 +9,7 @@ public class EnemyStateDash : EnemyState
     public override void OnEnter()
     {
         base.OnEnter();
-        enemy.ChaseSpeed = 1.6f;
+        enemy.ChaseSpeed = enemy.Data.dashSpeed;
     }
 
     public override void OnExit()

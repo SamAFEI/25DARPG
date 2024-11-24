@@ -9,7 +9,7 @@ public class EnemyStateChase : EnemyState
     public override void OnEnter()
     {
         animName = "Run";
-        if (enemy.ChaseSpeed >= 1.5f)
+        if (enemy.ChaseSpeed >= 1.1f)
         {
             animName = "Dash";
         }

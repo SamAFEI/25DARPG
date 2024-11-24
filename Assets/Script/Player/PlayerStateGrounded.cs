@@ -18,7 +18,7 @@ public class PlayerStateGrounded : PlayerState
 
     public override void OnUpdate()
     {
-        base.OnUpdate(); 
+        base.OnUpdate();
         
         if (player.IsDied)
         {
@@ -41,7 +41,7 @@ public class PlayerStateGrounded : PlayerState
             FSM.SetNextState(player.dashState);
             return;
         }
-        if (player.input.IsParrying)
+        if (player.input.IsParrying && FSM.currentState != player.parrySusccesState)
         {
             FSM.SetNextState(player.parryState);
             return;
