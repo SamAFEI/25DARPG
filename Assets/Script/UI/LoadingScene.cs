@@ -1,17 +1,17 @@
+using SharpUI.Source.Common.UI.Elements.Loading;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadingScene : MonoBehaviour
 {
-    private TextMeshProUGUI txtPercent;
+    private LoadingBar loadingBar;
     AsyncOperation _async;
     int progress = 0;
 
     private void Awake()
     {
-        txtPercent = GetComponent<TextMeshProUGUI>();
+        loadingBar = GetComponentInChildren<LoadingBar>();
     }
     private void Start()
     {
@@ -20,7 +20,7 @@ public class LoadingScene : MonoBehaviour
 
     private void OnGUI()
     {
-        txtPercent.text = "" + progress;
+        loadingBar.UpdatePercentage(progress);
     }
 
     private IEnumerator LoadSecne(string sceneName)

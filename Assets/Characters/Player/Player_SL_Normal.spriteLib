@@ -90,8 +90,36 @@ MonoBehaviour:
       m_FromMain: 0
       m_SpriteOverride: {fileID: -2586156054501540160, guid: 679dc102c67438f44bcc2132af317880,
         type: 3}
+    - m_Name: FACE_SHY
+      m_Hash: 653289077
+      m_Sprite: {fileID: 1764887638929269389, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 1764887638929269389, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+    - m_Name: FACE_FIGHT_SHY
+      m_Hash: 63646256
+      m_Sprite: {fileID: -4607581199429888667, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -4607581199429888667, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+    - m_Name: FACE_YADA_SHY
+      m_Hash: 767869477
+      m_Sprite: {fileID: -164169864738318057, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -164169864738318057, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+    - m_Name: FACE_IKU_SHY
+      m_Hash: 230629423
+      m_Sprite: {fileID: 5471891867347692429, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 5471891867347692429, guid: 679dc102c67438f44bcc2132af317880,
+        type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 2
+    m_EntryOverrideCount: 6
   - m_Name: HEAD
     m_Hash: 291904296
     m_CategoryList: []
@@ -263,5 +291,5 @@ MonoBehaviour:
     m_FromMain: 0
     m_EntryOverrideCount: 1
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638678089033602946
+  m_ModificationHash: 638681372384644738
   m_Version: 1

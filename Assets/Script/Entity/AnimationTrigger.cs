@@ -48,6 +48,10 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.CameraShakeTrigger();
     }
+    private void PlayAttackSFXTrigger(int _value)
+    {
+        entity.PlayAttackSFXTrigger(_value);
+    }
     private void PlaySFXTrigger(int _value)
     {
         entity.PlaySFXTrigger(_value);
@@ -55,5 +59,21 @@ public class AnimationTrigger : MonoBehaviour
     private void PlayVoiceTrigger(int _value)
     {
         entity.PlayVoiceTrigger(_value);
+    }
+    private void PlaySexSFXTrigger(int _value)
+    {
+        entity.PlaySexSFXTrigger(_value);
+    }
+    private void PlaySexVoiceTrigger(int _value)
+    {
+        entity.PlaySexVoiceTrigger(_value);
+    }
+    private void PlaySkillSFXTrigger(int _value)
+    {
+        entity.PlaySkillSFXTrigger(_value);
+    }
+    private void PlayHurtSFXTrigger()
+    {
+        entity.PlayHurtSFXTrigger();
     }
 }

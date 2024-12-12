@@ -7903,7 +7903,7 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.4
-    functionName: PlaySFXTrigger
+    functionName: PlayAttackSFXTrigger
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

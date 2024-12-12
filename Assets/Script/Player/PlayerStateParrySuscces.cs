@@ -10,7 +10,6 @@ public class PlayerStateParrySuscces : PlayerStateGrounded
     {
         base.OnEnter();
         player.SetZeroVelocity();
-        player.input.SetParrying(true);
         player.LastSuperArmedTime = 10f;
     }
 

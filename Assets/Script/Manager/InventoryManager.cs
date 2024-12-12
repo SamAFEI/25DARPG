@@ -1,12 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, ISaveManager
 {
     public static InventoryManager Instance { get; private set; }
-    public List<ItemData> items = new List<ItemData>();
     public List<Inventory> inventories = new List<Inventory>();
+    public List<ItemData> items = new List<ItemData>();
+    public List<ItemData> itemTypes = new List<ItemData>();
 
     public delegate void OnInventoryChanged();
     public OnInventoryChanged onInventoryChangedCallback;
@@ -22,6 +24,11 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private void Start()
+    {
+        itemTypes = Resources.LoadAll<ItemData>("Scriptable/Item").ToList();
     }
 
     public static void SaveInventory(ItemData itemData, int amount = 1)
@@ -43,6 +50,7 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
+        GetInventories(); //刷新 不然Bag 會取到已消失的id 來取出Item
         if (Instance.onInventoryChangedCallback != null)
         {
             Instance.onInventoryChangedCallback();
@@ -57,5 +65,25 @@ public class InventoryManager : MonoBehaviour
     public static Inventory GetInventoy(string itemName)
     {
         return GetInventories().Where(x => x.item.name == itemName).FirstOrDefault();
+    }
+
+    public void LoadData(GameData _data)
+    {
+        if (_data.Inventories == null) return;
+        inventories.AddRange(_data.Inventories);
+        foreach (Inventory inventory in inventories)
+        {
+            ItemData item = itemTypes.Where(x => x.name == inventory.itemName).FirstOrDefault();
+            if (item != null)
+            {
+                SaveInventory(item, inventory.amount);
+            }
+        }
+        GetInventories();
+    }
+
+    public void SaveData(ref GameData _data)
+    {
+        _data.Inventories = GetInventories();
     }
 }

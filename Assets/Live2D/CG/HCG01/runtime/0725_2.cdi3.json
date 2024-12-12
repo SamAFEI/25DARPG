@@ -27,6 +27,11 @@
 			"Name": "法5"
 		},
 		{
+			"Id": "Param12",
+			"GroupId": "ParamGroup",
+			"Name": "法6"
+		},
+		{
 			"Id": "Param8",
 			"GroupId": "ParamGroup",
 			"Name": "胸1"
@@ -35,6 +40,11 @@
 			"Id": "Param9",
 			"GroupId": "ParamGroup",
 			"Name": "胸2"
+		},
+		{
+			"Id": "Param11",
+			"GroupId": "ParamGroup4",
+			"Name": "Loop"
 		},
 		{
 			"Id": "Param5",
@@ -185,6 +195,11 @@
 			"Id": "ParamHairBack",
 			"GroupId": "",
 			"Name": "摇动 后发"
+		},
+		{
+			"Id": "Param13",
+			"GroupId": "",
+			"Name": "氣"
 		}
 	],
 	"ParameterGroups": [
@@ -194,9 +209,14 @@
 			"Name": "Folder 1"
 		},
 		{
+			"Id": "ParamGroup4",
+			"GroupId": "",
+			"Name": "Loop"
+		},
+		{
 			"Id": "ParamGroup2",
 			"GroupId": "",
-			"Name": "Folder 2"
+			"Name": "inside"
 		},
 		{
 			"Id": "ParamGroup3",
@@ -205,6 +225,14 @@
 		}
 	],
 	"Parts": [
+		{
+			"Id": "Part22",
+			"Name": "0725_2.psd(未找到对应图层)"
+		},
+		{
+			"Id": "Part20",
+			"Name": "0725_2.psd(未找到对应图层)"
+		},
 		{
 			"Id": "Part17",
 			"Name": "0725_2.psd(未找到对应图层)"
@@ -215,6 +243,10 @@
 		},
 		{
 			"Id": "Part8",
+			"Name": "資料夾 3"
+		},
+		{
+			"Id": "Part19",
 			"Name": "資料夾 3"
 		},
 		{

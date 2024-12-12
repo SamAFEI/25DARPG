@@ -7,13 +7,12 @@ public class EnemyStateKeepaway : EnemyState
     public override void OnEnter()
     {
         base.OnEnter();
-        stateTime = 1.5f;
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (stateTime < 0 || !enemy.IsKeepawaying)
+        if (!enemy.IsKeepawaying)
         {
             FSM.SetNextState(enemy.alertState);
         }

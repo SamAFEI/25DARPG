@@ -9,7 +9,8 @@ public class PlayerInput : MonoBehaviour
     public Rigidbody rb { get; set; }
     public PlayerData data { get; set; }
     public PlayerInteract playerInteract { get; set; }
-    public GameObject ui_Bag;
+    public UI_Bag ui_Bag;
+    public SettingManager settingManager;
     public InputHandle inputHandle;
     #endregion
 
@@ -147,6 +148,7 @@ public class PlayerInput : MonoBehaviour
         inputHandle.Character.Interact.started += InputInteract;
         inputHandle.Character.Item00.started += InputItem00;
         inputHandle.Character.Item01.started += InputItem01;
+        inputHandle.Character.Setting.started += InputSetting;
 
         inputHandle.SexAction.ResistHorizontal.performed += InputResistHorizontal;
         inputHandle.Character.Enable();
@@ -185,6 +187,10 @@ public class PlayerInput : MonoBehaviour
     private void InputOpenBag(InputAction.CallbackContext _context)
     {
         OpenBag();
+    }
+    private void InputSetting(InputAction.CallbackContext _context)
+    {
+        OpenSetting();
     }
 
     private void InputResistHorizontal(InputAction.CallbackContext _context)
@@ -346,8 +352,16 @@ public class PlayerInput : MonoBehaviour
     {
         if (ui_Bag != null)
         {
-            ui_Bag.SetActive(!ui_Bag.activeSelf);
+            ui_Bag.OpenUI_Area();
         }
     }
     #endregion
+
+    private void OpenSetting()
+    {
+        if (settingManager != null)
+        {
+            settingManager.OpenUI_Area();
+        }
+    }
 }

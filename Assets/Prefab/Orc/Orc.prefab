@@ -153,15 +153,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 0c693592759b2c642b48e13dd8c4f3ec, type: 2}
+  AudioData: {fileID: 11400000, guid: c62cd53d431fe3943a87575632d15ef4, type: 2}
   myLayerName: 
   gravityScale: 0
-  ChaseSpeed: 0
   MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
-  sfxAttack: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
-  sfxAttack2: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
-  sfxAttack3: {fileID: 8300000, guid: 76a58106628841447b1c8a704eba5946, type: 3}
-  sfxHurt: {fileID: 8300000, guid: ea22c125df3a3ef44b7de4e2f7833050, type: 3}
   patrolData:
     Points: []
     Index: 0

@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class UI_Canvas : MonoBehaviour
 {
     public static UI_Canvas Instance { get; private set; }
+    public Button BT_Setting { get; private set; }
     public Image UI_Die;
     public TextMeshProUGUI UI_DieContent;
+    public SettingManager settingManager;
 
     private void Awake()
     {
@@ -20,14 +22,22 @@ public class UI_Canvas : MonoBehaviour
         else if (this != Instance)
         {
             Destroy(this.gameObject);
+            return;
         }
+        BT_Setting = transform.Find("BT_Setting").GetComponent<Button>();
+    }
+    private void Start()
+    {
+        settingManager = GameObject.FindObjectOfType<SettingManager>();
+        BT_Setting.onClick.AddListener(() => { settingManager.OpenUI_Area(); });
+        AudioManager.PlayBGM(0);
     }
 
     private void Update()
     {
         if (UI_DieContent.color.a == 1 && Input.anyKeyDown)
         {
-            GameManager.Instance.RestarScene();
+            GameManager.LoadCGScene();
         }
     }
 

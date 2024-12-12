@@ -5,12 +5,12 @@ using UnityEngine;
 public class UI_Bag : MonoBehaviour
 {
     public static UI_Bag Instance { get; private set; }
+    public GameObject UI_Area { get; private set; }
     public InventoryManager inventoryManager { get; private set; }
     public List<Inventory> inventories { get; private set; } = new List<Inventory>();
 
     public int slotsWidth = 4, slotsHeight = 2;
     public UI_Slot[,] slots;
-
 
     private void Awake()
     {
@@ -24,18 +24,16 @@ public class UI_Bag : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-
     }
     private void Start()
     {
         inventoryManager = InventoryManager.Instance;
         inventoryManager.onInventoryChangedCallback += UpdateUI;
-        gameObject.SetActive(false);
-        UpdateUI();
     }
 
     private void InitUI()
     {
+        UI_Area = transform.Find("UI_Area").gameObject;
         slots = new UI_Slot[slotsHeight, slotsWidth];
         List<UI_Slot> list = GetComponentsInChildren<UI_Slot>().ToList();
         //foreach (UI_Slot slot in list)
@@ -50,12 +48,14 @@ public class UI_Bag : MonoBehaviour
                 list.RemoveAt(0);
             }
         }
+        UI_Area.SetActive(false);
     }
 
     private void UpdateUI()
     {
-        if (!gameObject.activeSelf) { return; }
-        inventories = InventoryManager.GetInventories();
+        if (!UI_Area.activeSelf) { return; }
+        inventories = new List<Inventory>();
+        inventories.AddRange(InventoryManager.GetInventories());
 
         //先找有在Bag的更新數量
         for (int i = 0; i < slotsHeight; i++)
@@ -97,5 +97,15 @@ public class UI_Bag : MonoBehaviour
         }
     }
 
+    public void OpenUI_Area()
+    {
+        if (!UI_Area.activeSelf)
+        {
+            UI_Area.SetActive(true);
+            UpdateUI();
+            return;
+        }
+        UI_Area.SetActive(false);
+    }
 }
 

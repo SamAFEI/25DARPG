@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class EnemyStateAlert : EnemyState
 {
     public EnemyStateAlert(Enemy _entity, EntityFSM _FSM, string _animName) : base(_entity, _FSM, _animName)
@@ -9,7 +11,7 @@ public class EnemyStateAlert : EnemyState
     {
         base.OnEnter();
         enemy.SetZeroVelocity();
-        stateTime = 0.2f;
+        stateTime = Random.Range(0.2f, 0.5f);
     }
 
     public override void OnUpdate()

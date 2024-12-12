@@ -3,12 +3,7 @@ using UnityEngine;
 
 public class OrcStr : Enemy
 {
-    public override void CheckAction()
-    {
-        base.CheckAction();
-        //CanAttack3 = LastAttack3Time < 0 && CheckPlayerDistance(Data.attack3Distance)
-        //    && GameManager.CanAttackPlayer() && !CheckPlayerDistance(6);
-    }
+    public bool IsEventAtcion;
     public override void AlertStateAction()
     {
         if (CanCatch && Random.Range(0.00f, 100.00f) < 50f)
@@ -47,6 +42,17 @@ public class OrcStr : Enemy
     {
         FSM.SetNextState(attack2State);
     }
+
+    public override void Attack2Finish()
+    {
+        base.Attack2Finish();
+        if (IsEventAtcion)
+        {
+            IsAlerting = true;
+            DashAttack();
+            IsEventAtcion = false;
+        }
+    }
     public override bool CheckDashAttack()
     {
         return CheckPlayerDistance(Data.attack3Distance)
@@ -62,9 +68,8 @@ public class OrcStr : Enemy
     {
         FacingToPlayer();
         IsNoCDAttack = true;
+        IsEventAtcion = true;
         FSM.SetNextState(attack2State);
-        yield return new WaitForSeconds(0.1f);
-        CanChase = true; //避開 ObstacleAvoidance 用
-        FSM.SetNextState(attack3State);
+        yield return null;
     }
 }

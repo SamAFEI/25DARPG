@@ -154,9 +154,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 3d385d3e9f0ebad429219cba37425f74, type: 2}
+  AudioData: {fileID: 11400000, guid: c62cd53d431fe3943a87575632d15ef4, type: 2}
   myLayerName: 
   gravityScale: 0
-  ChaseSpeed: 0
   MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
   sfxAttack: {fileID: 0}

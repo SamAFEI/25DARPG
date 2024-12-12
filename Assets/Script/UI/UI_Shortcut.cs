@@ -46,11 +46,10 @@ public class UI_Shortcut : MonoBehaviour
         foreach (UI_Slot slot in slots)
         {
             if (slot.item == null) continue;
-            Inventory inventory = inventories.Where(x => x.item.name == slot.itemName).FirstOrDefault();
+            Inventory inventory = inventories.Where(x => x.item.name == slot.inventory.itemName).FirstOrDefault();
             if (inventory != null)
             {
                 slot.SetSlot(inventory);
-                inventories.Remove(inventory);
             }
             else if (slot.inventory != null)
             {
@@ -58,18 +57,6 @@ public class UI_Shortcut : MonoBehaviour
                 slot.SetSlot(slot.inventory);
             }
         }
-        //沒有在Bag 要產生新的
-        /*foreach (Inventory inventory in inventories)
-        {
-            foreach (UI_Slot slot in slots)
-            {
-                if (slot.inventory == null)
-                {
-                    slot.SetSlot(inventory);
-                    break;
-                }
-            }
-        }*/
     }
 
     public Inventory GetSlotItemData(int index)

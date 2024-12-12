@@ -98,6 +98,15 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Setting"",
+                    ""type"": ""Button"",
+                    ""id"": ""06f04c8e-0e86-4004-83db-e525853992c3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -243,6 +252,17 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""action"": ""OpenBag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8325cf7-04aa-4654-ae6f-fad8552f784b"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Setting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -309,6 +329,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         m_Character_Item00 = m_Character.FindAction("Item00", throwIfNotFound: true);
         m_Character_Item01 = m_Character.FindAction("Item01", throwIfNotFound: true);
         m_Character_OpenBag = m_Character.FindAction("OpenBag", throwIfNotFound: true);
+        m_Character_Setting = m_Character.FindAction("Setting", throwIfNotFound: true);
         // SexAction
         m_SexAction = asset.FindActionMap("SexAction", throwIfNotFound: true);
         m_SexAction_ResistHorizontal = m_SexAction.FindAction("ResistHorizontal", throwIfNotFound: true);
@@ -381,6 +402,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Item00;
     private readonly InputAction m_Character_Item01;
     private readonly InputAction m_Character_OpenBag;
+    private readonly InputAction m_Character_Setting;
     public struct CharacterActions
     {
         private @InputHandle m_Wrapper;
@@ -393,6 +415,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         public InputAction @Item00 => m_Wrapper.m_Character_Item00;
         public InputAction @Item01 => m_Wrapper.m_Character_Item01;
         public InputAction @OpenBag => m_Wrapper.m_Character_OpenBag;
+        public InputAction @Setting => m_Wrapper.m_Character_Setting;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -426,6 +449,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @OpenBag.started += instance.OnOpenBag;
             @OpenBag.performed += instance.OnOpenBag;
             @OpenBag.canceled += instance.OnOpenBag;
+            @Setting.started += instance.OnSetting;
+            @Setting.performed += instance.OnSetting;
+            @Setting.canceled += instance.OnSetting;
         }
 
         private void UnregisterCallbacks(ICharacterActions instance)
@@ -454,6 +480,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @OpenBag.started -= instance.OnOpenBag;
             @OpenBag.performed -= instance.OnOpenBag;
             @OpenBag.canceled -= instance.OnOpenBag;
+            @Setting.started -= instance.OnSetting;
+            @Setting.performed -= instance.OnSetting;
+            @Setting.canceled -= instance.OnSetting;
         }
 
         public void RemoveCallbacks(ICharacterActions instance)
@@ -527,6 +556,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         void OnItem00(InputAction.CallbackContext context);
         void OnItem01(InputAction.CallbackContext context);
         void OnOpenBag(InputAction.CallbackContext context);
+        void OnSetting(InputAction.CallbackContext context);
     }
     public interface ISexActionActions
     {

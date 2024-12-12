@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Setting",
+                    "type": "Button",
+                    "id": "06f04c8e-0e86-4004-83db-e525853992c3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -219,6 +228,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "OpenBag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8325cf7-04aa-4654-ae6f-fad8552f784b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Setting",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -16,6 +16,8 @@ public class OrcBoss : Enemy
         if (!isAlter && IsAlerting)
         {
             PlayVoiceTrigger(0);
+            AttackMoveMaxSpeed = 3f;
+            FSM.SetNextState(attack3State);
             isAlter = true;
         }
     }
@@ -56,11 +58,6 @@ public class OrcBoss : Enemy
                 return;
             }
             FSM.SetNextState(chaseState);
-            return;
-        }
-        if (CanCatch)
-        {
-            FSM.SetNextState(catchState);
             return;
         }
     }

@@ -34,17 +34,12 @@ public class UI_EntityStatus : MonoBehaviour
         float startHP = hpSlider.value;
         while (hpSmooth < 1)
         {
-            hpSlider.gameObject.SetActive(true);
             hpSmooth += Time.deltaTime * smooth;
             hpSlider.value = Mathf.Lerp(startHP, entity.CurrentHp, hpSmooth);
+            hpSlider.gameObject.SetActive(!entity.IsSexing);
             yield return null;
         }
         yield return new WaitForSeconds(2f);
-        hpSlider.gameObject.SetActive(false);
-    }
-
-    public void CloseHpSlider()
-    {
         hpSlider.gameObject.SetActive(false);
     }
 }

@@ -23,6 +23,7 @@ public class Player : Entity
     public PlayerStateParrySuscces parrySusccesState { get; set; }
     public PlayerStateHurt hurtState { get; set; }
     public PlayerStateSex sexState { get; set; }
+    public PlayerStateSexStart sexStartState { get; set; }
     public PlayerStateDie dieState { get; set; }
     #endregion
     public new PlayerData Data => (PlayerData)base.Data;
@@ -42,14 +43,6 @@ public class Player : Entity
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
     public SpriteLibraryAsset SLAssetBreak2;
-    public AudioClip sfxParrySuccess;
-    public AudioClip voiceParrySuccess;
-    public AudioClip sfxAttack;
-    public AudioClip voiceAttack;
-    public AudioClip sfxHPPotion;
-    public AudioClip voiceHurt;
-    public AudioClip voiceSex;
-    public AudioClip sfxRockAttack;
 
     protected override void Awake()
     {
@@ -68,6 +61,7 @@ public class Player : Entity
         parrySusccesState = new PlayerStateParrySuscces(this, FSM, "ParrySuscces");
         hurtState = new PlayerStateHurt(this, FSM, "Hurt");
         sexState = new PlayerStateSex(this, FSM, "Sex");
+        sexStartState = new PlayerStateSexStart(this, FSM, "SexStart");
         dieState = new PlayerStateDie(this, FSM, "Die");
         FSM.InitState(idleState);
     }
@@ -87,23 +81,28 @@ public class Player : Entity
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             testSexAnimIndex++;
-            if (testSexAnimIndex > 3) testSexAnimIndex = 1;
+            if (testSexAnimIndex > 2) testSexAnimIndex = 1;
             testSexAnim = "OrcForeplay" + testSexAnimIndex.ToString().PadLeft(2, '0');
             sexAnimName = testSexAnim;
             IsSexing = true;
             Debug.Log(sexAnimName);
-            FSM.SetNextState(sexState);
+            StartCoroutine(TestSexAnimation(sexState));
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             testSexAnimIndex++;
-            if (testSexAnimIndex > 4) testSexAnimIndex = 1;
+            if (testSexAnimIndex > 2) testSexAnimIndex = 1;
             testSexAnim = "OrcSex" + testSexAnimIndex.ToString().PadLeft(2, '0');
             sexAnimName = testSexAnim;
             IsSexing = true;
             Debug.Log(sexAnimName);
-            FSM.SetNextState(sexState);
+            StartCoroutine(TestSexAnimation(sexStartState));
         }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            FSM.SetNextState(idleState);
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             Hurt(10000);
@@ -147,29 +146,27 @@ public class Player : Entity
             Enemy _enemy = other.GetComponentInParent<Enemy>();
             if (CanBeStunned && _enemy.CanBeStunned && !_enemy.IsStunning)
             {
-                TimerManager.Instance.DoFrozenTime(0.1f);
-                PlaySFXTrigger(1);
-                PlayVoiceTrigger(1);
+                TimerManager.Instance.DoFrozenTime(0.2f);
                 entityFX.DoPlayHitFX(0, weaponPoint.transform.position);
                 _enemy.LastStunTime = 3f;
                 FSM.SetNextState(parrySusccesState);
                 return;
             }
-            if (IsHurting || IsStunning || IsSuperArmeding || !_enemy.CanDamage) { return; }
+            if (IsHurting || IsStunning || IsSuperArmeding || !_enemy.CanDamage || IsSexing) { return; }
             if (_enemy.IsCatching)
             {
                 if (_enemy.IsDied) { return; }
                 if (!IsBreak1)
                 {
                     sexAnimName = _enemy.Data.foreplayAnims[Random.Range(0, _enemy.Data.foreplayAnims.Count)].name;
+                    FSM.SetNextState(sexState);
                 }
                 else
                 {
                     sexAnimName = _enemy.Data.sexAnims[Random.Range(0, _enemy.Data.sexAnims.Count)].name;
+                    FSM.SetNextState(sexStartState);
                 }
                 IsSexing = true;
-                FSM.SetNextState(sexState);
-                StartCoroutine(Resist());
                 GameManager.AddSexEnemies(_enemy);
                 return;
             }
@@ -185,35 +182,6 @@ public class Player : Entity
         input.inputHandle.SexAction.Disable();
         UI_Canvas.Instance.FadeInUI_Die();
     }
-
-    #region Animation Action
-    public override void PlaySFXTrigger(int _value)
-    {
-        AudioClip clip = null;
-        if (_value == 0) { clip = sfxAttack; }
-        else if (_value == 1) { clip = sfxParrySuccess; }
-        else if (_value == 2) { clip = sfxHPPotion; }
-        else if (_value == 4) { clip = sfxRockAttack; }
-        if (clip != null)
-        {
-            AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
-        }
-    }
-
-    public override void PlayVoiceTrigger(int _value)
-    {
-        AudioClip clip = null;
-        if (_value == 0) { clip = voiceAttack; }
-        else if (_value == 1) { clip = voiceParrySuccess; }
-        else if (_value == 2) { clip = voiceHurt; }
-        else if (_value == 3) { clip = voiceSex; }
-        if (clip != null)
-        {
-            AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
-        }
-    }
-    #endregion
-
     #region Hurt
     public override IEnumerator HurtFlasher()
     {
@@ -255,7 +223,7 @@ public class Player : Entity
     public override void SexHurt()
     {
         if (!IsSexing) { return; }
-        CameraManager.Shake(8f, 0.2f);
+        //CameraManager.Shake(8f, 0.2f);
         foreach (Enemy _enemy in GameManager.Instance.sexEnemies)
         {
             float _damage = _enemy.AttackDamage;
@@ -355,6 +323,13 @@ public class Player : Entity
     }
     #endregion
 
+    public IEnumerator TestSexAnimation(EntityState sexState)
+    {
+        FSM.SetNextState(idleState);
+        yield return new WaitForSeconds(0.3f);
+        FSM.SetNextState(sexState);
+    }
+
     public IEnumerator DoShark()
     {
         Vector3 original = transform.position;
@@ -377,7 +352,7 @@ public class Player : Entity
         ItemData item = inventory.item;
         if (item.name == "HPPotion")
         {
-            PlaySFXTrigger(2);
+            PlaySFXTrigger(0);
             Hurt(-MaxHp * item.effectsVaule);
         }
         InventoryManager.SaveInventory(item, -1);

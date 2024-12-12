@@ -1143,8 +1143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45cefea7ada4b55409955f8216f07ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destructibleType: 0
   hitFX: {fileID: 0}
-  isCrush: 0
   hp: 10
   droppedItemRate: 5
   explosionForce: 0.5

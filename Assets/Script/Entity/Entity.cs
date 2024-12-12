@@ -20,6 +20,7 @@ public abstract class Entity : MonoBehaviour
     #endregion
 
     public EntityData Data;
+    public AudioData AudioData;
     public float AttackDamage { get; set; }
     public int CurrentHp { get; set; }
     public int MaxHp { get; set; }
@@ -74,6 +75,11 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (GameManager.IsPaused)
+        {
+            SetGravityScale(0);
+            return;
+        }
         #region Timers
         LastHurtTime -= Time.deltaTime;
         LastStunTime -= Time.deltaTime;
@@ -85,17 +91,26 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (GameManager.IsPaused)
+        {
+            return;
+        }
         FSM.currentState.OnFixedUpdate();
         SetGravity();
     }
 
     protected virtual void LateUpdate()
     {
+        if (GameManager.IsPaused)
+        {
+            return;
+        }
         FSM.currentState.OnLateUpdate();
         DoBillboard();
     }
 
     #region Animation Action
+
     public virtual void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
     public virtual void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
     public virtual void DamageTrigger(int _value)
@@ -120,8 +135,56 @@ public abstract class Entity : MonoBehaviour
     {
         CameraManager.Shake(10f, 0.3f);
     }
-    public virtual void PlaySFXTrigger(int _value){ }
-    public virtual void PlayVoiceTrigger(int _value){ }
+    public virtual void PlayAttackSFXTrigger(int _value)
+    {
+        if (AudioData == null) return;
+        if (AudioData.AttackSFXs.Count == 0 || AudioData.AttackSFXs[_value] == null) return;
+        AudioClip clip = AudioData.AttackSFXs[_value];
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+    }
+    public virtual void PlaySkillSFXTrigger(int _value)
+    {
+        if (AudioData == null) return;
+        if (AudioData.SkillSFXs.Count == 0 || AudioData.SkillSFXs[_value] == null) return;
+        AudioClip clip = AudioData.SkillSFXs[_value];
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+    }
+    public virtual void PlaySFXTrigger(int _value)
+    {
+        if (AudioData == null) return;
+        if (AudioData.SFX.Count == 0 || AudioData.SFX[_value] == null) return;
+        AudioClip clip = AudioData.SFX[_value];
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+    }
+    public virtual void PlayVoiceTrigger(int _value)
+    {
+        if (AudioData == null) return;
+        if (AudioData.Voices.Count == 0 || AudioData.Voices[_value] == null) return;
+        AudioClip clip = AudioData.Voices[_value];
+        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+    }
+    public virtual void PlaySexSFXTrigger(int _value) 
+    {
+        if (AudioData == null) return;
+        if (AudioData.SexSFX.Count == 0 || AudioData.SexSFX[_value] == null) return;
+        AudioClip clip = AudioData.SexSFX[_value];
+        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+    }
+    public virtual void PlaySexVoiceTrigger(int _value)
+    {
+        if (AudioData == null) return;
+        if (AudioData.SexVoices.Count == 0 || AudioData.SexVoices[_value] == null) return;
+        AudioClip clip = AudioData.SexVoices[_value];
+        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+    }
+    public virtual void PlayHurtSFXTrigger() 
+    {
+        if (AudioData == null) return;
+        if (AudioData.HurtSFX == null) return; 
+        AudioClip clip = AudioData.HurtSFX;
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+    }
+
     #endregion
 
     #region Flip

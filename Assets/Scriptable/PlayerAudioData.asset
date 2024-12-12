@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3dc301442266b541a85927cc1c7830c, type: 3}
+  m_Name: PlayerAudioData
+  m_EditorClassIdentifier: 
+  HurtSFX: {fileID: 8300000, guid: e99dba895bda02a4daa3a70f6b586c3f, type: 3}
+  AttackSFXs:
+  - {fileID: 8300000, guid: e5312fd78ce54d04d830110430f17aa1, type: 3}
+  SkillSFXs:
+  - {fileID: 8300000, guid: 3be5e7334c2f20f488f374e41a8be16f, type: 3}
+  - {fileID: 8300000, guid: 76a58106628841447b1c8a704eba5946, type: 3}
+  SFX:
+  - {fileID: 8300000, guid: 5a109122b1c85ec46a1017bfaeee1b38, type: 3}
+  Voices:
+  - {fileID: 8300000, guid: f73cfc22a05bd82478e8f39296c137d4, type: 3}
+  - {fileID: 8300000, guid: e6a04a10286e999459f86291d1e07e15, type: 3}
+  SexSFX:
+  - {fileID: 8300000, guid: 3ae7484598100134a9c8fdf89f332ab2, type: 3}
+  - {fileID: 8300000, guid: 3ea308f605e08c24fa3b71803139ad79, type: 3}
+  - {fileID: 8300000, guid: 141f4bdf7b8fdd94b93cfffa473c635f, type: 3}
+  SexVoices:
+  - {fileID: 8300000, guid: fa107f197807fbe41a3c6d52cd83309f, type: 3}
+  - {fileID: 8300000, guid: 6125a27e3de2e61419aea4685e3f0660, type: 3}
+  - {fileID: 8300000, guid: e2bd3416671e3cb44a4a7114cae12fd7, type: 3}
+  - {fileID: 8300000, guid: 476c1745923f28d45be089172fdf5634, type: 3}
+  - {fileID: 8300000, guid: dcb7051c3cfd8254488243b6cd5e4f08, type: 3}

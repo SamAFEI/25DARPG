@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a4ec839eae21f469b072c4dd7a1d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectSEClip: {fileID: 8300000, guid: c0deb0d0b31e0894ba4b0a146a24c46d, type: 3}
   bgmClip: {fileID: 8300000, guid: 64a14d62064c18e4287b998caded340e, type: 3}
   battleBGMClip: {fileID: 8300000, guid: e75d3511da568c545b5826bf6e7251ef, type: 3}
   bossBGMClip: {fileID: 8300000, guid: 49cadbca5c6639a49a44c69014abd72b, type: 3}
@@ -184,6 +185,10 @@ MonoBehaviour:
   woodHitClip: {fileID: 8300000, guid: 4e36ef2e24c3d094ebc78bf51c4f312e, type: 3}
   rockHitClip: {fileID: 8300000, guid: 155fb2dd9a99d4e49b49df4e3a1d10a6, type: 3}
   rockBreakenClip: {fileID: 8300000, guid: 7d14964c39ad535458ea7ae1bf96fdfa, type: 3}
+  testClips:
+  - {fileID: 8300000, guid: 64a14d62064c18e4287b998caded340e, type: 3}
+  - {fileID: 8300000, guid: c0deb0d0b31e0894ba4b0a146a24c46d, type: 3}
+  - {fileID: 8300000, guid: f73cfc22a05bd82478e8f39296c137d4, type: 3}
 --- !u!1 &3656893779228136444
 GameObject:
   m_ObjectHideFlags: 0

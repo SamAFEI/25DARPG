@@ -11,7 +11,7 @@ public class BT_Start : MonoBehaviour
     private void Awake()
     {
         bt_start = GetComponent<Button>();
-        bt_start.onClick.AddListener(() => GameManager.Instance.LoadScene("DemoScene7"));
+        bt_start.onClick.AddListener(() => GameManager.LoadScene("DemoScene7"));
         tmp_Start = GetComponentInChildren<TextMeshProUGUI>();
     }
 
@@ -19,7 +19,7 @@ public class BT_Start : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameManager.Instance.LoadScene("DemoScene7");
+            GameManager.LoadScene("DemoScene7");
         }
     }
 

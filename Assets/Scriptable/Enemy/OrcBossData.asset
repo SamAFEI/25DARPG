@@ -36,6 +36,7 @@ MonoBehaviour:
   jumpHangMaxSpeedMult: 0
   maxHP: 1000
   isBoos: 1
+  dashSpeed: 1.4
   attack1ResetTime: 3
   attack1Damage: 20
   attack1IsHeavy: 0
@@ -45,18 +46,11 @@ MonoBehaviour:
   attack3ResetTime: 8
   attack3Damage: 50
   attack3IsHeavy: 1
-  alertDistance: 5
-  catchDistance: 2
+  alertDistance: 8
+  catchDistance: 0
   attack1Distance: 4
   attack2Distance: 5
   attack3Distance: 10
   projectiles: []
-  foreplayAnims:
-  - {fileID: 7400000, guid: f547ce621cba1c54b8841ceccd827e94, type: 2}
-  - {fileID: 7400000, guid: eb6b1668e07d57947b6b8d919ff3e6e3, type: 2}
-  - {fileID: 7400000, guid: cfdc64d79d276c94eafb0bbce15bcda2, type: 2}
-  sexAnims:
-  - {fileID: 7400000, guid: 5aa23dc9424c5ba4daa6031eed0d8e30, type: 2}
-  - {fileID: 7400000, guid: 124e56db1f7f35747bdfa68aa42fb298, type: 2}
-  - {fileID: 7400000, guid: 0739aa97be14fe944b08224551779f65, type: 2}
-  - {fileID: 7400000, guid: 60fb6ffe73da8bc44b4a4f25585bb140, type: 2}
+  foreplayAnims: []
+  sexAnims: []

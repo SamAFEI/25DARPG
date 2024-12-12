@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e6fedc2472449cead18ef23b5cb30d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library:
+  - m_Name: L ANKLE BAND
+    m_Hash: 420405996
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L ANKLE BAND
+      m_Hash: 420405996
+      m_Sprite: {fileID: 5221330079676132551, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 5221330079676132551, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: L SHOULDERS
+    m_Hash: 585370554
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L SHOULDERS
+      m_Hash: 585370554
+      m_Sprite: {fileID: -7503903443672535843, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -7503903443672535843, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: L WRIST BAND
+    m_Hash: 578000962
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L WRIST BAND
+      m_Hash: 578000962
+      m_Sprite: {fileID: -5617555788225153944, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -5617555788225153944, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: L HAND
+    m_Hash: 942290071
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: L HAND
+      m_Hash: 942290071
+      m_Sprite: {fileID: 4617476635776122932, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 4617476635776122932, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    - m_Name: L HAND_0
+      m_Hash: 93827978
+      m_Sprite: {fileID: 7097312363265609377, guid: 796567e6991a7e741acb7686b4198788,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 7097312363265609377, guid: 796567e6991a7e741acb7686b4198788,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 2
+  - m_Name: PANTS
+    m_Hash: 187187034
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: PANTS
+      m_Hash: 187187034
+      m_Sprite: {fileID: -4590174004738260304, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -4590174004738260304, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: R ANKLE BAND
+    m_Hash: 1009245198
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: R ANKLE BAND
+      m_Hash: 1009245198
+      m_Sprite: {fileID: -6798279868123956825, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -6798279868123956825, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  - m_Name: R HAND
+    m_Hash: 32921468
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: R HAND
+      m_Hash: 32921468
+      m_Sprite: {fileID: -6702634231043656135, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -6702634231043656135, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    - m_Name: R HAND_0
+      m_Hash: 749113491
+      m_Sprite: {fileID: -8471554067359970255, guid: 796567e6991a7e741acb7686b4198788,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -8471554067359970255, guid: 796567e6991a7e741acb7686b4198788,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 2
+  - m_Name: R WRIST BAND
+    m_Hash: 123381408
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: R WRIST BAND
+      m_Hash: 123381408
+      m_Sprite: {fileID: 5560666365869005216, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 5560666365869005216, guid: c51565abd56e77349b3e9a4e60353cbc,
+        type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 1
+  m_PrimaryLibraryGUID: 
+  m_ModificationHash: 638682254133509421
+  m_Version: 1

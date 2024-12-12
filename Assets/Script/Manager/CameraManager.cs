@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour
     public Collider InitCameraCollider;
     public CinemachineVirtualCamera VCameraViewZ { get; private set; }
     public CinemachineVirtualCamera VCameraViewX { get; private set; }
+    public bool isFaceZ;
     public CinemachineConfiner ConfinerViewZ;
     public CinemachineConfiner ConfinerViewX;
     public CinemachineBrain cameraBrain;
@@ -64,31 +65,27 @@ public class CameraManager : MonoBehaviour
         Instance.cbmPerlin = Instance.activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         Instance.cbmPerlin.m_AmplitudeGain = 0f;
         Instance.cbmPerlin.m_FrequencyGain = 0f;
+        isFaceZ = Instance.activeCamera == CameraViewZ;
     }
 
     #region AreaCamera
     public static void ChangeCamera(int index, Collider collider)
     {
-        Instance.activeCamera.Priority = 10;
+        
         if (index == 0)
         {
+            Instance.activeCamera = Instance.VCameraViewX;
             Instance.ConfinerViewZ.m_BoundingVolume = collider;
             Instance.VCameraViewZ.Priority = 11;
         }
         else if (index == 1)
         {
+            Instance.activeCamera = Instance.VCameraViewZ;
             Instance.ConfinerViewX.m_BoundingVolume = collider;
             Instance.VCameraViewX.Priority = 11;
         }
+        Instance.activeCamera.Priority = 10;
         Instance.GetActiveCamera();
-    }
-
-    public void SetActiveCamera(CinemachineVirtualCamera camera)
-    {
-        activeCamera = camera;
-        cbmPerlin = activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        Instance.cbmPerlin.m_AmplitudeGain = 0f;
-        Instance.cbmPerlin.m_FrequencyGain = 0f;
     }
     #endregion
 

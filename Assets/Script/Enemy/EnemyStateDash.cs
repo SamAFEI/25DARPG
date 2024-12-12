@@ -21,6 +21,11 @@ public class EnemyStateDash : EnemyState
     public override void OnUpdate()
     {
         base.OnUpdate();
+        if (!enemy.CanChase)
+        {
+            FSM.SetNextState(enemy.alertState);
+            return;
+        }
         if (enemy.CheckDashAttack())
         {
             enemy.DashAttack();

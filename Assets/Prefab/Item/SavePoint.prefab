@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1498246819282353639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6169239718772079946}
+  m_Layer: 10
+  m_Name: Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6169239718772079946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498246819282353639}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 363146756434952518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4968898504028272650
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,7 +44,7 @@ GameObject:
   - component: {fileID: 6489314418534000930}
   - component: {fileID: 5373467798837995353}
   - component: {fileID: 7959061720689189794}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SavePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,7 +63,8 @@ Transform:
   m_LocalPosition: {x: 60.19, y: 148.94, z: -221.5}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 6169239718772079946}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -36.542, z: 0}
 --- !u!33 &7398166500014597771
@@ -64,6 +96,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 71e41e43b459a244abaf5acca76b89ee, type: 2}
+  - {fileID: 2100000, guid: 7bc7bfcbf0ccc5649ace3ab4221e982e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -119,5 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d23931ead29efa48981f9083a49f94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   data: {fileID: 11400000, guid: 3eab8e13ff335aa489e8d6eadc164838, type: 2}
+  viewType: 0
+  cameraCollider: {fileID: 0}
   ui_Interactable: {fileID: 0}
+  outlineMAT: {fileID: 2100000, guid: 7bc7bfcbf0ccc5649ace3ab4221e982e, type: 2}
+  selectedTimeout: 0

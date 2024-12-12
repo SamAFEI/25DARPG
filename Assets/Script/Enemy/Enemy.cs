@@ -46,17 +46,11 @@ public class Enemy : Entity
     public bool CanAttack1 { get; set; }
     public bool CanAttack2 { get; set; }
     public bool CanAttack3 { get; set; }
-    public bool CanSexPlayer { get; set; }
     public bool CanCatch { get; set; }
     public bool IsNoCDAttack { get; set; }
     public float ChaseSpeed { get; set; }
     public Vector3 MoveTarget;
     public Vector3 MoveDirection;
-
-    public AudioClip sfxAttack;
-    public AudioClip sfxAttack2;
-    public AudioClip sfxAttack3;
-    public AudioClip sfxHurt;
     public PatrolData patrolData = new PatrolData();
 
 
@@ -124,7 +118,7 @@ public class Enemy : Entity
         {
             Player _player = other.GetComponentInParent<Player>();
             entityFX.DoPlayHitFX(0, entityCollider.ClosestPoint(other.transform.position));
-            PlaySFXTrigger(3);
+            PlayHurtSFXTrigger();
             Hurt(_player.AttackDamage, _player.IsHeaveyAttack);
             Repel(_player.transform.position, _player.IsHeaveyAttack);
         }
@@ -152,21 +146,6 @@ public class Enemy : Entity
     }
     public float GetPlayerDistance() => GameManager.GetPlayerDistance(this.transform.position);
     public Vector3 GetPlayerDirection() => GameManager.GetPlayerDirection(this.transform.position);
-
-    #region Animation Action
-    public override void PlaySFXTrigger(int _value)
-    {
-        AudioClip clip = null;
-        if (_value == 0) { clip = sfxAttack; }
-        else if (_value == 1) { clip = sfxAttack2; }
-        else if (_value == 2) { clip = sfxAttack3; }
-        else if (_value == 3) { clip = sfxHurt; }
-        if (clip != null)
-        {
-            AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
-        }
-    }
-    #endregion
 
     #region About Hurt
     public virtual void Hurt(float _damage, bool _isHeaveyAttack = false)
@@ -231,10 +210,11 @@ public class Enemy : Entity
     }
 
     #region Enemy AI
-    public virtual bool CheckPlayerDistance(float minBorder, float minZ = 1.5f)
+    public virtual bool CheckPlayerDistance(float minBorder, bool checkZ = true)
     {
         Vector3 vector = CheckRelativeVector(GameManager.Instance.player.transform.position);
-        if (GetPlayerDistance() < minBorder && Mathf.Abs(vector.z) < minZ)
+        float minZ = attackMesh.GetComponent<BoxCollider>().size.z * 0.5f;
+        if (GetPlayerDistance() < minBorder && (Mathf.Abs(vector.z) < minZ || !checkZ))
         {
             return true;
         }
@@ -267,7 +247,7 @@ public class Enemy : Entity
     }
     public virtual void CheckAction()
     {
-        IsKeepawaying = (!GameManager.CanAttackPlayer() || LastAttack1Time > 0) && CheckPlayerDistance(Data.alertDistance);
+        IsKeepawaying = (!GameManager.CanAttackPlayer() || LastAttack1Time > 0) && CheckPlayerDistance(Data.alertDistance * 1.2f, false);
         CanChase = LastAttack1Time < 0 && !CheckPlayerDistance(Data.attack1Distance)
             && GameManager.CanAttackPlayer();
         CanAttack1 = LastAttack1Time < 0 && CheckPlayerDistance(Data.attack1Distance)
@@ -278,7 +258,16 @@ public class Enemy : Entity
             && GameManager.CanAttackPlayer();
         CanCatch = LastCatchTime < 0 && CheckPlayerDistance(Data.catchDistance)
             && GameManager.CanAttackPlayer();
-        CanSexPlayer = GameManager.CanSexPlayer() && CheckPlayerDistance(Data.catchDistance);
+
+        if (GameManager.Instance.player.IsSexing)
+        {
+            LastAttack1Time = Random.Range(0.3f ,1f);
+            LastAttack2Time = Random.Range(0.3f, 1f);
+            LastAttack3Time = Random.Range(0.3f, 1f);
+            LastCatchTime = Random.Range(3f, 5f);
+        }
+        if (IsSexing) //觸發Sex的不要動
+        { IsKeepawaying = false; }
     }
     public virtual void DoChase()
     {
@@ -294,12 +283,12 @@ public class Enemy : Entity
     {
         if (IsHurting && IsAttacking) { return; }
         Vector3 _vector = GameManager.GetPlayerDirection(this.transform.position);
-        MoveDirection = new Vector3(_vector.x * -2f, _vector.y, _vector.z * -1.5f);
+        MoveDirection = new Vector3(_vector.x * -1.5f, _vector.y, _vector.z * -1f);
         Run(0.6f);
     }
     public virtual void AlertStateAction()
     {
-        if (CanCatch && Random.Range(0.00f, 100.00f) < 50f)
+        if (CanCatch && Random.Range(0.00f, 100.00f) < 80f)
         {
             FSM.SetNextState(catchState);
             return;
@@ -406,7 +395,10 @@ public class Enemy : Entity
             FSM.SetNextState(attack1State);
             return;
         }
-        FSM.SetNextState(catchState);
+        if (!Data.isBoos) //Boss沒有小動畫
+        {
+            FSM.SetNextState(catchState);
+        }
     }
     public virtual bool CheckDashAttack()
     {
@@ -500,7 +492,6 @@ public class Enemy : Entity
                             && destructible.destructibleType == DestructibleType.wood && Random.Range(0, 100) > 70)
                         {
                             FSM.SetNextState(attack1State);
-                            IsNoCDAttack = true;
                         }
                     }
                 }

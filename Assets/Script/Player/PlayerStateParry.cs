@@ -16,7 +16,7 @@ public class PlayerStateParry : PlayerStateGrounded
     {
         base.OnExit();
         player.input.SetParrying(false);
-        player.CanBeStunned = false;
+        player.StunnedTrigger(0);
     }
 
     public override void OnUpdate()

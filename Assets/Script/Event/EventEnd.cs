@@ -15,7 +15,7 @@ public class EventEnd : MonoBehaviour, IInteractable
     {
         if (isEnd && Input.GetKeyDown(KeyCode.E))
         {
-            GameManager.Instance.LoadStarScene();
+            GameManager.LoadStarScene();
         }
     }
 

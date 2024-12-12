@@ -3,15 +3,18 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, ISaveManager
 {
     public static GameManager Instance { get; private set; }
     public static string LoadSceneName;
+    public static string SavePointName;
+    public static bool IsPaused { get; private set; }
     public GameObject playerObj { get; private set; }
     public Player player { get; private set; }
     public List<Enemy> sexEnemies { get; private set; } = new List<Enemy>();
     public LayerMask enemyLayerMask;
     public bool isStartScene;
+    private SavePoint lastSavePoint;
 
     private void Awake()
     {
@@ -29,7 +32,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         playerObj = GameObject.FindWithTag("Player");
-        player = playerObj.GetComponent<Player>();
+        if (playerObj != null)
+        {
+            player = playerObj.GetComponent<Player>();
+        }
         if (isStartScene)
         {
             player.StartCoroutine(player.DoStartAnimation());
@@ -76,17 +82,17 @@ public class GameManager : MonoBehaviour
     {
         Instance.sexEnemies.Add(enemy);
         enemy.FSM.SetNextState(enemy.alertState);
-        enemy.uiEnityStatus.CloseHpSlider();
+        enemy.IsSexing = true;
         enemy.skeleton.SetActive(false);
     }
     public static void ResetSexEnemies()
     {
         List<Enemy> enemies = new List<Enemy>();
         enemies.AddRange(Instance.sexEnemies);
-        foreach(Enemy enemy in enemies)
+        foreach (Enemy enemy in enemies)
         {
             enemy.skeleton.SetActive(true);
-            enemy.LastCatchTime = Random.Range(3f, 5f);
+            enemy.IsSexing = false;
             enemy.FSM.SetNextState(enemy.alertState);
             Instance.sexEnemies.Remove(enemy);
         }
@@ -104,20 +110,76 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public void LoadScene(string _sceneName)
+    #region About Scene
+    public static void LoadScene(string _sceneName)
     {
         LoadSceneName = _sceneName;
         SceneManager.LoadScene("LoadingScene");
+        PausedGame(false);
     }
-    public void RestarScene()
+    public static void ResetActiveScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         LoadScene(scene.name);
     }
-
-    public void LoadStarScene()
+    public static void LoadStarScene()
     {
-        Scene scene = SceneManager.GetActiveScene();
         LoadScene("StartScene");
+    }
+    public static void LoadTitleScene()
+    {
+        LoadScene("TitleScene");
+    }
+    public static void LoadGameScene()
+    {
+        LoadScene("GameScene");
+    }
+    public static void LoadCGScene()
+    {
+        LoadScene("Live2DScene");
+    }
+    #endregion
+
+    #region About SaveLoad
+    public static void DoSaveGame(string savePointName)
+    {
+        SavePointName = savePointName;
+        SaveManager.SaveGame();
+        ResetActiveScene();
+    }
+
+    public void LoadData(GameData _data)
+    {
+        SavePointName = _data.SavePointName;
+        List<SavePoint> savePoints = GameObject.FindObjectsOfType<SavePoint>().ToList();
+        foreach (SavePoint savePoint in savePoints)
+        {
+            if (savePoint.name == SavePointName)
+            {
+                lastSavePoint = savePoint;
+                playerObj.transform.position = lastSavePoint.LoadPoint();
+                break;
+            }
+        }
+    }
+
+    public void SaveData(ref GameData _data)
+    {
+        _data.SavePointName = SavePointName;
+    }
+    #endregion
+
+    public static void PausedGame(bool paused)
+    {
+        IsPaused = paused;
+        if (IsPaused)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+        AudioManager.PausePlay(IsPaused);
     }
 }

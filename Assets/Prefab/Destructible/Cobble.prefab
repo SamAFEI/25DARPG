@@ -744,6 +744,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1b4ac7f29d5087d489765315ce98b634, type: 2}
+  - {fileID: 2100000, guid: d014e6393f069d44c9f7478c82d226ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -865,8 +866,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45cefea7ada4b55409955f8216f07ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destructibleType: 0
   hitFX: {fileID: 0}
-  isCrush: 0
   hp: 5
   droppedItemRate: 5
   explosionForce: 0.5

@@ -69,7 +69,7 @@ MonoBehaviour:
   m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_CameraDistance: 15
-  m_DeadZoneWidth: 0.2
+  m_DeadZoneWidth: 0.1
   m_DeadZoneHeight: 0.8
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_CameraDistance: 15
-  m_DeadZoneWidth: 0.2
+  m_DeadZoneWidth: 0.1
   m_DeadZoneHeight: 0.8
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
@@ -239,7 +239,7 @@ Transform:
   m_GameObject: {fileID: 7754672580505873690}
   serializedVersion: 2
   m_LocalRotation: {x: 0.12278779, y: -0.6963643, z: 0.12278779, w: 0.6963643}
-  m_LocalPosition: {x: 451.6955, y: 6.8143272, z: 361.40012}
+  m_LocalPosition: {x: 483.3155, y: 6.8143334, z: 361.40012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -351,6 +351,7 @@ MonoBehaviour:
   CameraViewZ: {fileID: 8893477989715964040}
   CameraViewX: {fileID: 7754672580505873690}
   InitCameraCollider: {fileID: 0}
+  isFaceZ: 0
   ConfinerViewZ: {fileID: 8781958513451145516}
   ConfinerViewX: {fileID: 5908005548021707130}
   cameraBrain: {fileID: 0}
@@ -383,7 +384,7 @@ Transform:
   m_GameObject: {fileID: 8893477989715964040}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17364816, y: -0, z: -0, w: 0.9848078}
-  m_LocalPosition: {x: 437.6, y: 6.814296, z: 347.30466}
+  m_LocalPosition: {x: 469.22, y: 6.814296, z: 347.30466}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

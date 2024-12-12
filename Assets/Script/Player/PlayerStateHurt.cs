@@ -9,7 +9,6 @@ public class PlayerStateHurt : PlayerState
     public override void OnEnter()
     {
         base.OnEnter();
-        player.PlayVoiceTrigger(2);
         player.LastSuperArmedTime = player.Data.hurtResetTime;
     }
 
