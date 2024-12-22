@@ -14321,6 +14321,13 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0
+    functionName: SetAttackType
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.28333333
     functionName: PlayAttackFX
     data: 
@@ -14330,20 +14337,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.31666666
     functionName: PlayVoiceTrigger
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 1
-    messageOptions: 0
-  - time: 0.33333334
-    functionName: PlayAttackFX
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 3
-    messageOptions: 0
-  - time: 0.35
-    functionName: PlaySkillSFXTrigger
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

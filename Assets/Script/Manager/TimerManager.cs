@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TimerManager : MonoBehaviour
@@ -29,12 +28,12 @@ public class TimerManager : MonoBehaviour
             if (frozdenDeltaTime <= 0) { isFrozening = false; }
         }
     }
-    public void SlowFrozenTime(float _time)
+    public static void SlowFrozenTime(float _time)
     {
-        if (isFrozening) { return; }
-        frozenTime = _time;
-        frozdenDeltaTime = _time;
-        isFrozening = true;
+        if (Instance.isFrozening) { return; }
+        Instance.frozenTime = _time;
+        Instance.frozdenDeltaTime = _time;
+        Instance.isFrozening = true;
     }
 
     public void DoFrozenTime(float _time = 0.1f)

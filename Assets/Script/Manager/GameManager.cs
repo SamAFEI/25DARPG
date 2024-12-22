@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour, ISaveManager
     public GameObject playerObj { get; private set; }
     public Player player { get; private set; }
     public List<Enemy> sexEnemies { get; private set; } = new List<Enemy>();
+    public List<Enemy> alertEnemies { get; private set; } = new List<Enemy>();
     public LayerMask enemyLayerMask;
     public bool isStartScene;
     private SavePoint lastSavePoint;
@@ -78,6 +79,9 @@ public class GameManager : MonoBehaviour, ISaveManager
         if (Instance.playerObj == null) { return false; }
         return Instance.player.IsStunning;
     }
+    #endregion
+
+    #region About Enemy
     public static void AddSexEnemies(Enemy enemy)
     {
         Instance.sexEnemies.Add(enemy);
@@ -107,6 +111,32 @@ public class GameManager : MonoBehaviour, ISaveManager
             Enemy enemy = collider.GetComponentInParent<Enemy>();
             enemy.LastCatchTime = Random.Range(3f, 5f);
         }
+    }
+    public static void AddAlertEnemy(Enemy enemy)
+    {
+        if (Instance.alertEnemies.Contains(enemy)) return;
+        Instance.alertEnemies.Add(enemy);
+        PlayBattleBGM();
+    }
+    public static void RemoveAlertEnemy(Enemy enemy)
+    {
+        if (!Instance.alertEnemies.Contains(enemy)) return;
+        Instance.alertEnemies.Remove(enemy);
+        PlayBattleBGM();
+    }
+    public static void PlayBattleBGM()
+    {
+        if (Instance.alertEnemies.Where(x => x.Data.isBoos).Count() > 0)
+        {
+            AudioManager.PlayBGM(2);
+            return;
+        }
+        if (Instance.alertEnemies.Count() > 0)
+        {
+            AudioManager.PlayBGM(1);
+            return;
+        }
+        AudioManager.PlayBGM(0);
     }
     #endregion
 

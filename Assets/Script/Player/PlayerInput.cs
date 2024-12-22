@@ -24,6 +24,7 @@ public class PlayerInput : MonoBehaviour
     public float LastPressedDashTime;
     public float LastPressedAttackTime;
     public float LastPressedParryTime;
+    public float LastPressedEarthshatterTime;
     public float ResetDashTime;
     #endregion
 
@@ -31,6 +32,7 @@ public class PlayerInput : MonoBehaviour
     public bool IsPressedAttack { get { return LastPressedAttackTime > 0; } }
     public bool IsPressedParry { get { return LastPressedParryTime > 0; } }
     public bool IsPressedDash { get { return LastPressedDashTime > 0; } }
+    public bool IsPressedEarthshatter { get { return LastPressedEarthshatterTime > 0; } }
     public bool IsJumping { get; set; }
     public bool IsDashing { get; set; }
     public bool IsParrying { get; set; }
@@ -59,6 +61,7 @@ public class PlayerInput : MonoBehaviour
         LastPressedAttackTime -= Time.deltaTime;
         LastPressedParryTime -= Time.deltaTime;
         ResetDashTime -= Time.deltaTime;
+        LastPressedEarthshatterTime -= Time.deltaTime;
         #endregion
 
         #region Input Handler
@@ -80,13 +83,17 @@ public class PlayerInput : MonoBehaviour
         }
         #endregion
 
-        #region ATTACK CHECKS
+        #region ATTACK OR SKILL CHECKS
 
         if (CanAttack() && IsPressedAttack)
         {
             SetAttacking(true);
         }
 
+        if (CanAttack() && player.CanEarthshatter() && IsPressedEarthshatter)
+        {
+            SetAttacking(true, AttackTypeEnum.Earthshatter);
+        }
         #endregion
 
         #region DASH CHECKS
@@ -111,7 +118,8 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (player.CanMovement)
+        //移置 Player.cs
+        /*if (player.CanMovement)
         {
             if (MoveInput.x != 0)
             {
@@ -123,7 +131,7 @@ public class PlayerInput : MonoBehaviour
                 player.SetZeroVelocity();
             }
             Run(1);
-        }
+        }*/
     }
 
     private void OnDestroy()
@@ -149,6 +157,7 @@ public class PlayerInput : MonoBehaviour
         inputHandle.Character.Item00.started += InputItem00;
         inputHandle.Character.Item01.started += InputItem01;
         inputHandle.Character.Setting.started += InputSetting;
+        inputHandle.Character.Earthshatter.started += InputEarthshatter;
 
         inputHandle.SexAction.ResistHorizontal.performed += InputResistHorizontal;
         inputHandle.Character.Enable();
@@ -191,6 +200,10 @@ public class PlayerInput : MonoBehaviour
     private void InputSetting(InputAction.CallbackContext _context)
     {
         OpenSetting();
+    }
+    private void InputEarthshatter(InputAction.CallbackContext _context)
+    {
+        LastPressedEarthshatterTime = data.attackInputBufferTime;
     }
 
     private void InputResistHorizontal(InputAction.CallbackContext _context)
@@ -275,11 +288,13 @@ public class PlayerInput : MonoBehaviour
     #endregion
 
     #region ATTACK METHODS
-    public void SetAttacking(bool _isAttacking)
+    public void SetAttacking(bool isAttacking, AttackTypeEnum attackType = AttackTypeEnum.Basic)
     {
-        IsAttacking = _isAttacking;
+        IsAttacking = isAttacking;
         player.IsAttacking = IsAttacking;
+        player.AttackType = attackType;
     }
+
     #endregion
 
     #region DASH METHODS
@@ -365,3 +380,4 @@ public class PlayerInput : MonoBehaviour
         }
     }
 }
+

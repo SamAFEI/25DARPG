@@ -42,6 +42,7 @@ public class Enemy : Entity
     public bool IsPatroling { get; set; }
     public bool IsKeepawaying { get; set; }
     public bool IsCatching { get; set; }
+    public bool IsAmbushDash { get; set; }
     public bool CanChase { get; set; }
     public bool CanAttack1 { get; set; }
     public bool CanAttack2 { get; set; }
@@ -106,6 +107,10 @@ public class Enemy : Entity
         base.FixedUpdate();
         CheckAlert();
         DoAlert();
+        if (IsAlerting)
+        {
+            GameManager.AddAlertEnemy(this);
+        }
         if (IsMoveToTarget && !IsStunning)
         {
             DoMoveTarget();
@@ -156,7 +161,7 @@ public class Enemy : Entity
             TimerManager.Instance.DoFrozenTime(0.1f);
             CameraManager.Shake(1f, 0.1f);
             LastHurtTime = Data.hurtResetTime;
-            if (_isHeaveyAttack) { LastHurtTime += 0.3f; _damage *= 2; }
+            if (_isHeaveyAttack) { LastHurtTime += 0.3f; }
             if (IsSuperArmeding) { LastHurtTime = 0; }
             StartCoroutine(HurtFlasher());
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
@@ -179,16 +184,23 @@ public class Enemy : Entity
     {
         if (IsSuperArmeding) return;
         float power = rb.mass * 1.5f;
-        if (isHeavyAttack) { power *= 3f; }
+        if (isHeavyAttack) { power *= 1.5f; }
         Vector3 _vector = CheckRelativeVector(sourcePosition);
         float faceRight = _vector.x * -1;
         float faceFoward = _vector.z * -10;
         CheckIsFacingRight(faceRight * -1 > 0);
         _vector = new Vector3(faceRight * power, 0, faceFoward);
         _vector = CameraManager.GetDirectionByCamera(_vector);
+        SetZeroVelocity();
         rb.AddForce(_vector, ForceMode.Impulse);
     }
     #endregion
+
+    public override void Die(float _delay = 0.5F)
+    {
+        base.Die(_delay);
+        GameManager.RemoveAlertEnemy(this);
+    }
 
     public override void SetZeroVelocity()
     {
@@ -288,6 +300,12 @@ public class Enemy : Entity
     }
     public virtual void AlertStateAction()
     {
+        if (IsAmbushDash)
+        {
+            FSM.SetNextState(dashState);
+            IsAmbushDash = false;
+            return;
+        }
         if (CanCatch && Random.Range(0.00f, 100.00f) < 80f)
         {
             FSM.SetNextState(catchState);
@@ -384,7 +402,7 @@ public class Enemy : Entity
         FacingToPlayer();
         IsNoCDAttack = true;
         FSM.SetNextState(attack1State);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
         CanChase = true; //避開 ObstacleAvoidance 用
         FSM.SetNextState(dashState);
     }

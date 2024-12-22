@@ -28,6 +28,7 @@ public class OrcBoss : Enemy
         if (IsDied)
         {
             PlayVoiceTrigger(1);
+            TimerManager.SlowFrozenTime(0.5f);
             Instantiate(dropItem, gameObject.transform.position, Quaternion.identity);
         }
     }

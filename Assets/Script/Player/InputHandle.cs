@@ -107,6 +107,15 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Earthshatter"",
+                    ""type"": ""Button"",
+                    ""id"": ""6f337abe-7ca9-41fd-bf6a-23d77bf9c819"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -263,6 +272,28 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""action"": ""Setting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b8fe395-0408-472e-bd42-6956aa4c97ef"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Earthshatter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aaa7188a-6877-4b74-9c85-2ce2a8ae3207"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item01"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -330,6 +361,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         m_Character_Item01 = m_Character.FindAction("Item01", throwIfNotFound: true);
         m_Character_OpenBag = m_Character.FindAction("OpenBag", throwIfNotFound: true);
         m_Character_Setting = m_Character.FindAction("Setting", throwIfNotFound: true);
+        m_Character_Earthshatter = m_Character.FindAction("Earthshatter", throwIfNotFound: true);
         // SexAction
         m_SexAction = asset.FindActionMap("SexAction", throwIfNotFound: true);
         m_SexAction_ResistHorizontal = m_SexAction.FindAction("ResistHorizontal", throwIfNotFound: true);
@@ -403,6 +435,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Item01;
     private readonly InputAction m_Character_OpenBag;
     private readonly InputAction m_Character_Setting;
+    private readonly InputAction m_Character_Earthshatter;
     public struct CharacterActions
     {
         private @InputHandle m_Wrapper;
@@ -416,6 +449,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         public InputAction @Item01 => m_Wrapper.m_Character_Item01;
         public InputAction @OpenBag => m_Wrapper.m_Character_OpenBag;
         public InputAction @Setting => m_Wrapper.m_Character_Setting;
+        public InputAction @Earthshatter => m_Wrapper.m_Character_Earthshatter;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -452,6 +486,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @Setting.started += instance.OnSetting;
             @Setting.performed += instance.OnSetting;
             @Setting.canceled += instance.OnSetting;
+            @Earthshatter.started += instance.OnEarthshatter;
+            @Earthshatter.performed += instance.OnEarthshatter;
+            @Earthshatter.canceled += instance.OnEarthshatter;
         }
 
         private void UnregisterCallbacks(ICharacterActions instance)
@@ -483,6 +520,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
             @Setting.started -= instance.OnSetting;
             @Setting.performed -= instance.OnSetting;
             @Setting.canceled -= instance.OnSetting;
+            @Earthshatter.started -= instance.OnEarthshatter;
+            @Earthshatter.performed -= instance.OnEarthshatter;
+            @Earthshatter.canceled -= instance.OnEarthshatter;
         }
 
         public void RemoveCallbacks(ICharacterActions instance)
@@ -557,6 +597,7 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         void OnItem01(InputAction.CallbackContext context);
         void OnOpenBag(InputAction.CallbackContext context);
         void OnSetting(InputAction.CallbackContext context);
+        void OnEarthshatter(InputAction.CallbackContext context);
     }
     public interface ISexActionActions
     {

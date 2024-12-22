@@ -46,7 +46,7 @@ public class DestructibleEntity : MonoBehaviour
             if (destructibleType == DestructibleType.rock)
             {
                 AudioManager.PlayRockHitSFX(transform.position);
-                if (!_entity.IsRockAttack) { return; }
+                if (_entity.AttackType != AttackTypeEnum.Earthshatter) { return; }
             }
             else
             {

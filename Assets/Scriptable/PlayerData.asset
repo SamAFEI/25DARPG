@@ -44,4 +44,6 @@ MonoBehaviour:
   dashResetTime: 0.5
   canCounterTime: 0.2
   MaxHP: 200
+  MaxMP: 200
   AttackDamage: 20
+  EarthshatterDamage: 50

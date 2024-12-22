@@ -60,6 +60,14 @@ public class SaveManager : MonoBehaviour
         }
         Instance.dataHandler.SaveFiled(Instance.gameData);
     }
+    public static void SaveSetting()
+    {
+        if (Instance.dataHandler == null) { return; }
+        ISaveManager _saveManager = GameObject.FindObjectOfType<SettingManager>();
+        _saveManager.SaveData(ref Instance.gameData);
+        Instance.dataHandler.SaveFiled(Instance.gameData);
+    }
+
     public static bool CheckHaveSaveData()
     {
         if (Instance.dataHandler == null) { return false; }

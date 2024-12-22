@@ -76,4 +76,8 @@ public class AnimationTrigger : MonoBehaviour
     {
         entity.PlayHurtSFXTrigger();
     }
+    private void SetAttackType(AttackTypeEnum type)
+    {
+        entity.SetAttackType(type);
+    }
 }

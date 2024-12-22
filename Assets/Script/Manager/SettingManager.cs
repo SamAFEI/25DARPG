@@ -248,7 +248,8 @@ public class SettingManager : MonoBehaviour, ISaveManager
         GameManager.PausedGame(!UI_Area.activeSelf);
         if (UI_Area.activeSelf)
         {
-            SaveManager.SaveGame();
+            SaveManager.SaveSetting();
+            UI_DialogCanvas.Close();
             UI_Area.SetActive(false);
             return;
         }
@@ -260,6 +261,7 @@ public class SettingManager : MonoBehaviour, ISaveManager
         UI_DialogCanvas.Show("是否確定返回標題畫面？",
                 () =>
                 {
+                    SaveManager.SaveSetting();
                     GameManager.LoadTitleScene();
                 },
                 () => { }

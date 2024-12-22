@@ -61,28 +61,6 @@ public class UI_TitleCanvas : MonoBehaviour
             GameManager.LoadGameScene();
         }
     }
-
-    private async Task LoadGameAsync(bool isNew)
-    {
-        AudioManager.PlaySelectSE();
-        if (isNew)
-        {
-            if (hasSaveData)
-            {
-                await UI_DialogCanvas.Show("是否覆蓋目前進度，重新開始遊戲？",
-                    () =>
-                    {
-                        SaveManager.Instance.DeleteSaveData();
-                    },
-                    () =>
-                    {
-                        return;
-                    }
-                );
-            }
-        }
-        GameManager.LoadGameScene();
-    }
     private void QuitGame()
     {
         AudioManager.PlaySelectSE();

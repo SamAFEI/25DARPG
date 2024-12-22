@@ -29,6 +29,7 @@ public class UI_Shortcut : MonoBehaviour
         inventoryManager.onInventoryChangedCallback += UpdateUI;
         InintSlots();
     }
+
     private void InintSlots()
     {
         slots = GetComponentsInChildren<UI_Slot>().ToList();

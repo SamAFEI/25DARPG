@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: SavePoint
   icon: {fileID: -1477765919, guid: 93c9a4446cd8c3845bfd044ce791b833, type: 3}
-  interactHint: 
+  interactHint: SavePoint
+  describe: 
   content: Save Susecces

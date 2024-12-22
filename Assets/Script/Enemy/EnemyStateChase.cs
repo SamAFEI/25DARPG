@@ -12,6 +12,7 @@ public class EnemyStateChase : EnemyState
         if (enemy.ChaseSpeed >= 1.1f)
         {
             animName = "Dash";
+            FSM.SetNextState(enemy.dashState);
         }
         base.OnEnter();
     }
@@ -24,7 +25,7 @@ public class EnemyStateChase : EnemyState
             FSM.SetNextState(enemy.alertState);
             return;
         }
-        if (stateTime < 0 && Random.Range(0, 100) > 80)
+        if (stateTime < 0 && Random.Range(0, 100) > 50)
         {
             FSM.SetNextState(enemy.dashState);
             return;

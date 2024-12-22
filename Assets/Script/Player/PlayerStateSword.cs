@@ -12,8 +12,7 @@ public class PlayerStateSword : PlayerStateGrounded
     public override void OnEnter()
     {
         animName = "Sword1";
-        int maxCombots = 1;
-        if (player.hasRockAttack) { maxCombots = 2; };
+        int maxCombots = 2;
         if (attackCount > maxCombots || Time.time >= lastTimeAttacked + attackWindow)
         {
             attackCount = 0;
@@ -21,10 +20,11 @@ public class PlayerStateSword : PlayerStateGrounded
         attackCount++;
         base.OnEnter();
         player.SetZeroVelocity();
+        player.AttackDamage = player.Data.AttackDamage;
         if (attackCount == 3) 
         { 
-            player.IsHeaveyAttack = true; 
-            player.IsRockAttack = true;
+            player.IsHeaveyAttack = true;
+            player.AttackDamage = player.Data.AttackDamage * 1.5f;
         }
     }
     public override void OnExit()
@@ -33,7 +33,6 @@ public class PlayerStateSword : PlayerStateGrounded
         lastTimeAttacked = Time.time;
         player.input.SetAttacking(false);
         player.IsHeaveyAttack = false;
-        player.IsRockAttack = false;
     }
     public override void OnUpdate()
     {

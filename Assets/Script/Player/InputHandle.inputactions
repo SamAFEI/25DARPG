@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Earthshatter",
+                    "type": "Button",
+                    "id": "6f337abe-7ca9-41fd-bf6a-23d77bf9c819",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -239,6 +248,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Setting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b8fe395-0408-472e-bd42-6956aa4c97ef",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Earthshatter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aaa7188a-6877-4b74-9c85-2ce2a8ae3207",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item01",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

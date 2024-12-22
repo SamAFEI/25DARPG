@@ -36,7 +36,8 @@ public abstract class Entity : MonoBehaviour
     public bool CanDamage { get; set; }
     public bool CanBeStunned { get; set; }
     public bool IsMoveToTarget { get; set; }
-    public bool IsRockAttack { get; set; }
+    public AttackTypeEnum AttackType { get; set; }
+    public bool IsEarthshatter { get; set; }
     public int FacingDir => IsFacingRight ? 1 : -1;
     public string myLayerName;
     [Header("­«¤O«Y¼Æ")]
@@ -77,7 +78,7 @@ public abstract class Entity : MonoBehaviour
     {
         if (GameManager.IsPaused)
         {
-            SetGravityScale(0);
+            //SetGravityScale(0);
             return;
         }
         #region Timers
@@ -110,7 +111,6 @@ public abstract class Entity : MonoBehaviour
     }
 
     #region Animation Action
-
     public virtual void AnimationFinishTrigger() => FSM.currentState.AnimationFinishTrigger();
     public virtual void PlayAttackTrigger(int _index) => entityFX.DoPlayAttackFX(_index);
     public virtual void DamageTrigger(int _value)
@@ -184,7 +184,10 @@ public abstract class Entity : MonoBehaviour
         AudioClip clip = AudioData.HurtSFX;
         AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
     }
-
+    public virtual void SetAttackType(AttackTypeEnum type)
+    {
+        AttackType = type;
+    }
     #endregion
 
     #region Flip
@@ -294,6 +297,7 @@ public abstract class Entity : MonoBehaviour
         }
         gameObject.layer = LayerMask.NameToLayer(myLayerName);
     }
+
 
     /// <summary>
     /// ¯È«½«½

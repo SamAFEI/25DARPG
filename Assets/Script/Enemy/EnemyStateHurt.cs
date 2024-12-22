@@ -12,7 +12,6 @@ public class EnemyStateHurt : EnemyState
     public override void OnEnter()
     {
         base.OnEnter();
-        enemy.SetZeroVelocity();
     }
     public override void OnUpdate()
     {

@@ -13,7 +13,6 @@ public class EnemyStateAttack3 : EnemyState
         enemy.IsAttacking = true;
         enemy.AttackDamage = enemy.Data.attack3Damage;
         enemy.IsHeaveyAttack = enemy.Data.attack3IsHeavy;
-        enemy.IsRockAttack = true;
     }
     public override void OnExit()
     {
@@ -21,7 +20,6 @@ public class EnemyStateAttack3 : EnemyState
         enemy.SetZeroVelocity();
         enemy.IsAttacking = false;
         enemy.IsHeaveyAttack = false;
-        enemy.IsRockAttack = false;
         enemy.LastAttack3Time = enemy.Data.attack3ResetTime + Random.Range(0.00f, 0.30f);
         if (enemy.IsNoCDAttack) { enemy.LastAttack3Time = 0; }
         enemy.IsNoCDAttack = false;

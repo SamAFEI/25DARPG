@@ -5,10 +5,10 @@ using UnityEngine;
 public class UI_Bag : MonoBehaviour
 {
     public static UI_Bag Instance { get; private set; }
-    public GameObject UI_Area { get; private set; }
     public InventoryManager inventoryManager { get; private set; }
     public List<Inventory> inventories { get; private set; } = new List<Inventory>();
 
+    public GameObject UI_Area;
     public int slotsWidth = 4, slotsHeight = 2;
     public UI_Slot[,] slots;
 
@@ -33,7 +33,7 @@ public class UI_Bag : MonoBehaviour
 
     private void InitUI()
     {
-        UI_Area = transform.Find("UI_Area").gameObject;
+        UI_Area.SetActive(true);
         slots = new UI_Slot[slotsHeight, slotsWidth];
         List<UI_Slot> list = GetComponentsInChildren<UI_Slot>().ToList();
         //foreach (UI_Slot slot in list)

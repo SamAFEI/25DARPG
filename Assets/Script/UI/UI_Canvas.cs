@@ -10,6 +10,9 @@ public class UI_Canvas : MonoBehaviour
     public Image UI_Die;
     public TextMeshProUGUI UI_DieContent;
     public SettingManager settingManager;
+    public GameObject UI_SkillU;
+    public GameObject UI_SkillI;
+    public GameObject UI_SkillO;
 
     private void Awake()
     {
@@ -39,6 +42,9 @@ public class UI_Canvas : MonoBehaviour
         {
             GameManager.LoadCGScene();
         }
+        UI_SkillU.SetActive(GameManager.Instance.player.hasEarthshatter);
+        UI_SkillI.SetActive(false);
+        UI_SkillO.SetActive(false);
     }
 
     public void FadeInUI_Die()

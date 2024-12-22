@@ -24,6 +24,7 @@ public class UI_DialogCanvas : MonoBehaviour
     }
 
     public GameObject UI_Area { get; private set; }
+    public bool isShowing { get { return UI_Area.activeSelf; } }
     public TextMeshProUGUI TX_Header;
     public TextMeshProUGUI TX_Content;
     public Button BT_Close;
@@ -40,12 +41,7 @@ public class UI_DialogCanvas : MonoBehaviour
         Instance.UI_Area.SetActive(false);
     }
 
-    public static void ShowDialog()
-    {
-
-    }
-
-    public static async Task Show(string content, Action yesAction, Action noAction = null)
+    public static void Show(string content, Action yesAction, Action noAction = null)
     {
         Instance.UI_Area.SetActive(true);
         Instance.TX_Content.text = content;
@@ -55,21 +51,18 @@ public class UI_DialogCanvas : MonoBehaviour
         Instance.RBT_Yes.gameObject.SetActive(false);
         Instance.RBT_No.gameObject.SetActive(false);
         Instance.RBT_Ok.gameObject.SetActive(false);
-        bool isClick = false;
         if (noAction != null)
         {
             Instance.RBT_Yes.gameObject.SetActive(true);
             Instance.RBT_No.gameObject.SetActive(true);
             Instance.RBT_No.onClick.AddListener(() =>
             {
-                isClick = true;
                 AudioManager.PlaySelectSE();
                 Instance.UI_Area.SetActive(false);
                 noAction();
             });
             Instance.RBT_Yes.onClick.AddListener(() =>
             {
-                isClick = true;
                 AudioManager.PlaySelectSE();
                 Instance.UI_Area.SetActive(false);
                 yesAction();
@@ -80,11 +73,15 @@ public class UI_DialogCanvas : MonoBehaviour
             Instance.RBT_Ok.gameObject.SetActive(true);
             Instance.RBT_Ok.onClick.AddListener(() =>
             {
-                isClick = true;
                 AudioManager.PlaySelectSE();
                 Instance.UI_Area.SetActive(false);
                 yesAction();
             });
         }
+    }
+    
+    public static void Close()
+    {
+        Instance.UI_Area.SetActive(false);
     }
 }

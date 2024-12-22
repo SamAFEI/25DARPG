@@ -9,9 +9,10 @@ public class EnemyPoint : MonoBehaviour
     private bool isActiveAlter;
     private bool isClear;
     public List<Enemy> enemies = new List<Enemy>();
-    public float ambushTime = 0f;
+    public List<Enemy> firstEnemies = new List<Enemy>();
+    public bool isAmbushActive;
     public List<Enemy> hideEnemies = new List<Enemy>();
-    public float ambush2Time = 0f;
+    public bool isAmbush2Active;
     public List<Enemy> hideEnemies2 = new List<Enemy>();
     public bool isBoss;
     public GameObject activeEvent;
@@ -19,7 +20,6 @@ public class EnemyPoint : MonoBehaviour
 
     private void Start()
     {
-        enemies = GetComponentsInChildren<Enemy>().ToList();
         foreach (Enemy enemy in hideEnemies)
         {
             enemy.gameObject.SetActive(false); 
@@ -28,22 +28,25 @@ public class EnemyPoint : MonoBehaviour
         {
             enemy.gameObject.SetActive(false);
         }
+        isAmbushActive = false;
+        isAmbush2Active = false;
+        firstEnemies = GetComponentsInChildren<Enemy>().ToList();
     }
 
     private void LateUpdate()
     {
         ActiveAlter();
+        Ambush();
+        Ambush2();
         CheckAreClear();
     }
 
     private void ActiveAlter()
     {
         if (isActiveAlter) { return; }
-        if (enemies.Where(x => x.IsAlerting).ToList().Count() > 0)
+        if (firstEnemies.Where(x => x.IsAlerting).ToList().Count() > 0)
         {
-            StartCoroutine(Ambush());
-            StartCoroutine(Ambush2());
-            foreach (Enemy enemy in enemies)
+            foreach (Enemy enemy in firstEnemies)
             {
                 if (enemy.gameObject.activeSelf)
                 { enemy.IsAlerting = true; }
@@ -53,27 +56,46 @@ public class EnemyPoint : MonoBehaviour
                 }
             }
             isActiveAlter = true;
+            foreach (Enemy enemy in hideEnemies)
+            {
+                enemy.gameObject.SetActive(true);
+            }
+            foreach (Enemy enemy in hideEnemies2)
+            {
+                enemy.gameObject.SetActive(true);
+            }
+            enemies = GetComponentsInChildren<Enemy>().ToList();
         }
     }
 
-    private IEnumerator Ambush()
+    private void Ambush()
     {
-        yield return new WaitForSeconds(ambushTime);
-        foreach (Enemy enemy in hideEnemies)
+        if (!isActiveAlter || isClear || isAmbushActive) { return; }
+        if (firstEnemies.Where(x => x != null).ToList().Count() <= 1)
         {
-            enemy.gameObject.SetActive(true);
-            enemy.IsAlerting = true;
+            foreach (Enemy enemy in hideEnemies)
+            {
+                enemy.IsAlerting = true;
+                enemy.IsAmbushDash = true;
+            }
+            isAmbushActive = true;
         }
     }
-    private IEnumerator Ambush2()
+    private void Ambush2()
     {
-        yield return new WaitForSeconds(ambush2Time);
-        foreach (Enemy enemy in hideEnemies2)
+        if (!isActiveAlter || isClear || isAmbush2Active) { return; }
+        if (isAmbushActive && 
+            (firstEnemies.Where(x => x != null).ToList().Count() + hideEnemies.Where(x => x != null).ToList().Count()) <= 1)
         {
-            enemy.gameObject.SetActive(true);
-            enemy.IsAlerting = true;
+            foreach (Enemy enemy in hideEnemies2)
+            {
+                enemy.IsAlerting = true;
+                enemy.IsAmbushDash = true;
+            }
+            isAmbush2Active = true;
         }
     }
+
     private void CheckAreClear()
     {
         if (!isActiveAlter || isClear) { return; }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3dc301442266b541a85927cc1c7830c, type: 3}
   m_Name: PlayerAudioData
   m_EditorClassIdentifier: 
-  HurtSFX: {fileID: 8300000, guid: e99dba895bda02a4daa3a70f6b586c3f, type: 3}
+  HurtSFX: {fileID: 0}
   AttackSFXs:
   - {fileID: 8300000, guid: e5312fd78ce54d04d830110430f17aa1, type: 3}
   SkillSFXs:
@@ -21,15 +21,16 @@ MonoBehaviour:
   SFX:
   - {fileID: 8300000, guid: 5a109122b1c85ec46a1017bfaeee1b38, type: 3}
   Voices:
-  - {fileID: 8300000, guid: f73cfc22a05bd82478e8f39296c137d4, type: 3}
-  - {fileID: 8300000, guid: e6a04a10286e999459f86291d1e07e15, type: 3}
+  - {fileID: 8300000, guid: 12448c88733089541ad29fbc772036d5, type: 3}
+  - {fileID: 8300000, guid: d962a6a9d6d5b34439a68f53dbf52a17, type: 3}
+  - {fileID: 8300000, guid: a56e3388916dc07449102a056c89ff23, type: 3}
+  - {fileID: 8300000, guid: 298a07905ae866443b4427353f6aa98b, type: 3}
   SexSFX:
   - {fileID: 8300000, guid: 3ae7484598100134a9c8fdf89f332ab2, type: 3}
   - {fileID: 8300000, guid: 3ea308f605e08c24fa3b71803139ad79, type: 3}
   - {fileID: 8300000, guid: 141f4bdf7b8fdd94b93cfffa473c635f, type: 3}
   SexVoices:
-  - {fileID: 8300000, guid: fa107f197807fbe41a3c6d52cd83309f, type: 3}
-  - {fileID: 8300000, guid: 6125a27e3de2e61419aea4685e3f0660, type: 3}
-  - {fileID: 8300000, guid: e2bd3416671e3cb44a4a7114cae12fd7, type: 3}
-  - {fileID: 8300000, guid: 476c1745923f28d45be089172fdf5634, type: 3}
-  - {fileID: 8300000, guid: dcb7051c3cfd8254488243b6cd5e4f08, type: 3}
+  - {fileID: 8300000, guid: 033af9f7f3fba7143a75e4800b459f51, type: 3}
+  - {fileID: 8300000, guid: 4219a950b95858641888e926c810d16a, type: 3}
+  - {fileID: 8300000, guid: f14f54b8ee924854f8139a43fa893ee3, type: 3}
+  - {fileID: 8300000, guid: 8f281fc83592498489304e0958cd170f, type: 3}

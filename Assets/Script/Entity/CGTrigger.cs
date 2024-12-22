@@ -1,21 +1,36 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CGTrigger : MonoBehaviour
 {
-    public List<AudioClip> SexSFX;
+    public AudioData Data;
+    public Animator Anim => GetComponent<Animator>();
 
-    public List<AudioClip> SexVoices;
     public virtual void PlaySexSFXTrigger(int _value)
     {
-        if (SexSFX.Count == 0 || SexSFX[_value] == null) return;
-        AudioClip clip = SexSFX[_value];
+        if (Data.SexSFX.Count == 0 || Data.SexSFX[_value] == null) return;
+        AudioClip clip = Data.SexSFX[_value];
         AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
     }
     public virtual void PlaySexVoiceTrigger(int _value)
     {
-        if (SexVoices.Count == 0 || SexVoices[_value] == null) return;
-        AudioClip clip = SexVoices[_value];
+        if (Data.SexVoices.Count == 0 || Data.SexVoices[_value] == null) return;
+        AudioClip clip = Data.SexVoices[_value];
         AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+    }
+
+    public void PlayIdle()
+    {
+        PlaySexVoiceTrigger(0);
+        Anim.Play("Idle");
+    }
+
+    public void PlayOrgasm()
+    {
+        Anim.Play("Orgasm");
+    }
+
+    public void PlayInsertion()
+    {
+        Anim.Play("Insertion");
     }
 }

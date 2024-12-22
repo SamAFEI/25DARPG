@@ -23,7 +23,7 @@ public class PlayerInteract : MonoBehaviour
     private void FixedUpdate()
     {
         SearchInteractable();
-        CheckBattling();
+        //CheckBattling();
     }
 
     private void SearchInteractable()

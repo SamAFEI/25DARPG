@@ -25,10 +25,18 @@ public class Player : Entity
     public PlayerStateSex sexState { get; set; }
     public PlayerStateSexStart sexStartState { get; set; }
     public PlayerStateDie dieState { get; set; }
+    public PlayerStateEarthshatter earthshatterState { get; set; }
     #endregion
+
     public new PlayerData Data => (PlayerData)base.Data;
-    public bool CanMovement { get { return !input.IsAttacking && !input.IsDashing && !input.IsParrying 
-                && !IsStunning && !IsSexing && !IsSystem && !IsHurting && !IsDied; } }
+    public bool CanMovement
+    {
+        get
+        {
+            return !input.IsAttacking && !input.IsDashing && !input.IsParrying
+                && !IsStunning && !IsSexing && !IsSystem && !IsHurting && !IsDied;
+        }
+    }
     public Vector3 MoveInput { get { return input.MoveInput; } }
     public bool IsSystem { get; set; }
     public bool IsBreak1 { get; set; }
@@ -36,9 +44,12 @@ public class Player : Entity
     public string sexAnimName { get; set; }
     public string testSexAnim { get; set; }
     public int testSexAnimIndex { get; set; }
-    public bool hasRockAttack { get { return InventoryManager.Instance.inventories.Where(x => x.item.name == "Magic Sword Fragment").ToList().Count() > 0; } }
+    public bool hasEarthshatter { get { return InventoryManager.Instance.inventories.Where(x => x.item.name == "Earthshatter").ToList().Count() > 0; } }
+    public int MaxMp { get; set; }
+    public int CurrentMp { get; set; }
 
     public float LastResistTime;
+    public float ShakeTime;
 
     public SpriteLibraryAsset SLAssetNormal;
     public SpriteLibraryAsset SLAssetBreak1;
@@ -48,7 +59,9 @@ public class Player : Entity
     {
         base.Awake();
         MaxHp = Data.MaxHP;
+        MaxMp = Data.MaxMP;
         CurrentHp = MaxHp;
+        CurrentMp = 0;
         AttackDamage = Data.AttackDamage;
         input = GetComponent<PlayerInput>();
         uiPlayerHint = GetComponentInChildren<UI_PlayerHint>();
@@ -63,6 +76,7 @@ public class Player : Entity
         sexState = new PlayerStateSex(this, FSM, "Sex");
         sexStartState = new PlayerStateSexStart(this, FSM, "SexStart");
         dieState = new PlayerStateDie(this, FSM, "Die");
+        earthshatterState = new PlayerStateEarthshatter(this, FSM, "Earthshatter");
         FSM.InitState(idleState);
     }
 
@@ -124,6 +138,19 @@ public class Player : Entity
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (CanMovement)
+        {
+            if (MoveInput.x != 0)
+            {
+                CheckIsFacingRight(MoveInput.x > 0);
+            }
+            if (MoveInput.x > 0 != IsFacingRight)
+            {
+                //避免轉向滑行
+                SetZeroVelocity();
+            }
+            Run(1);
+        }
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -146,7 +173,7 @@ public class Player : Entity
             Enemy _enemy = other.GetComponentInParent<Enemy>();
             if (CanBeStunned && _enemy.CanBeStunned && !_enemy.IsStunning)
             {
-                TimerManager.Instance.DoFrozenTime(0.2f);
+                TimerManager.Instance.DoFrozenTime(0.15f);
                 entityFX.DoPlayHitFX(0, weaponPoint.transform.position);
                 _enemy.LastStunTime = 3f;
                 FSM.SetNextState(parrySusccesState);
@@ -229,6 +256,7 @@ public class Player : Entity
             float _damage = _enemy.AttackDamage;
             CurrentHp = (int)Mathf.Clamp(CurrentHp - _damage, 0, MaxHp);
             uiPlayerStatus.DoLerpHealth();
+            uiPlayerHint.SetSliderValue(-50);
         }
     }
 
@@ -261,8 +289,8 @@ public class Player : Entity
         IsSystem = true;
         Vector3 _vector = CheckRelativeVector(sourcePosition);
         float faceRight = rb.mass * -5;
-        if (isHeavyAttack) 
-        { 
+        if (isHeavyAttack)
+        {
             faceRight *= 3;
             CheckIsFacingRight(_vector.x > 0);
         }
@@ -298,7 +326,6 @@ public class Player : Entity
     /// <returns></returns>
     public IEnumerator Resist()
     {
-        int _count = 1;
         float _currentInput;
         float _nextInput = 0;
         while (IsSexing)
@@ -308,9 +335,8 @@ public class Player : Entity
                 _currentInput = MoveInput.x;
                 if (_currentInput == _nextInput)
                 {
-                    _count++;
-                    StartCoroutine(DoShark());
-                    if (_count == 10)
+                    SetShakeTime();
+                    if (uiPlayerHint.SetSliderValue(10))
                     {
                         IsSexing = false;
                         yield break;
@@ -323,20 +349,20 @@ public class Player : Entity
     }
     #endregion
 
-    public IEnumerator TestSexAnimation(EntityState sexState)
+    public void SetShakeTime()
     {
-        FSM.SetNextState(idleState);
-        yield return new WaitForSeconds(0.3f);
-        FSM.SetNextState(sexState);
+        float time = 0.1f;
+        ShakeTime += time;
+        if (ShakeTime > time) { return; } //Coroutine 執行中
+        StartCoroutine(DoShake());
     }
 
-    public IEnumerator DoShark()
+    public IEnumerator DoShake()
     {
         Vector3 original = transform.position;
-        float time = 0.1f;
-        while (time > 0)
+        while (ShakeTime > 0)
         {
-            time -= Time.deltaTime;
+            ShakeTime -= Time.deltaTime;
             float offset = Mathf.Sin(Time.time * .5f) * .1f;
             transform.position = original + new Vector3(offset, 0, offset);
             yield return new WaitForSeconds(0.001f);
@@ -344,6 +370,7 @@ public class Player : Entity
         transform.position = original;
     }
 
+    #region Input Action
     public void ItemAction(int _index)
     {
         Inventory inventory = UI_Shortcut.Instance.GetSlotItemData(_index);
@@ -355,25 +382,37 @@ public class Player : Entity
             PlaySFXTrigger(0);
             Hurt(-MaxHp * item.effectsVaule);
         }
+        //else if (item.name == "MPPotion")
+        //{
+        //    PlaySFXTrigger(0);
+        //}
         InventoryManager.SaveInventory(item, -1);
     }
+    #endregion
 
+    #region Input Skill
+    public bool CanEarthshatter()
+    {
+        return hasEarthshatter;
+    }
+    #endregion
+
+    public IEnumerator TestSexAnimation(EntityState sexState)
+    {
+        FSM.SetNextState(idleState);
+        yield return new WaitForSeconds(0.3f);
+        FSM.SetNextState(sexState);
+    }
     public IEnumerator DemoSword3()
     {
         IsSystem = true;
         input.inputHandle.Character.Disable();
         input.MoveInput = Vector2.zero;
-        yield return new WaitForSeconds(0.5f);
-        input.SetAttacking(true);
-        yield return new WaitForSeconds(0.5f);
-        input.SetAttacking(true);
-        yield return new WaitForSeconds(0.5f);
-        input.SetAttacking(true);
+        input.SetAttacking(true, AttackTypeEnum.Earthshatter);
         yield return new WaitForSeconds(1f);
         input.inputHandle.Character.Enable();
         IsSystem = false;
     }
-
     public IEnumerator DoStartAnimation()
     {
         IsSystem = true;
@@ -385,12 +424,12 @@ public class Player : Entity
             if (index < 3)
             {
                 if (index == 1)
-                    testSexAnim = "OrcForeplay01"; 
+                    testSexAnim = "OrcForeplay01";
                 else if (index == 2)
-                    testSexAnim = "OrcForeplay03"; 
+                    testSexAnim = "OrcForeplay03";
                 SetSpriteLibraryAsset(SLAssetBreak1);
             }
-            else 
+            else
             {
                 if (index == 3)
                     testSexAnim = "OrcSex01";
@@ -402,4 +441,69 @@ public class Player : Entity
             yield return new WaitForSeconds(5f);
         }
     }
+
+    public virtual void DoAttactMove(float speed)
+    {
+        if (MoveInput.x != 0)
+        {
+            CheckIsFacingRight(MoveInput.x > 0);
+        }
+        Run(speed);
+    }
+
+    #region RUN METHODS
+    private void Run(float lerpAmount)
+    {
+        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z * 5f, MoveInput.x);
+
+        float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+        //Calculate the direction we want to move in and our desired velocity
+        //float targetSpeed = MoveInput.normalized.magnitude * data.runMaxSpeed;
+        float targetSpeed = targetDirection.normalized.magnitude * Data.runMaxSpeed;
+        //We can reduce are control using Lerp() this smooths changes to are direction and speed
+        if (lerpAmount > 1) { targetSpeed *= lerpAmount; }
+        targetSpeed = Mathf.Lerp(rbSpeed, targetSpeed, lerpAmount);
+
+        #region Calculate AccelRate
+        float accelRate;
+
+        //Gets an acceleration value based on if we are accelerating (includes turning) 
+        //or trying to decelerate (stop). As well as applying a multiplier if we're air borne.
+
+        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount;
+        #endregion
+
+        #region Add Bonus Jump Apex Acceleration
+        //Increase are acceleration and maxSpeed when at the apex of their jump, makes the jump feel a bit more bouncy, responsive and natural
+        /*if ((IsJumping || IsWallJumping || _isJumpFalling) && Mathf.Abs(rb.velocity.y) < Data.jumpHangTimeThreshold)
+        {
+            accelRate *= data.jumpHangAccelerationMult;
+            targetSpeed *= data.jumpHangMaxSpeedMult;
+        }*/
+        #endregion
+
+        #region Conserve Momentum
+        //We won't slow the player down if they are moving in their desired direction but at a greater speed than their maxSpeed
+        /*if (data.doConserveMomentum && Mathf.Abs(RB.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(RB.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && LastOnGroundTime < 0)
+        {
+            //Prevent any deceleration from happening, or in other words conserve are current momentum
+            //You could experiment with allowing for the player to slightly increae their speed whilst in this "state"
+            accelRate = 0;
+        }*/
+        #endregion
+        //Calculate difference between current velocity and desired velocity
+        float speedDif = targetSpeed - rbSpeed;
+        //Calculate force along x-axis to apply to thr player
+
+        float movement = speedDif * accelRate;
+
+        //Convert this to a vector and apply to rigidbody
+        rb.AddForce(movement * targetDirection.normalized, ForceMode.Force);
+        /*
+		 * For those interested here is what AddForce() will do
+		 * RB.velocity = new Vector2(RB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);
+		 * Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second
+		*/
+    }
+    #endregion
 }

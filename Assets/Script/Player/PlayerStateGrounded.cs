@@ -48,8 +48,16 @@ public class PlayerStateGrounded : PlayerState
         }
         if (player.input.IsAttacking)
         {
-            FSM.SetNextState(player.swordState);
-            return;
+            if (player.AttackType == AttackTypeEnum.Basic)
+            {
+                FSM.SetNextState(player.swordState);
+                return;
+            }
+            else if (player.AttackType == AttackTypeEnum.Earthshatter)
+            {
+                FSM.SetNextState(player.earthshatterState);
+                return;
+            }
         }
     }
 }

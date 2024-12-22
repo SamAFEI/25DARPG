@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b7511967cf084429108017b39ad8e3, type: 3}
+  m_Name: MPPotion
+  m_EditorClassIdentifier: 
+  name: MPPotion
+  icon: {fileID: -918780132, guid: 93c9a4446cd8c3845bfd044ce791b833, type: 3}
+  interactHint: Secretion
+  describe: 
+  content: 
+  effectsVaule: 0.5
+  canShortcut: 1
