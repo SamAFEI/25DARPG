@@ -127,7 +127,7 @@ public class Player : Entity
         }
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            StartCoroutine(DemoSword3());
+            DoEarthshatter();
         }
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
@@ -200,6 +200,11 @@ public class Player : Entity
             float damage = _enemy.AttackDamage * Random.Range(0.80f, 1.20f);
             Repel(_enemy.transform.position, _enemy.IsHeaveyAttack);
             Hurt(damage, _enemy.IsHeaveyAttack);
+        }
+        if (other.tag == "Fire")
+        {
+            Repel(other.transform.position);
+            Hurt(20);
         }
     }
 
@@ -397,6 +402,10 @@ public class Player : Entity
     }
     #endregion
 
+    public void DoEarthshatter()
+    {
+        input.SetAttacking(true, AttackTypeEnum.Earthshatter);
+    }
     public IEnumerator TestSexAnimation(EntityState sexState)
     {
         FSM.SetNextState(idleState);

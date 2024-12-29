@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, ISaveManager
@@ -13,6 +14,9 @@ public class GameManager : MonoBehaviour, ISaveManager
     public Player player { get; private set; }
     public List<Enemy> sexEnemies { get; private set; } = new List<Enemy>();
     public List<Enemy> alertEnemies { get; private set; } = new List<Enemy>();
+    public Volume volume { get; private set; }
+    public bool isBattleing { get; private set; }
+
     public LayerMask enemyLayerMask;
     public bool isStartScene;
     private SavePoint lastSavePoint;
@@ -28,6 +32,8 @@ public class GameManager : MonoBehaviour, ISaveManager
         {
             Destroy(this.gameObject);
         }
+        SavePointName = ""; 
+        LoadSceneName = "";
     }
 
     private void Start()
@@ -79,6 +85,11 @@ public class GameManager : MonoBehaviour, ISaveManager
         if (Instance.playerObj == null) { return false; }
         return Instance.player.IsStunning;
     }
+    public void DoEarthshatter()
+    {
+        if (Instance.playerObj == null) { return; }
+        Instance.player.DoEarthshatter();
+    }
     #endregion
 
     #region About Enemy
@@ -128,15 +139,18 @@ public class GameManager : MonoBehaviour, ISaveManager
     {
         if (Instance.alertEnemies.Where(x => x.Data.isBoos).Count() > 0)
         {
+            Instance.isBattleing = true;
             AudioManager.PlayBGM(2);
             return;
         }
         if (Instance.alertEnemies.Count() > 0)
         {
+            Instance.isBattleing = true;
             AudioManager.PlayBGM(1);
             return;
         }
         AudioManager.PlayBGM(0);
+        Instance.isBattleing = false;
     }
     #endregion
 
@@ -175,7 +189,8 @@ public class GameManager : MonoBehaviour, ISaveManager
     {
         SavePointName = savePointName;
         SaveManager.SaveGame();
-        ResetActiveScene();
+        GameGlobalVolume.DoLensDistortion(true);
+        //ResetActiveScene(); //¦bGameGlobalVolume.DoLensDistortion(true); °õ¦æ
     }
 
     public void LoadData(GameData _data)
@@ -191,6 +206,7 @@ public class GameManager : MonoBehaviour, ISaveManager
                 break;
             }
         }
+        SavePointName = "";
     }
 
     public void SaveData(ref GameData _data)
@@ -212,4 +228,5 @@ public class GameManager : MonoBehaviour, ISaveManager
         }
         AudioManager.PausePlay(IsPaused);
     }
+
 }

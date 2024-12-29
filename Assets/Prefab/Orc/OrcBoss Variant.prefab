@@ -266,17 +266,17 @@ PrefabInstance:
     - target: {fileID: 5620450407534917218, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.8492622
+      value: 3.28
       objectReference: {fileID: 0}
     - target: {fileID: 5620450407534917218, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8670195
+      value: 1.24
       objectReference: {fileID: 0}
     - target: {fileID: 5620450407534917218, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.98999023
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5620450407534917218, guid: 4ef60dea8e106344e87b3fc787fcf479,
         type: 3}
@@ -464,18 +464,15 @@ MonoBehaviour:
   gravityScale: 0
   MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
-  sfxAttack: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
-  sfxAttack2: {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
-  sfxAttack3: {fileID: 8300000, guid: 76a58106628841447b1c8a704eba5946, type: 3}
-  sfxHurt: {fileID: 8300000, guid: ea22c125df3a3ef44b7de4e2f7833050, type: 3}
   patrolData:
     Points: []
     Index: 0
     Order: 0
     NextPoint: {x: 0, y: 0, z: 0}
-  voiceAlter: {fileID: 8300000, guid: 8643fc3fa81c4b04c95c15471484f2d9, type: 3}
+  voiceAlter: {fileID: 8300000, guid: eda4c68024ee48e419d35400dddabf1c, type: 3}
   voiceDie: {fileID: 8300000, guid: 6e99c256505efbc4fbdc0923e8bd829a, type: 3}
   dropItem: {fileID: 183498414915139310, guid: 744385a6b41e92a4c89d08d67cb399f0, type: 3}
+  boss1FlowTrigger: {fileID: 0}
 --- !u!4 &9171737969812890153 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6586817797430822592, guid: 4ef60dea8e106344e87b3fc787fcf479,

@@ -4897,7 +4897,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4734483895812299300}
-  - component: {fileID: 822985795548421894}
+  - component: {fileID: 2865672921080638270}
   - component: {fileID: 4724700563555345281}
   m_Layer: 10
   m_Name: HPPotion
@@ -4923,7 +4923,7 @@ Transform:
   - {fileID: 4033171953656856122}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &822985795548421894
+--- !u!54 &2865672921080638270
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

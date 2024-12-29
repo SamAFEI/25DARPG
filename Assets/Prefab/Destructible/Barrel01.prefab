@@ -1190,6 +1190,8 @@ MonoBehaviour:
   destructibleType: 0
   hitFX: {fileID: 1518655715659774, guid: 7d91db3260583a04884fd1d5b635bb70, type: 3}
   hp: 10
+  dropItem: {fileID: 8616813634614978141, guid: 50985a4c76fdc6b42a5f0a5fa205921f,
+    type: 3}
   droppedItemRate: 5
   explosionForce: 30
 --- !u!208 &4150563862408574941

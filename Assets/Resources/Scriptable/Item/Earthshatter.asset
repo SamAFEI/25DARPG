@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Earthshatter
   icon: {fileID: -537727695, guid: 93c9a4446cd8c3845bfd044ce791b833, type: 3}
-  interactHint: Magic Sword Fragment
+  localizedInteractHint:
+    m_TableReference:
+      m_TableCollectionName: GUID:4ccce69ca1d784c40863d6160d8583ed
+    m_TableEntryReference:
+      m_KeyId: 1034487971840
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   describe: Magic Sword Fragment
   content: Learn to Earthshatter
   effectsVaule: 0
   canShortcut: 0
+  references:
+    version: 2
+    RefIds: []

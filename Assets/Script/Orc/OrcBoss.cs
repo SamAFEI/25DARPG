@@ -5,6 +5,7 @@ public class OrcBoss : Enemy
     public AudioClip voiceAlter;
     public AudioClip voiceDie;
     public GameObject dropItem;
+    public GameObject boss1FlowTrigger;
 
     private bool isAlter;
 
@@ -19,6 +20,7 @@ public class OrcBoss : Enemy
             AttackMoveMaxSpeed = 3f;
             FSM.SetNextState(attack3State);
             isAlter = true;
+            Destroy(boss1FlowTrigger);
         }
     }
 
@@ -28,7 +30,7 @@ public class OrcBoss : Enemy
         if (IsDied)
         {
             PlayVoiceTrigger(1);
-            TimerManager.SlowFrozenTime(0.5f);
+            TimerManager.SlowFrozenTime(1f);
             Instantiate(dropItem, gameObject.transform.position, Quaternion.identity);
         }
     }
@@ -78,5 +80,10 @@ public class OrcBoss : Enemy
         {
             AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position, volume);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (boss1FlowTrigger != null) Destroy(boss1FlowTrigger);
     }
 }

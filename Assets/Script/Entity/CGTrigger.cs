@@ -4,12 +4,13 @@ public class CGTrigger : MonoBehaviour
 {
     public AudioData Data;
     public Animator Anim => GetComponent<Animator>();
+    public bool isStart;
 
     public virtual void PlaySexSFXTrigger(int _value)
     {
         if (Data.SexSFX.Count == 0 || Data.SexSFX[_value] == null) return;
         AudioClip clip = Data.SexSFX[_value];
-        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
     }
     public virtual void PlaySexVoiceTrigger(int _value)
     {
@@ -18,9 +19,22 @@ public class CGTrigger : MonoBehaviour
         AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
     }
 
+    public virtual void PlayStartVoice()
+    {
+        if (isStart)
+        {
+            PlaySexVoiceTrigger(0);
+        }
+        else
+        {
+            PlaySexVoiceTrigger(3);
+        }
+        isStart = false;
+    }
+
     public void PlayIdle()
     {
-        PlaySexVoiceTrigger(0);
+        isStart = true;
         Anim.Play("Idle");
     }
 

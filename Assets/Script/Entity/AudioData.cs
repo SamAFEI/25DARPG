@@ -5,6 +5,7 @@ using UnityEngine;
 public class AudioData : ScriptableObject
 {
     public AudioClip HurtSFX;
+    public List<AudioClip> HurtSFXs;
 
     public List<AudioClip> AttackSFXs;
 

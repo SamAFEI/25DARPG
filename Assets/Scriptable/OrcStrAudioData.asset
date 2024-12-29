@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: OrcStrAudioData
   m_EditorClassIdentifier: 
   HurtSFX: {fileID: 8300000, guid: ea22c125df3a3ef44b7de4e2f7833050, type: 3}
+  HurtSFXs:
+  - {fileID: 8300000, guid: ea22c125df3a3ef44b7de4e2f7833050, type: 3}
   AttackSFXs:
   - {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}
   - {fileID: 8300000, guid: 59d51d4c3d1fe744285421eff41b3a47, type: 3}

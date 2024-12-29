@@ -1,7 +1,7 @@
 using SharpUI.Source.Common.UI.Elements.Button;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class UI_TitleCanvas : MonoBehaviour
@@ -11,6 +11,10 @@ public class UI_TitleCanvas : MonoBehaviour
     public Button BT_Setting;
     public Button BT_Quit;
     public SettingManager settingManager;
+    public LocalizedString localizedNewGame;
+    public LocalizedString localizedQuitGame;
+    public string newGame => localizedNewGame.GetLocalizedString();
+    public string quitGame => localizedQuitGame.GetLocalizedString();
     private bool hasSaveData;
     private void Awake()
     {
@@ -39,10 +43,10 @@ public class UI_TitleCanvas : MonoBehaviour
         {
             if (hasSaveData)
             {
-                UI_DialogCanvas.Show("是否覆蓋目前進度，重新開始遊戲？",
+                UI_DialogCanvas.Show(newGame,
                     () =>
                     {
-                        SaveManager.Instance.DeleteSaveData();
+                        SaveManager.NewGameData();
                         GameManager.LoadGameScene();
                     },
                     () =>
@@ -64,7 +68,7 @@ public class UI_TitleCanvas : MonoBehaviour
     private void QuitGame()
     {
         AudioManager.PlaySelectSE();
-        UI_DialogCanvas.Show("確定要離開遊戲？",
+        UI_DialogCanvas.Show(quitGame,
             () =>
             {
                 Application.Quit();

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: DialogContent_zh-TW
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: zh-TW
+  m_SharedData: {fileID: 11400000, guid: bc89daba31eb1d74794dc2f5cf2a6fb6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 36256202752
+    m_Localized: "\u662F\u5426\u78BA\u5B9A\u8FD4\u56DE\u6A19\u984C\u756B\u9762\uFF1F"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1553465982976
+    m_Localized: "\u662F\u5426\u8986\u84CB\u76EE\u524D\u9032\u5EA6\uFF0C\u91CD\u65B0\u958B\u59CB\u904A\u6232\uFF1F"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1567403655168
+    m_Localized: "\u78BA\u5B9A\u8981\u96E2\u958B\u904A\u6232\uFF1F"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8219477524480
+    m_Localized: "\u88AB\u4FD8\u865C"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

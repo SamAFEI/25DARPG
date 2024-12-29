@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8352760891592042681}
   m_Layer: 0
   m_Name: SM_Prop_Bonfire_01
-  m_TagString: Untagged
+  m_TagString: Fire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 2665254987553298987}
   m_Layer: 0
   m_Name: Bonfire01
-  m_TagString: Untagged
+  m_TagString: Fire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

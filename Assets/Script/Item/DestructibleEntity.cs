@@ -19,7 +19,8 @@ public class DestructibleEntity : MonoBehaviour
     public DestructibleType destructibleType = 0;
     public GameObject hitFX;
     public int hp = 10;
-    public int droppedItemRate = 5;
+    public GameObject dropItem;
+    public int droppedItemRate = 10;
     public float explosionForce = 200f;
 
     protected virtual void Awake()
@@ -74,7 +75,7 @@ public class DestructibleEntity : MonoBehaviour
         meshRenderer.enabled = false;
         //gameObject.layer = LayerMask.NameToLayer("Ignore");
         obstacle.enabled = false;
-        collider.isTrigger = true;
+        //collider.isTrigger = true;
         collider.excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") 
                 | 1 << LayerMask.NameToLayer("Destructible") | 1 << LayerMask.NameToLayer("Interactable");
         broken.SetActive(true);
@@ -82,7 +83,7 @@ public class DestructibleEntity : MonoBehaviour
         foreach (UnfreezeFragment fragment in fragments)
         {
             fragment.Unfreeze();
-            fragment.GetComponent<Collider>().excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy");
+            fragment.GetComponent<Collider>().excludeLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Interactable");
             fragment.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 1f, 1f, ForceMode.Impulse);
         }
         if (destructibleType == DestructibleType.rock)
@@ -116,6 +117,10 @@ public class DestructibleEntity : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(.1f);
+            if (alpha < 0.5f)
+            {
+                DoDropItem();
+            }
             if (alpha <= 0.1f) alpha = 0f;
         }
         Destroy(gameObject);
@@ -152,6 +157,14 @@ public class DestructibleEntity : MonoBehaviour
         GameObject obj = Instantiate(hitFX, _point, Quaternion.identity, transform);
         obj.SetActive(true);
         Destroy(obj, 0.3f);
+    }
+
+    public void DoDropItem()
+    {
+        if (dropItem == null) return; 
+        if (droppedItemRate <= Random.Range(0, 100)) return;
+        Instantiate(dropItem, gameObject.transform.position + (Vector3.up), Quaternion.identity);
+        dropItem = null;
     }
 }
 

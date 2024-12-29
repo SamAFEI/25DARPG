@@ -38,7 +38,6 @@ public class SavePoint : MonoBehaviour, IInteractable
             outlineMAT.SetFloat("_Intensity", 0.5f);
         }
     }
-
     public InteractableData GetInteractableData()
     {
         selectedTimeout = 0.2f;
@@ -47,6 +46,11 @@ public class SavePoint : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if (GameManager.Instance.isBattleing)
+        {
+            AudioManager.PlayCancelSFX(transform.position);
+            return;
+        }
         ui_Interactable = GameObject.Find("UI_Canvas").transform.Find("UI_Interactable").GetComponent<UI_Interactable>();
         AudioManager.PlayItemPickupSFX(transform.position);
         GameManager.Instance.player.Hurt(-1000000);

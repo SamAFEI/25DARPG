@@ -6,6 +6,7 @@ public class GameData
     public SettingStore Setting;
     public List<Inventory> Inventories;
     public string SavePointName;
+    public ForestFlow forestFlow;
 
     public GameData()
     {

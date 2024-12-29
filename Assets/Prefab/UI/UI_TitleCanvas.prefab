@@ -1130,6 +1130,27 @@ MonoBehaviour:
   BT_Setting: {fileID: 2620293428672622124}
   BT_Quit: {fileID: 5630978122041765732}
   settingManager: {fileID: 0}
+  localizedNewGame:
+    m_TableReference:
+      m_TableCollectionName: GUID:bc89daba31eb1d74794dc2f5cf2a6fb6
+    m_TableEntryReference:
+      m_KeyId: 1553465982976
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedQuitGame:
+    m_TableReference:
+      m_TableCollectionName: GUID:bc89daba31eb1d74794dc2f5cf2a6fb6
+    m_TableEntryReference:
+      m_KeyId: 1567403655168
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7375664031177373194
 GameObject:
   m_ObjectHideFlags: 0

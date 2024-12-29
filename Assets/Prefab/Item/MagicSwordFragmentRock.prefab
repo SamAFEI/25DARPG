@@ -74,6 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a08d35d8d1e84564f8c1ce34a3bcecaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chartIndex: 5
   itemData: {fileID: 11400000, guid: be8f4c6ec0ee52744970ca093796e646, type: 2}
   amount: 1
 --- !u!1 &4871186806058022602
@@ -5023,7 +5024,7 @@ PrefabInstance:
     - target: {fileID: 23648730927250862, guid: 9a27b28aaddfd7e4c84339511e0d10e2,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 135252150991881074, guid: 9a27b28aaddfd7e4c84339511e0d10e2, type: 3}

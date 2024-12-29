@@ -12,6 +12,7 @@ TagManager:
   - Floor
   - Destructible
   - Interactable
+  - Fire
   layers:
   - Default
   - TransparentFX

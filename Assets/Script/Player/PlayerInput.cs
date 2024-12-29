@@ -81,6 +81,10 @@ public class PlayerInput : MonoBehaviour
         {
             player.SetSpriteLibraryAsset(player.SLAssetBreak2);
         }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            GameGlobalVolume.DoLensDistortion(true);
+        }
         #endregion
 
         #region ATTACK OR SKILL CHECKS
@@ -191,7 +195,7 @@ public class PlayerInput : MonoBehaviour
     }
     private void InputItem01(InputAction.CallbackContext _context)
     {
-        player.ItemAction(1);
+        //player.ItemAction(1);
     }
     private void InputOpenBag(InputAction.CallbackContext _context)
     {

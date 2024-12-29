@@ -129,6 +129,15 @@ public class Enemy : Entity
         }
     }
 
+    protected virtual void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Fire")
+        {
+            Repel(other.transform.position);
+            Hurt(20);
+        }
+    }
+
     protected virtual void SetFSMState()
     {
         idleState = new EnemyStateIdle(this, FSM, "Idle");

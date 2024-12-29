@@ -5,6 +5,7 @@ public class ProjectileBase : MonoBehaviour
     public Rigidbody rb { get; private set; }
     public bool IsHeaveyAttack { get; set; }
     public GameObject hitFX;
+    public AudioClip hitSFX;
     public float AttackDamage;
     public float Speed;
 
@@ -20,6 +21,7 @@ public class ProjectileBase : MonoBehaviour
 
     private void Hit()
     {
+        DoPlayHitSFX();
         DoPlayHitFX();
         Destroy(gameObject);
     }
@@ -30,5 +32,11 @@ public class ProjectileBase : MonoBehaviour
         GameObject obj = Instantiate(hitFX, transform.position, Quaternion.identity);
         obj.SetActive(true);
         Destroy(obj, 0.3f);
+    }
+
+    public void DoPlayHitSFX()
+    {
+        if (hitSFX == null) { return; }
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, hitSFX, transform.position);
     }
 }

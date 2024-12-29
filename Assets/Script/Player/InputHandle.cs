@@ -346,6 +346,34 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Dialog"",
+            ""id"": ""02605d9c-ca80-4b49-8a48-c10fbac8b119"",
+            ""actions"": [
+                {
+                    ""name"": ""Continue"",
+                    ""type"": ""Button"",
+                    ""id"": ""1a8f09ad-f512-4abb-947c-c705ca8089c3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""613a5b98-775f-40b2-af4e-0cc97eb8368e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Continue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -365,6 +393,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         // SexAction
         m_SexAction = asset.FindActionMap("SexAction", throwIfNotFound: true);
         m_SexAction_ResistHorizontal = m_SexAction.FindAction("ResistHorizontal", throwIfNotFound: true);
+        // Dialog
+        m_Dialog = asset.FindActionMap("Dialog", throwIfNotFound: true);
+        m_Dialog_Continue = m_Dialog.FindAction("Continue", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -586,6 +617,52 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
         }
     }
     public SexActionActions @SexAction => new SexActionActions(this);
+
+    // Dialog
+    private readonly InputActionMap m_Dialog;
+    private List<IDialogActions> m_DialogActionsCallbackInterfaces = new List<IDialogActions>();
+    private readonly InputAction m_Dialog_Continue;
+    public struct DialogActions
+    {
+        private @InputHandle m_Wrapper;
+        public DialogActions(@InputHandle wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Continue => m_Wrapper.m_Dialog_Continue;
+        public InputActionMap Get() { return m_Wrapper.m_Dialog; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DialogActions set) { return set.Get(); }
+        public void AddCallbacks(IDialogActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DialogActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DialogActionsCallbackInterfaces.Add(instance);
+            @Continue.started += instance.OnContinue;
+            @Continue.performed += instance.OnContinue;
+            @Continue.canceled += instance.OnContinue;
+        }
+
+        private void UnregisterCallbacks(IDialogActions instance)
+        {
+            @Continue.started -= instance.OnContinue;
+            @Continue.performed -= instance.OnContinue;
+            @Continue.canceled -= instance.OnContinue;
+        }
+
+        public void RemoveCallbacks(IDialogActions instance)
+        {
+            if (m_Wrapper.m_DialogActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDialogActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DialogActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DialogActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public DialogActions @Dialog => new DialogActions(this);
     public interface ICharacterActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -602,5 +679,9 @@ public partial class @InputHandle: IInputActionCollection2, IDisposable
     public interface ISexActionActions
     {
         void OnResistHorizontal(InputAction.CallbackContext context);
+    }
+    public interface IDialogActions
+    {
+        void OnContinue(InputAction.CallbackContext context);
     }
 }

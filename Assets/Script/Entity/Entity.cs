@@ -180,8 +180,9 @@ public abstract class Entity : MonoBehaviour
     public virtual void PlayHurtSFXTrigger() 
     {
         if (AudioData == null) return;
-        if (AudioData.HurtSFX == null) return; 
-        AudioClip clip = AudioData.HurtSFX;
+        if (AudioData.HurtSFXs == null) return; 
+        int index = Random.Range(0 ,AudioData.HurtSFXs.Count());
+        AudioClip clip = AudioData.HurtSFXs[index];
         AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
     }
     public virtual void SetAttackType(AttackTypeEnum type)

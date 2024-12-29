@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: HPPotion
   icon: {fileID: -917907840, guid: 93c9a4446cd8c3845bfd044ce791b833, type: 3}
-  interactHint: HPPotion
+  localizedInteractHint:
+    m_TableReference:
+      m_TableCollectionName: GUID:4ccce69ca1d784c40863d6160d8583ed
+    m_TableEntryReference:
+      m_KeyId: 1018415398912
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   describe: HPPotion
   content: Used Heal 30% HP
   effectsVaule: 0.3
   canShortcut: 1
+  references:
+    version: 2
+    RefIds: []

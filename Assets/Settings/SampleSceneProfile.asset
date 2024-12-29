@@ -133,16 +133,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   intensity:
     m_OverrideState: 1
     m_Value: 0
   xMultiplier:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 0.5
   yMultiplier:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 0.5
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
@@ -269,17 +269,17 @@ MonoBehaviour:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 0.8551724
-          outSlope: 0.8551724
+          inSlope: 1.0231578
+          outSlope: 1.0231578
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.9903226
-          value: 0.97931033
-          inSlope: 1.4965516
-          outSlope: 1.4965516
+          time: 1
+          value: 1
+          inSlope: 1.2070591
+          outSlope: 1.2070591
           tangentMode: 0
           weightedMode: 0
           inWeight: 0

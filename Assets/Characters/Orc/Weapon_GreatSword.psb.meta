@@ -817,7 +817,7 @@ ScriptedImporter:
   documentPivot: {x: 0.2635356, y: 0.17503807}
   documentAlignment: 9
   importHiddenLayers: 0
-  layerMappingOption: 2
+  layerMappingOption: 0
   generatePhysicsShape: 0
   paperDollMode: 0
   keepDupilcateSpriteName: 1
@@ -1196,7 +1196,7 @@ ScriptedImporter:
     spriteName: 
     isGroup: 0
     parentIndex: 33
-    spriteID: d8e6963121d7e294eb3a3aa52f3e6c72
+    spriteID: 73e05fc1b5d52774b9aa8f18ff9fed1d
     layerID: 53
     mosaicPosition: {x: 0, y: 0}
     flatten: 0

@@ -185,10 +185,12 @@ MonoBehaviour:
   woodHitClip: {fileID: 8300000, guid: 4e36ef2e24c3d094ebc78bf51c4f312e, type: 3}
   rockHitClip: {fileID: 8300000, guid: 155fb2dd9a99d4e49b49df4e3a1d10a6, type: 3}
   rockBreakenClip: {fileID: 8300000, guid: 7d14964c39ad535458ea7ae1bf96fdfa, type: 3}
+  flowTriggerClip: {fileID: 8300000, guid: c0deb0d0b31e0894ba4b0a146a24c46d, type: 3}
+  cancelClip: {fileID: 8300000, guid: 6bf8eea1fb6ee684186012240088d02e, type: 3}
   testClips:
   - {fileID: 8300000, guid: 64a14d62064c18e4287b998caded340e, type: 3}
   - {fileID: 8300000, guid: c0deb0d0b31e0894ba4b0a146a24c46d, type: 3}
-  - {fileID: 8300000, guid: f73cfc22a05bd82478e8f39296c137d4, type: 3}
+  - {fileID: 8300000, guid: 12448c88733089541ad29fbc772036d5, type: 3}
 --- !u!1 &3656893779228136444
 GameObject:
   m_ObjectHideFlags: 0

@@ -67,6 +67,16 @@ public class SaveManager : MonoBehaviour
         _saveManager.SaveData(ref Instance.gameData);
         Instance.dataHandler.SaveFiled(Instance.gameData);
     }
+    /// <summary>
+    /// 重新開始遊戲 儲存Setting資料 重新建立存檔
+    /// </summary>
+    public static void NewGameData()
+    {
+        SettingStore setting = Instance.gameData.Setting;
+        Instance.gameData = new GameData();
+        Instance.gameData.Setting = setting;
+        SaveGame();
+    }
 
     public static bool CheckHaveSaveData()
     {

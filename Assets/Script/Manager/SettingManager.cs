@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ public class SettingManager : MonoBehaviour, ISaveManager
     public Resolution resolution { get; private set; }
     public bool isFullScreen { get; private set; }
     public List<Resolution> systemResolutions { get; private set; }
+    public LocalizedString localizedTitleDialogContent;
+    public string titleDialogContent => localizedTitleDialogContent.GetLocalizedString();
 
     private string languageText;
     private string resolutionText;
@@ -258,7 +261,7 @@ public class SettingManager : MonoBehaviour, ISaveManager
 
     public void ReturnTitle()
     {
-        UI_DialogCanvas.Show("是否確定返回標題畫面？",
+        UI_DialogCanvas.Show(titleDialogContent,
                 () =>
                 {
                     SaveManager.SaveSetting();

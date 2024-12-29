@@ -11,6 +11,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
         uiInteractable = GameObject.Find("UI_Canvas").transform.Find("UI_Interactable").GetComponent<UI_Interactable>();
     }
 
+
     public void Interact()
     {
         AudioManager.PlayItemPickupSFX(transform.position);
