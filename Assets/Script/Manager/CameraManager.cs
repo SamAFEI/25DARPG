@@ -1,4 +1,5 @@
-using Cinemachine;
+Ôªøusing Cinemachine;
+using System.Collections;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
@@ -124,7 +125,7 @@ public class CameraManager : MonoBehaviour
     }
     #endregion
 
-    #region ®Ã Camera ∂b¶V
+    #region ‰æù Camera Ëª∏Âêë
     public static Vector3 GetDirectionByCamera(float vertical, float horizontal)
     {
         Vector3 forward = Vector3.forward;
@@ -138,6 +139,21 @@ public class CameraManager : MonoBehaviour
     public static Vector3 GetDirectionByCamera(Vector3 vector)
     {
         return GetDirectionByCamera(vector.z, vector.x);
+    }
+    #endregion
+
+    #region Camera Action
+    public IEnumerator DoFrontCamera(float value)
+    {
+        float startX = Instance.activeCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenX;
+        float smooth = 0;
+        while (smooth < 1)
+        {
+            smooth += Time.deltaTime;
+            Instance.activeCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenX = Mathf.Lerp(startX, value, smooth);
+            yield return null;
+        }
+        Instance.activeCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenX = value;
     }
     #endregion
 }

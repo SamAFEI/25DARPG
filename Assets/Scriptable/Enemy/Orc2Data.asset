@@ -38,19 +38,19 @@ MonoBehaviour:
   isBoos: 0
   dashSpeed: 1.4
   attack1ResetTime: 2
-  attack1Damage: 10
+  attack1Damage: 20
   attack1IsHeavy: 0
   attack2ResetTime: 3
-  attack2Damage: 10
+  attack2Damage: 0
   attack2IsHeavy: 0
   attack3ResetTime: 3
-  attack3Damage: 10
-  attack3IsHeavy: 0
+  attack3Damage: 40
+  attack3IsHeavy: 1
   alertDistance: 5
   catchDistance: 3
-  attack1Distance: 3
+  attack1Distance: 4
   attack2Distance: 5
-  attack3Distance: 5
+  attack3Distance: 10
   projectiles: []
   foreplayAnims:
   - {fileID: 7400000, guid: 05fb3227eb158f34eabc5e7daaf20e79, type: 2}

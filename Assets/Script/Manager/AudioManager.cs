@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -10,7 +10,8 @@ public class AudioManager : MonoBehaviour
     public static AudioSource SFXSource { get; private set; }
     public static AudioSource VoiceSource { get; private set; }
     public static AudioMixer AudioMixer { get; private set; }
-    private static AudioClip currentBGMClip;
+
+    private AudioClip nextBGMClip;
 
     public AudioClip selectSEClip;
     public AudioClip bgmClip;
@@ -42,7 +43,6 @@ public class AudioManager : MonoBehaviour
         SFXSource = transform.Find("SFXSource").GetComponent<AudioSource>();
         VoiceSource = transform.Find("VoiceSource").GetComponent<AudioSource>();
         AudioMixer = BGMSource.outputAudioMixerGroup.audioMixer;
-        currentBGMClip = null;
     }
 
     public static void PlayBGM(int value)
@@ -63,9 +63,10 @@ public class AudioManager : MonoBehaviour
             clip = Instance.bossBGMClip;
             fadeTime = 0;
         }
-        if (currentBGMClip != clip)
+        Instance.nextBGMClip = clip;
+        if (Instance.nextBGMClip != BGMSource.clip)
         {
-            Instance.StartCoroutine(FadeBGM(clip, fadeTime));
+            Instance.StartCoroutine(FadeBGM(fadeTime));
         }
     }
     public static void PlayOnPoint(AudioSource audioSource, AudioClip clip, Vector3 point, float volume = 1f)
@@ -147,18 +148,19 @@ public class AudioManager : MonoBehaviour
         SFXSource.UnPause();
         VoiceSource.UnPause();
     }
-    public static IEnumerator FadeBGM(AudioClip clip, float fadeTime = 5f)
+    public static IEnumerator FadeBGM(float fadeTime = 5f)
     {
-        currentBGMClip = clip;
+        if (BGMSource.clip == Instance.nextBGMClip) { yield break; }
         float time = 0;
         while (time < fadeTime && BGMSource.clip != null)
         {
             time += Time.deltaTime;
-            BGMSource.volume = Mathf.Lerp(1f, 0f, time/ fadeTime);
+            BGMSource.volume = Mathf.Lerp(1f, 0f, time / fadeTime);
             yield return null;
         }
         BGMSource.Stop();
-        BGMSource.clip = clip;
+        BGMSource.clip = Instance.nextBGMClip;
+        Instance.nextBGMClip = null;
         BGMSource.loop = true;
         BGMSource.Play();
         time = 0;
