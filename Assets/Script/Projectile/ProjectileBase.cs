@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProjectileBase : MonoBehaviour
 {
@@ -37,6 +37,6 @@ public class ProjectileBase : MonoBehaviour
     public void DoPlayHitSFX()
     {
         if (hitSFX == null) { return; }
-        AudioManager.PlayOnPoint(AudioManager.SFXSource, hitSFX, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, hitSFX, transform.position, true);
     }
 }

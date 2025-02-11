@@ -460,10 +460,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 7297b71ecde2af145981e1241efe43f2, type: 2}
   AudioData: {fileID: 11400000, guid: c62cd53d431fe3943a87575632d15ef4, type: 2}
-  myLayerName: 
   gravityScale: 0
+  dropItem: {fileID: 183498414915139310, guid: 744385a6b41e92a4c89d08d67cb399f0, type: 3}
+  dropRate: 100
   MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
+  LossPlayerTime: 0
   patrolData:
     Points: []
     Index: 0
@@ -471,7 +473,6 @@ MonoBehaviour:
     NextPoint: {x: 0, y: 0, z: 0}
   voiceAlter: {fileID: 8300000, guid: eda4c68024ee48e419d35400dddabf1c, type: 3}
   voiceDie: {fileID: 8300000, guid: 6e99c256505efbc4fbdc0923e8bd829a, type: 3}
-  dropItem: {fileID: 183498414915139310, guid: 744385a6b41e92a4c89d08d67cb399f0, type: 3}
   boss1FlowTrigger: {fileID: 0}
 --- !u!4 &9171737969812890153 stripped
 Transform:

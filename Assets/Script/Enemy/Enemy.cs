@@ -50,10 +50,14 @@ public class Enemy : Entity
     public bool CanCatch { get; set; }
     public bool IsNoCDAttack { get; set; }
     public float ChaseSpeed { get; set; }
+
+    [Header("Drop")]
+    public GameObject dropItem;
+    public float dropRate;
     public Vector3 MoveTarget;
     public Vector3 MoveDirection;
+    public float LossPlayerTime;
     public PatrolData patrolData = new PatrolData();
-
 
     protected override void Awake()
     {
@@ -107,10 +111,6 @@ public class Enemy : Entity
         base.FixedUpdate();
         CheckAlert();
         DoAlert();
-        if (IsAlerting)
-        {
-            GameManager.AddAlertEnemy(this);
-        }
         if (IsMoveToTarget && !IsStunning)
         {
             DoMoveTarget();
@@ -187,6 +187,10 @@ public class Enemy : Entity
         if (IsDied)
         {
             FSM.SetNextState(dieState);
+            if (dropRate > Random.Range(0, 100))
+            {
+                Instantiate(dropItem, gameObject.transform.position, Quaternion.identity);
+            }
         }
     }
     public void Repel(Vector3 sourcePosition, bool isHeavyAttack = false)
@@ -246,19 +250,24 @@ public class Enemy : Entity
         if (GameManager.GetPlayerDistance(this.transform.position) <= Data.alertDistance)
         {
             IsAlerting = true;
+            GameManager.AddAlertEnemy(this);
+        }
+        if (IsAlerting)
+        {
+            if (GetPlayerDistance() > Data.alertDistance * 2f)
+            { LossPlayerTime -= Time.fixedDeltaTime; }
+            else
+            { LossPlayerTime = 1f; }
+
+            if (LossPlayerTime <= 0)
+            {
+                GameManager.RemoveAlertEnemy(this);
+            }
         }
     }
     public virtual void DoAlert()
     {
         if (!IsAlerting) { return; }
-        //if (IsAlerting || IsAttacking)
-        //{
-        //    CanChase = false;
-        //    CanAttack1 = false;
-        //    CanCatch = false;
-        //    IsKeepawaying = false;
-        //    return;
-        //}
         float faceRight = CheckRelativeVector(GameManager.Instance.player.transform.position).x;
         if (faceRight != 0 && !IsStunning && !IsCatching)
         {
@@ -417,12 +426,12 @@ public class Enemy : Entity
     }
     public virtual void DashAttack()
     {
-        if (Random.Range(0, 100) > 40)
+        if (Random.Range(0, 100) > 20)
         {
             FSM.SetNextState(attack1State);
             return;
         }
-        if (!Data.isBoos) //Boss沒有小動畫
+        if (Data.sexAnims.Count > 0) //Boss沒有小動畫
         {
             FSM.SetNextState(catchState);
         }

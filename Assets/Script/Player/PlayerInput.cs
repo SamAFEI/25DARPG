@@ -170,6 +170,10 @@ public class PlayerInput : MonoBehaviour
     private void InputMovement(InputAction.CallbackContext _context)
     {
         Vector2 vector = _context.ReadValue<Vector2>();
+        if (vector.x != MoveInput.x || MoveInput.z != vector.y)
+        {
+            player.SetZeroVelocity();
+        }
         MoveInput.x = vector.x;
         MoveInput.z = vector.y;
     }

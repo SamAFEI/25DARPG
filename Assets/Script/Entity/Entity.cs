@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,11 +38,11 @@ public abstract class Entity : MonoBehaviour
     public bool IsMoveToTarget { get; set; }
     public AttackTypeEnum AttackType { get; set; }
     public bool IsEarthshatter { get; set; }
+    public string myLayerName { get; set; }
     public int FacingDir => IsFacingRight ? 1 : -1;
-    public string myLayerName;
-    [Header("≠´§O´Yº∆")]
+    [Header("ÈáçÂäõ‰øÇÊï∏")]
     public float gravityScale;
-    [Header("≠´§O")]
+    [Header("ÈáçÂäõ")]
     public static float GlobalGravity = -9.81f;
 
     #region Timers
@@ -140,28 +140,28 @@ public abstract class Entity : MonoBehaviour
         if (AudioData == null) return;
         if (AudioData.AttackSFXs.Count == 0 || AudioData.AttackSFXs[_value] == null) return;
         AudioClip clip = AudioData.AttackSFXs[_value];
-        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position, true);
     }
     public virtual void PlaySkillSFXTrigger(int _value)
     {
         if (AudioData == null) return;
         if (AudioData.SkillSFXs.Count == 0 || AudioData.SkillSFXs[_value] == null) return;
         AudioClip clip = AudioData.SkillSFXs[_value];
-        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position, true);
     }
     public virtual void PlaySFXTrigger(int _value)
     {
         if (AudioData == null) return;
         if (AudioData.SFX.Count == 0 || AudioData.SFX[_value] == null) return;
         AudioClip clip = AudioData.SFX[_value];
-        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position, true);
     }
     public virtual void PlayVoiceTrigger(int _value)
     {
         if (AudioData == null) return;
         if (AudioData.Voices.Count == 0 || AudioData.Voices[_value] == null) return;
         AudioClip clip = AudioData.Voices[_value];
-        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position, true);
     }
     public virtual void PlaySexSFXTrigger(int _value) 
     {
@@ -183,7 +183,7 @@ public abstract class Entity : MonoBehaviour
         if (AudioData.HurtSFXs == null) return; 
         int index = Random.Range(0 ,AudioData.HurtSFXs.Count());
         AudioClip clip = AudioData.HurtSFXs[index];
-        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position);
+        AudioManager.PlayOnPoint(AudioManager.SFXSource, clip, transform.position, true);
     }
     public virtual void SetAttackType(AttackTypeEnum type)
     {
@@ -204,7 +204,6 @@ public abstract class Entity : MonoBehaviour
         Vector3 scale = skeleton.transform.localScale;
         scale.x *= -1;
         skeleton.transform.localScale = scale;
-
         IsFacingRight = !IsFacingRight;
     }
 
@@ -274,13 +273,13 @@ public abstract class Entity : MonoBehaviour
     }
     public virtual void SexHurt()
     {
-        //ƒ~©”•Œ
+        //ÁπºÊâøÁî®
     }
     #endregion 
 
     public virtual void ShotProjectile(int _index)
     {
-        //ƒ~©”•Œ
+        //ÁπºÊâøÁî®
     }
 
     public virtual void Die(float _delay = 0.5f)
@@ -301,7 +300,7 @@ public abstract class Entity : MonoBehaviour
 
 
     /// <summary>
-    /// Ø»´Ω´Ω
+    /// Á¥ôÂ®ÉÂ®É
     /// </summary>
     /// <param name="_asset"></param>
     public virtual void SetSpriteLibraryAsset(SpriteLibraryAsset _asset)
@@ -310,7 +309,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// ≠±¶VCamera
+    /// Èù¢ÂêëCamera
     /// </summary>
     protected void DoBillboard()
     {
@@ -319,15 +318,15 @@ public abstract class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// ≠p∫‚¨€πÔ¶Ï∏m
+    /// Ë®àÁÆóÁõ∏Â∞ç‰ΩçÁΩÆ
     /// </summary>
     /// <param name="_target"></param>
-    /// <returns> •k√‰ X > 0  ´e§Ë Z > 0 </returns>
+    /// <returns> Âè≥ÈÇä X > 0  ÂâçÊñπ Z > 0 </returns>
     protected Vector3 CheckRelativeVector(Vector3 _target)
     {
         Vector3 _vector = _target - this.transform.position;
-        float faceRight = Vector3.Cross(transform.forward, _vector).y; //¿À¨d¨Oß_¶b•k√‰ X > 0
-        float faceFoward = Vector3.Dot(transform.forward, _vector); //¿À¨d¨Oß_¶b´e§Ë Z > 0
+        float faceRight = Vector3.Cross(transform.forward, _vector).y; //Ê™¢Êü•ÊòØÂê¶Âú®Âè≥ÈÇä X > 0
+        float faceFoward = Vector3.Dot(transform.forward, _vector); //Ê™¢Êü•ÊòØÂê¶Âú®ÂâçÊñπ Z > 0
         return new Vector3(faceRight, 0, faceFoward);
     }
 

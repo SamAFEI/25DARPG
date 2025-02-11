@@ -66,7 +66,7 @@ public class CameraManager : MonoBehaviour
         Instance.cbmPerlin = Instance.activeCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         Instance.cbmPerlin.m_AmplitudeGain = 0f;
         Instance.cbmPerlin.m_FrequencyGain = 0f;
-        isFaceZ = Instance.activeCamera == CameraViewZ;
+        isFaceZ = Instance.activeCamera.gameObject == CameraViewZ;
     }
 
     #region AreaCamera

@@ -235,7 +235,7 @@ public class SettingManager : MonoBehaviour, ISaveManager
             languageText = data.Setting.Language;
             resolutionText = data.Setting.Resolution;
         }
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
         TG_FullScreen.isOn = Instance.isFullScreen;
         CreateDP_Resolution();
 #endif

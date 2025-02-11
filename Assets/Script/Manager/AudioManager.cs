@@ -48,7 +48,7 @@ public class AudioManager : MonoBehaviour
     public static void PlayBGM(int value)
     {
         AudioClip clip = null;
-        float fadeTime = 5f;
+        float fadeTime = 4f;
         if (value == 0)
         {
             clip = Instance.bgmClip;
@@ -69,7 +69,7 @@ public class AudioManager : MonoBehaviour
             Instance.StartCoroutine(FadeBGM(fadeTime));
         }
     }
-    public static void PlayOnPoint(AudioSource audioSource, AudioClip clip, Vector3 point, float volume = 1f)
+    public static void PlayOnPoint(AudioSource audioSource, AudioClip clip, Vector3 point,bool byDistance = false, float volume = 1f)
     {
         if (clip == null) return;
         GameObject obj = new GameObject(clip.name);
@@ -78,6 +78,12 @@ public class AudioManager : MonoBehaviour
         audio.outputAudioMixerGroup = audioSource.outputAudioMixerGroup;
         audio.clip = clip;
         audio.volume = volume;
+        if (byDistance)
+        {
+            audio.spatialBlend = 1;
+            audio.maxDistance = 15f;
+            audio.minDistance = 5f;
+        }
         audio.Play();
         Destroy(obj, clip.length);
     }

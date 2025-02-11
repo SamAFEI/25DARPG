@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Orc2 : Enemy
 {
@@ -51,7 +51,7 @@ public class Orc2 : Enemy
     }
     public override void Attack1Finish()
     {
-        AttackMoveMaxSpeed = 3f;
+        AttackMoveMaxSpeed = 10f;
         FSM.SetNextState(attack2State);
     }
 }

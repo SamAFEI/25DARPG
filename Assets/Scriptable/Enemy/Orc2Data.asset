@@ -41,7 +41,7 @@ MonoBehaviour:
   attack1Damage: 20
   attack1IsHeavy: 0
   attack2ResetTime: 3
-  attack2Damage: 0
+  attack2Damage: 30
   attack2IsHeavy: 0
   attack3ResetTime: 3
   attack3Damage: 40

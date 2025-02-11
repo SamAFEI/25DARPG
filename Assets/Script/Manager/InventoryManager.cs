@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour, ISaveManager
@@ -46,7 +45,7 @@ public class InventoryManager : MonoBehaviour, ISaveManager
             {
                 if (Instance.items.Contains(itemData))
                 {
-                    Instance.items.Remove(itemData); 
+                    Instance.items.Remove(itemData);
                 }
             }
         }

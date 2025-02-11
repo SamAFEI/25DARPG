@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -52,10 +52,10 @@ public class GameManager : MonoBehaviour, ISaveManager
     #region About Player
 
     /// <summary>
-    /// Get ´ÂPlayer¤è¦V¦V¶q
+    /// Get æœPlayeræ–¹å‘å‘é‡
     /// </summary>
     /// <param name="_position"></param>
-    /// <returns> Vector3 ¤è¦V </returns>
+    /// <returns> Vector3 æ–¹å‘ </returns>
     public static Vector3 GetPlayerDirection(Vector3 _position)
     {
         if (Instance.playerObj == null) { return Vector3.zero; }
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour, ISaveManager
     }
 
     /// <summary>
-    /// Get »PPlayerªº¶ZÂ÷
+    /// Get èˆ‡Playerçš„è·é›¢
     /// </summary>
     /// <param name="_position"></param>
     /// <returns></returns>
@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour, ISaveManager
         SavePointName = savePointName;
         SaveManager.SaveGame();
         GameGlobalVolume.DoLensDistortion(true);
-        //ResetActiveScene(); //¦bGameGlobalVolume.DoLensDistortion(true); °õ¦æ
+        //ResetActiveScene(); //åœ¨GameGlobalVolume.DoLensDistortion(true); åŸ·è¡Œ
     }
 
     public void LoadData(GameData _data)

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
@@ -146,7 +146,7 @@ public class Player : Entity
             }
             if (MoveInput.x > 0 != IsFacingRight)
             {
-                //Á×§KÂà¦V·Æ¦æ
+                //é¿å…è½‰å‘æ»‘è¡Œ
                 SetZeroVelocity();
             }
             Run(1);
@@ -157,7 +157,7 @@ public class Player : Entity
     {
         if (other.tag == "Projectile")
         {
-            //¥Î§ðÀ»¥´±¼
+            //ç”¨æ”»æ“Šæ‰“æŽ‰
             if ((other.transform.position - entityCollider.ClosestPoint(other.transform.position)).magnitude > 0.3f) { return; }
             if (IsHurting || IsStunning || IsSuperArmeding) { return; }
             ProjectileBase _projectile = other.GetComponentInParent<ProjectileBase>();
@@ -201,7 +201,7 @@ public class Player : Entity
             Repel(_enemy.transform.position, _enemy.IsHeaveyAttack);
             Hurt(damage, _enemy.IsHeaveyAttack);
         }
-        if (other.tag == "Fire")
+        if (other.tag == "Fire" && !IsAttacking)
         {
             Repel(other.transform.position);
             Hurt(20);
@@ -326,7 +326,7 @@ public class Player : Entity
     }
 
     /// <summary>
-    /// ±Ã¤ãSex
+    /// æŽ™æ‰ŽSex
     /// </summary>
     /// <returns></returns>
     public IEnumerator Resist()
@@ -358,7 +358,7 @@ public class Player : Entity
     {
         float time = 0.1f;
         ShakeTime += time;
-        if (ShakeTime > time) { return; } //Coroutine °õ¦æ¤¤
+        if (ShakeTime > time) { return; } //Coroutine åŸ·è¡Œä¸­
         StartCoroutine(DoShake());
     }
 
@@ -463,12 +463,25 @@ public class Player : Entity
     #region RUN METHODS
     private void Run(float lerpAmount)
     {
-        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z * 5f, MoveInput.x);
-
-        float rbSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+        float factor = 1.6f;
+        Vector3 targetDirection = CameraManager.GetDirectionByCamera(MoveInput.z, MoveInput.x);
+        Vector3 veloctiy = rb.velocity;
+        veloctiy.y = 0;
+        if (CameraManager.Instance.activeCamera != null)
+        {
+            if (CameraManager.Instance.isFaceZ)
+            {
+                veloctiy.z /= factor;
+            }
+            else
+            {
+                veloctiy.x /= factor;
+            }
+        }
+        float rbSpeed = veloctiy.magnitude;
+        rbSpeed = Mathf.Clamp(rbSpeed, 0, Data.runMaxSpeed);
         //Calculate the direction we want to move in and our desired velocity
-        //float targetSpeed = MoveInput.normalized.magnitude * data.runMaxSpeed;
-        float targetSpeed = targetDirection.normalized.magnitude * Data.runMaxSpeed;
+        float targetSpeed = targetDirection.magnitude * Data.runMaxSpeed;
         //We can reduce are control using Lerp() this smooths changes to are direction and speed
         if (lerpAmount > 1) { targetSpeed *= lerpAmount; }
         targetSpeed = Mathf.Lerp(rbSpeed, targetSpeed, lerpAmount);
@@ -506,8 +519,21 @@ public class Player : Entity
 
         float movement = speedDif * accelRate;
 
+        Vector3 dir = targetDirection;
+        if (MoveInput.z != 0 && CameraManager.Instance.activeCamera != null)
+        {
+            if (CameraManager.Instance.isFaceZ)
+            {
+                dir.z = MoveInput.z > 0 ? factor : -factor;
+            }
+            else
+            {
+                dir.x = MoveInput.z > 0 ? -factor : factor;
+            }
+        }
+
         //Convert this to a vector and apply to rigidbody
-        rb.AddForce(movement * targetDirection.normalized, ForceMode.Force);
+        rb.AddForce(movement * dir, ForceMode.Force);
         /*
 		 * For those interested here is what AddForce() will do
 		 * RB.velocity = new Vector2(RB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);

@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 
 public class PlayerStateEarthshatter : PlayerStateGrounded
@@ -34,7 +34,7 @@ public class PlayerStateEarthshatter : PlayerStateGrounded
         base.OnFixedUpdate();
         if (player.IsMoveToTarget)
         {
-            player.DoAttactMove(3f);
+            player.DoAttactMove(2f);
         }
     }
 }

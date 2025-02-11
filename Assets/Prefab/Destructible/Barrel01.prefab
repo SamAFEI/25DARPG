@@ -1192,7 +1192,7 @@ MonoBehaviour:
   hp: 10
   dropItem: {fileID: 8616813634614978141, guid: 50985a4c76fdc6b42a5f0a5fa205921f,
     type: 3}
-  droppedItemRate: 5
+  droppedItemRate: 1
   explosionForce: 30
 --- !u!208 &4150563862408574941
 NavMeshObstacle:

@@ -1,10 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class OrcBoss : Enemy
 {
     public AudioClip voiceAlter;
     public AudioClip voiceDie;
-    public GameObject dropItem;
     public GameObject boss1FlowTrigger;
 
     private bool isAlter;
@@ -31,7 +30,6 @@ public class OrcBoss : Enemy
         {
             PlayVoiceTrigger(1);
             TimerManager.SlowFrozenTime(1f);
-            Instantiate(dropItem, gameObject.transform.position, Quaternion.identity);
         }
     }
 
@@ -78,7 +76,7 @@ public class OrcBoss : Enemy
         else if (_value == 1) { clip = voiceDie; }
         if (clip != null)
         {
-            AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position, volume);
+            AudioManager.PlayOnPoint(AudioManager.VoiceSource, clip, transform.position, false, volume);
         }
     }
 

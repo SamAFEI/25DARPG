@@ -1787,7 +1787,7 @@ MonoBehaviour:
   hp: 10
   dropItem: {fileID: 8616813634614978141, guid: 50985a4c76fdc6b42a5f0a5fa205921f,
     type: 3}
-  droppedItemRate: 5
+  droppedItemRate: 1
   explosionForce: 200
 --- !u!114 &636836490844130623
 MonoBehaviour:

@@ -101,10 +101,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: f23356d90c1e436408ee1ee4a4c78439, type: 2}
   AudioData: {fileID: 11400000, guid: fd3f57f48d9ea634890e78a2be438f6b, type: 2}
-  myLayerName: 
   gravityScale: 0
+  dropItem: {fileID: 8616813634614978141, guid: 50985a4c76fdc6b42a5f0a5fa205921f,
+    type: 3}
+  dropRate: 100
   MoveTarget: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
+  LossPlayerTime: 0
   patrolData:
     Points: []
     Index: 0
